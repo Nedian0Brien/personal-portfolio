@@ -1,0 +1,58 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.vite/
+build/
+tmp/
+temp/
+
+# Environment and secrets
+.env
+.env.*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# Editor and OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Tool/runtime folders
+.claude/
+.omc/
+.runtime/
+.npm/
+.pnpm-store/
+.parcel-cache/
+.next/
+.nuxt/
+.output/
+.turbo/
+
+# Caches
+.cache/
+coverage/
+
+# Large reference snapshots / captures used for local review
+design/references/
+
+# Workspace/reference content for onboarding (unneeded for app runtime)
+archives/
+design/
+docs/
+.codex
+
+# Local agent instruction shims
+AGENTS.md
+CLAUDE.md
+GEMINI.md

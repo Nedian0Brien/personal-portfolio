@@ -1,0 +1,17 @@
+{
+  "name": "portfolio-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --force --host 127.0.0.1 --port 8878",
+    "patch:react-grab": "node scripts/patch-react-grab.js",
+    "postinstall": "node scripts/patch-react-grab.js"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^5.1.1",
+    "vite": "^7.3.0",
+    "react-grab": "^0.1.32"
+  },
+  "devDependencies": {}
+}
