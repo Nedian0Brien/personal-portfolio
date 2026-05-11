@@ -1,0 +1,828 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>PROJECT — 3 design directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=IBM+Plex+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+button{font:inherit}
+
+/* common pieces shared by all 3 designs */
+.shell{max-width:1180px;margin:0 auto;padding:64px 28px 0}
+.opt-head{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;padding:0 4px 20px;margin-bottom:50px}
+.opt-eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+.opt-title{font-size:42px;line-height:1.04;font-weight:800;letter-spacing:-.02em;margin:8px 0 0}
+.opt-meta{font-size:12px;text-align:right}
+
+/* per-design section frame */
+.design{padding:88px 0 88px}
+.design + .design{border-top:1px solid rgba(0,0,0,.08)}
+
+/* compact 2-col grid (each design uses) */
+.compact-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:22px}
+
+/* -------------- Carousel base (shared mechanics) -------------- */
+.viewport{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.slides{position:relative;width:100%;height:100%}
+.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transform:translateX(20px) scale(.985);transition:opacity .42s ease, transform .42s cubic-bezier(.2,.7,.2,1);pointer-events:none}
+.slide.on{opacity:1;transform:translateX(0) scale(1);pointer-events:auto}
+.slide.prev{transform:translateX(-20px) scale(.985)}
+.click-half{position:absolute;top:0;bottom:0;width:42%;z-index:4;cursor:pointer}
+.click-half.l{left:0}.click-half.r{right:0}
+.nav{position:absolute;top:50%;transform:translateY(-50%);display:grid;place-items:center;cursor:pointer;z-index:5}
+
+/* phone / browser shells */
+.phone{aspect-ratio:9/19;background:#0e0e10;border-radius:34px;padding:7px;box-shadow:0 30px 50px -10px rgba(0,0,0,.5), inset 0 0 0 1.5px rgba(255,255,255,.08);position:relative}
+.phone__notch{position:absolute;top:13px;left:50%;transform:translateX(-50%);width:74px;height:18px;background:#000;border-radius:99px;z-index:2}
+.phone__screen{width:100%;height:100%;border-radius:26px;overflow:hidden;background:#fff;position:relative}
+
+.browser{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 30px 50px -10px rgba(0,0,0,.4)}
+.browser__bar{display:flex;align-items:center;gap:6px;padding:9px 12px;background:#f1f1f1;border-bottom:1px solid #e0e0e0}
+.browser__dot{width:10px;height:10px;border-radius:50%;background:#ddd}
+.browser__dot.r{background:#ff5f57}.browser__dot.y{background:#febc2e}.browser__dot.g{background:#28c840}
+.browser__url{margin-left:10px;background:#fff;border:1px solid #e0e0e0;border-radius:6px;padding:3px 10px;font:500 11px/1 "JetBrains Mono",monospace;color:#999;flex:1}
+
+/* ============================================================
+   DESIGN A — APPLE TODAY (CINEMATIC)
+   ============================================================ */
+.design.A{background:#f5f4ef;color:#111;font-family:"Inter","Pretendard Variable",sans-serif}
+.design.A .opt-eyebrow{font-family:"JetBrains Mono",monospace;color:#6b6b6b}
+.design.A .opt-title{font-family:"Inter Tight",sans-serif}
+.design.A .opt-meta{font-family:"JetBrains Mono",monospace;color:#6b6b6b}
+.design.A .design-mark{
+  display:inline-flex;align-items:baseline;gap:14px;
+  font-family:"Inter Tight",sans-serif;font-weight:800;font-size:36px;letter-spacing:-.02em;
+  margin-bottom:6px;
+}
+.design.A .design-mark span{font-family:"JetBrains Mono",monospace;font-size:11px;color:#6b6b6b;font-weight:500;letter-spacing:.18em;text-transform:uppercase}
+.design.A .proj-header{padding:0 4px;margin:14px 0 30px}
+.design.A .proj-header .eyebrow{font:500 11px/1 "JetBrains Mono",monospace;letter-spacing:.18em;text-transform:uppercase;color:#6b6b6b}
+.design.A .proj-header .title{font-family:"Inter Tight",sans-serif;font-weight:800;font-size:34px;letter-spacing:-.02em;margin-top:10px}
+.design.A .proj-header .meta{font:500 12px "JetBrains Mono",monospace;color:#6b6b6b;margin-top:10px}
+
+.design.A .story{position:relative;border-radius:28px;overflow:hidden;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.05),0 18px 40px rgba(0,0,0,.1)}
+.design.A .cover{position:relative;color:#fff;overflow:hidden;isolation:isolate}
+.design.A .cover::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.04) 0%,rgba(0,0,0,.45) 100%);z-index:1}
+.design.A .cover > *{position:relative;z-index:2}
+.design.A .copy .eyebrow{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;opacity:.92}
+.design.A .copy .headline{font-family:"Inter Tight",sans-serif;font-weight:800;letter-spacing:-.02em;line-height:1.06;margin:6px 0 0}
+.design.A .copy .sub{font-size:14.5px;line-height:1.55;opacity:.94;margin-top:12px;max-width:48ch}
+.design.A .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.design.A .tags span{font:600 11px/1 "JetBrains Mono",monospace;padding:5px 10px;border-radius:99px;background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.22)}
+.design.A .story.lg .cover{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);align-items:center;gap:28px;min-height:480px;padding:48px 48px 44px}
+.design.A .story.lg .copy .headline{font-size:clamp(28px,3.4vw,42px);max-width:18ch}
+.design.A .story.sm .cover{min-height:380px;padding:24px 24px 20px;display:flex;flex-direction:column;gap:16px}
+.design.A .story.sm .copy .headline{font-size:22px;max-width:18ch}
+.design.A .story.sm .copy .sub{font-size:13px;margin-top:8px}
+.design.A .stage{align-self:stretch;display:flex;align-items:center;justify-content:center}
+.design.A .story.lg .stage{justify-content:flex-end}
+.design.A .story.lg .viewport{min-height:380px}
+.design.A .story.sm .stage{flex:1;min-height:160px;width:100%;margin-top:14px}
+.design.A .story.sm .viewport{min-height:160px;padding:0 12px}
+.design.A .story.lg .phone{width:240px}
+.design.A .story.sm .phone{width:160px;border-radius:26px;padding:5px}
+.design.A .story.sm .phone__notch{width:54px;height:14px;top:9px}
+.design.A .story.sm .phone__screen{border-radius:20px}
+.design.A .nav{width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.15);color:#fff;font-size:22px;line-height:1;font-weight:300;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.22);transition:background .15s ease}
+.design.A .nav:hover{background:rgba(255,255,255,.28)}
+.design.A .nav.prev{left:14px}
+.design.A .nav.next{right:14px}
+.design.A .story.sm .nav{width:30px;height:30px;font-size:18px}
+.design.A .story.sm .nav.prev{left:6px}
+.design.A .story.sm .nav.next{right:6px}
+.design.A .dots{position:absolute;left:0;right:0;bottom:14px;display:flex;justify-content:center;gap:6px;z-index:5}
+.design.A .story.sm .dots{bottom:8px}
+.design.A .dots button{width:6px;height:6px;border-radius:50%;border:0;padding:0;background:rgba(255,255,255,.4);cursor:pointer;transition:width .25s ease}
+.design.A .dots button.on{background:#fff;width:18px;border-radius:99px}
+.design.A .counter{position:absolute;top:14px;right:14px;font:600 10px "JetBrains Mono",monospace;color:#fff;background:rgba(0,0,0,.32);padding:4px 9px;border-radius:99px;z-index:5}
+.design.A .story.sm .counter{top:8px;right:8px}
+.design.A .foot{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 20px;background:#fff;border-top:1px solid rgba(0,0,0,.08)}
+.design.A .app{display:flex;align-items:center;gap:14px;min-width:0}
+.design.A .icon{width:54px;height:54px;border-radius:13px;display:grid;place-items:center;font-family:"Inter Tight",sans-serif;font-weight:800;font-size:22px;color:#fff;letter-spacing:-.02em;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.18),inset 0 0 0 1px rgba(255,255,255,.18)}
+.design.A .name{font-family:"Inter Tight",sans-serif;font-weight:700;font-size:15.5px;letter-spacing:-.01em;margin:0}
+.design.A .tag{font-size:12px;color:#6b6b6b;margin:2px 0 0}
+.design.A .get{font-family:"Inter Tight",sans-serif;font-weight:700;font-size:13px;background:#e9e9eb;color:#0a84ff;padding:8px 22px;border-radius:99px;border:0;cursor:pointer;letter-spacing:.04em}
+.design.A .get.solid{background:#0a84ff;color:#fff}
+
+.A .theme-aris{background:radial-gradient(120% 120% at 0% 0%, #2563eb 0%, #1e3a8a 60%, #0a1e4d 100%)}
+.A .theme-voca{background:radial-gradient(130% 130% at 30% 0%, #10b981 0%, #047857 60%, #023b2a 100%)}
+.A .theme-prism{background:linear-gradient(120deg,#f472b6 0%,#a855f7 50%,#3b82f6 100%)}
+.A .ic-aris{background:linear-gradient(135deg,#3b82f6,#1e40af)}
+.A .ic-voca{background:linear-gradient(135deg,#10b981,#065f46)}
+.A .ic-prism{background:linear-gradient(135deg,#f472b6,#7c3aed)}
+
+/* ============================================================
+   DESIGN B — EDITORIAL PRINT
+   ============================================================ */
+.design.B{background:#f3ece1;color:#111;font-family:"Inter","Pretendard",sans-serif}
+.design.B .design-mark{display:inline-flex;align-items:baseline;gap:14px;font-family:"Fraunces",serif;font-weight:800;font-size:38px;letter-spacing:-.02em;margin-bottom:6px}
+.design.B .design-mark span{font-family:"JetBrains Mono",monospace;font-size:11px;color:#6b5d49;font-weight:500;letter-spacing:.18em;text-transform:uppercase}
+.design.B .proj-header{padding:0 4px;margin:14px 0 30px;border-top:2px solid #111;border-bottom:1px solid #111;padding-top:18px;padding-bottom:18px;display:flex;justify-content:space-between;align-items:flex-end;gap:30px}
+.design.B .proj-header .eyebrow{font:600 10px/1 "JetBrains Mono",monospace;letter-spacing:.22em;text-transform:uppercase;color:#3a2c1a}
+.design.B .proj-header .title{font-family:"Fraunces",serif;font-weight:800;font-size:42px;letter-spacing:-.025em;line-height:1;margin-top:6px;font-style:italic}
+.design.B .proj-header .meta{font:500 11px "JetBrains Mono",monospace;color:#6b5d49;letter-spacing:.06em;text-align:right;line-height:1.6}
+
+.design.B .story{position:relative;background:#fffaf1;border:1.5px solid #1a1a1a;border-radius:0;overflow:hidden}
+.design.B .story + .story{margin-top:22px}
+.design.B .number{
+  position:absolute;top:0;left:0;
+  background:#1a1a1a;color:#fffaf1;
+  font-family:"Fraunces",serif;font-weight:800;font-size:18px;
+  padding:6px 14px;letter-spacing:.04em;
+  z-index:6;
+}
+.design.B .accent-bar{position:absolute;top:0;right:0;height:4px;width:50%;z-index:5}
+.design.B .cover{position:relative;display:grid;padding:46px 36px 36px}
+.design.B .story.lg .cover{grid-template-columns:1.05fr 1fr;gap:40px;align-items:center;min-height:440px}
+.design.B .story.sm .cover{grid-template-columns:1fr;gap:18px;min-height:380px;padding:36px 26px 24px}
+.design.B .copy .eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#3a2c1a}
+.design.B .copy .headline{font-family:"Fraunces",serif;font-weight:800;letter-spacing:-.02em;line-height:1.04;margin:14px 0 0;color:#111}
+.design.B .story.lg .copy .headline{font-size:clamp(30px,3.7vw,46px);max-width:14ch}
+.design.B .story.sm .copy .headline{font-size:24px;max-width:18ch}
+.design.B .copy .sub{font-size:14.5px;line-height:1.65;color:#3a3027;margin-top:14px;max-width:48ch}
+.design.B .copy .sub b{background:#fff3a8;padding:0 3px;font-weight:600;color:#111}
+.design.B .story.sm .copy .sub{font-size:13px;margin-top:10px}
+.design.B .swatches{display:flex;align-items:center;gap:10px;margin-top:18px;font-family:"JetBrains Mono",monospace;font-size:10.5px;color:#3a2c1a;letter-spacing:.06em}
+.design.B .swatches .sw{display:inline-flex;align-items:center;gap:5px}
+.design.B .swatches .sw::before{content:"";display:block;width:10px;height:10px;border-radius:0;background:currentColor;color:#1a1a1a}
+.design.B .stage{position:relative}
+.design.B .figframe{
+  position:relative;
+  background:#fffaf1;
+  border:1px solid #1a1a1a;
+  padding:26px 22px 18px;
+  display:flex;flex-direction:column;align-items:center;
+}
+.design.B .figframe::before{content:"";position:absolute;top:-1px;left:-1px;right:-1px;height:6px;background:#1a1a1a}
+.design.B .figframe .figbody{position:relative;width:100%;display:flex;justify-content:center;flex:1}
+.design.B .story.lg .figframe .figbody{min-height:360px}
+.design.B .story.sm .figframe .figbody{min-height:200px}
+.design.B .figcaption{
+  margin-top:14px;font-family:"JetBrains Mono",monospace;font-size:10.5px;
+  color:#3a2c1a;letter-spacing:.04em;text-align:center;line-height:1.45;max-width:38ch;
+}
+.design.B .figcaption b{font-weight:700;color:#111}
+.design.B .nav{width:30px;height:30px;border:1.5px solid #1a1a1a;background:#fffaf1;color:#1a1a1a;font-family:"Fraunces",serif;font-size:20px;font-weight:600;border-radius:0}
+.design.B .nav:hover{background:#1a1a1a;color:#fffaf1}
+.design.B .nav.prev{left:14px}
+.design.B .nav.next{right:14px}
+.design.B .story.sm .nav{width:26px;height:26px;font-size:16px}
+.design.B .nav.prev{left:8px}.design.B .nav.next{right:8px}
+.design.B .pager{
+  position:absolute;bottom:-44px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:12px;
+  font-family:"JetBrains Mono",monospace;font-size:10px;color:#3a2c1a;letter-spacing:.06em;
+}
+.design.B .pager .dots{display:flex;gap:6px}
+.design.B .pager button{width:8px;height:8px;border-radius:0;border:1px solid #1a1a1a;background:transparent;padding:0;cursor:pointer}
+.design.B .pager button.on{background:#1a1a1a}
+.design.B .foot{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 30px;background:#1a1a1a;color:#fffaf1;border-top:1.5px solid #1a1a1a}
+.design.B .app{display:flex;align-items:baseline;gap:14px;min-width:0}
+.design.B .num{font-family:"JetBrains Mono",monospace;font-size:11px;color:#fffaf1;opacity:.6;letter-spacing:.18em}
+.design.B .name{font-family:"Fraunces",serif;font-weight:600;font-size:18px;font-style:italic;letter-spacing:-.005em;margin:0;color:#fffaf1}
+.design.B .tag{font:500 11px "JetBrains Mono",monospace;color:#c9b69a;margin-left:14px;letter-spacing:.04em;text-transform:uppercase}
+.design.B .get{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:11px;background:#fffaf1;color:#1a1a1a;padding:9px 22px;border-radius:0;border:0;cursor:pointer;letter-spacing:.16em;text-transform:uppercase}
+.design.B .get:hover{background:#fff3a8}
+.design.B .compact-grid{margin-top:34px}
+.design.B .story.sm .figframe .figbody .phone{transform:scale(.85)}
+.design.B .story.sm .figframe{padding:20px 16px 14px}
+.design.B .story.sm .figcaption{font-size:9.5px}
+
+/* accent per project (color rail) */
+.B .accent-aris{background:#2563eb}
+.B .accent-voca{background:#10b981}
+.B .accent-prism{background:#a855f7}
+
+/* ============================================================
+   DESIGN C — TERMINAL CONSOLE
+   ============================================================ */
+.design.C{background:#0a0d12;color:#cfd6df;font-family:"Inter",sans-serif;border-top:1px solid rgba(255,255,255,.06)}
+.design.C .design-mark{display:inline-flex;align-items:baseline;gap:14px;font-family:"JetBrains Mono",monospace;font-weight:600;font-size:30px;letter-spacing:-.01em;margin-bottom:6px;color:#e9eef5}
+.design.C .design-mark span{font-family:"JetBrains Mono",monospace;font-size:11px;color:#6b7785;font-weight:500;letter-spacing:.18em;text-transform:uppercase}
+.design.C .proj-header{
+  padding:0 4px;margin:14px 0 30px;
+  border:1px solid rgba(255,255,255,.08);
+  background:#0e131a;
+  padding:18px 22px;
+  display:flex;justify-content:space-between;align-items:center;gap:30px;
+}
+.design.C .proj-header::before{
+  content:"~/portfolio/03_project";
+  font:500 11px "JetBrains Mono",monospace;
+  color:#6b7785;
+  margin-right:18px;
+}
+.design.C .proj-header .left{display:flex;flex-direction:column}
+.design.C .proj-header .eyebrow{font:600 10px/1 "JetBrains Mono",monospace;letter-spacing:.18em;text-transform:uppercase;color:#41e3a4}
+.design.C .proj-header .title{font-family:"JetBrains Mono",monospace;font-weight:600;font-size:24px;letter-spacing:-.005em;margin-top:6px;color:#e9eef5}
+.design.C .proj-header .meta{font:500 11px "JetBrains Mono",monospace;color:#6b7785;text-align:right}
+
+.design.C .story{
+  position:relative;background:#0e131a;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:8px;overflow:hidden;
+}
+.design.C .story + .story{margin-top:18px}
+.design.C .winchrome{
+  display:flex;align-items:center;gap:8px;
+  padding:9px 14px;
+  background:#11171f;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  font:500 11px "JetBrains Mono",monospace;color:#6b7785;
+}
+.design.C .winchrome .dots{display:flex;gap:5px}
+.design.C .winchrome .dots i{width:9px;height:9px;border-radius:50%;display:block}
+.design.C .winchrome .dots .r{background:#ff5f57}.design.C .winchrome .dots .y{background:#febc2e}.design.C .winchrome .dots .g{background:#28c840}
+.design.C .winchrome .path{margin-left:8px}
+.design.C .winchrome .status{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:10px}
+.design.C .winchrome .status .blink{width:7px;height:7px;border-radius:50%;display:inline-block;background:#41e3a4;animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(65,227,164,.7)}50%{opacity:.5;box-shadow:0 0 0 5px rgba(65,227,164,0)}}
+.design.C .blink.dev{background:#fbbf24;animation-name:pulse-y}
+@keyframes pulse-y{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(251,191,36,.7)}50%{opacity:.5;box-shadow:0 0 0 5px rgba(251,191,36,0)}}
+.design.C .blink.plan{background:#94a3b8}
+
+.design.C .cover{
+  display:grid;
+  padding:34px 30px 30px;
+  position:relative;
+}
+.design.C .story.lg .cover{grid-template-columns:1fr 1fr;gap:34px;align-items:center;min-height:440px}
+.design.C .story.sm .cover{grid-template-columns:1fr;gap:14px;min-height:340px;padding:24px 22px 20px}
+.design.C .copy .eyebrow{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:600}
+.design.C .copy .headline{font-family:"Inter Tight",sans-serif;font-weight:700;letter-spacing:-.02em;line-height:1.06;margin:10px 0 0;color:#f4f7fb}
+.design.C .story.lg .copy .headline{font-size:clamp(28px,3.4vw,40px);max-width:18ch}
+.design.C .story.sm .copy .headline{font-size:22px;max-width:18ch}
+.design.C .copy .sub{font-size:14px;line-height:1.6;color:#9aa6b3;margin-top:14px;max-width:48ch}
+.design.C .story.sm .copy .sub{font-size:12.5px;margin-top:10px}
+.design.C .meta-row{
+  display:flex;gap:18px;margin-top:18px;
+  font:500 11px "JetBrains Mono",monospace;color:#6b7785;letter-spacing:.04em;
+}
+.design.C .meta-row b{color:#cfd6df;font-weight:600}
+.design.C .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.design.C .tags span{font:500 10.5px/1 "JetBrains Mono",monospace;padding:4px 9px;border-radius:3px;background:rgba(255,255,255,.04);color:#cfd6df;border:1px solid rgba(255,255,255,.08);letter-spacing:.04em}
+
+/* color accent (set on .accent variable) */
+.design.C [data-accent="cyan"]   .copy .eyebrow{color:#22d3ee}.design.C [data-accent="cyan"]   .accent{color:#22d3ee}
+.design.C [data-accent="lime"]   .copy .eyebrow{color:#a3e635}.design.C [data-accent="lime"]   .accent{color:#a3e635}
+.design.C [data-accent="orange"] .copy .eyebrow{color:#fb923c}.design.C [data-accent="orange"] .accent{color:#fb923c}
+
+.design.C .stage{align-self:stretch;display:flex;align-items:center;justify-content:center}
+.design.C .story.lg .stage{justify-content:flex-end}
+.design.C .story.sm .stage{flex:1;min-height:160px;width:100%;margin-top:12px}
+.design.C .viewport{position:relative}
+.design.C .story.lg .viewport{min-height:380px;width:100%}
+.design.C .story.sm .viewport{min-height:200px;padding:0 12px}
+.design.C .pane{
+  background:#0a0d12;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:6px;
+  position:relative;
+  overflow:hidden;
+}
+.design.C .pane-bar{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.08);
+  background:#0e131a;font:500 10px "JetBrains Mono",monospace;color:#6b7785;
+}
+.design.C .pane-bar .tab{padding:3px 9px;border-radius:3px;color:#cfd6df}
+.design.C .pane-bar .tab.on{background:rgba(34,211,238,.12);color:#22d3ee;border:1px solid rgba(34,211,238,.4)}
+.design.C [data-accent="lime"] .pane-bar .tab.on{background:rgba(163,230,53,.12);color:#a3e635;border-color:rgba(163,230,53,.4)}
+.design.C [data-accent="orange"] .pane-bar .tab.on{background:rgba(251,146,60,.12);color:#fb923c;border-color:rgba(251,146,60,.4)}
+.design.C .story.lg .pane{width:100%;max-width:520px}
+.design.C .story.sm .pane{width:100%}
+.design.C .pane-body{padding:22px;display:flex;justify-content:center;align-items:center;min-height:300px}
+.design.C .story.sm .pane-body{min-height:160px;padding:14px}
+
+/* nav arrows */
+.design.C .nav{
+  width:32px;height:32px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.4);
+  color:#cfd6df;font-family:"JetBrains Mono",monospace;font-size:14px;
+  border-radius:4px;cursor:pointer;
+  transition:all .15s ease;
+}
+.design.C .nav:hover{background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.4);color:#22d3ee}
+.design.C [data-accent="lime"] .nav:hover{background:rgba(163,230,53,.1);border-color:rgba(163,230,53,.4);color:#a3e635}
+.design.C [data-accent="orange"] .nav:hover{background:rgba(251,146,60,.1);border-color:rgba(251,146,60,.4);color:#fb923c}
+.design.C .nav.prev{left:12px}.design.C .nav.next{right:12px}
+.design.C .story.sm .nav{width:26px;height:26px;font-size:12px}
+
+.design.C .pager{
+  position:absolute;left:0;right:0;bottom:10px;
+  display:flex;justify-content:center;align-items:center;gap:10px;
+  font:500 10px "JetBrains Mono",monospace;color:#6b7785;letter-spacing:.06em;z-index:5;
+}
+.design.C .pager .dots{display:flex;gap:4px}
+.design.C .pager button{width:18px;height:3px;border-radius:0;border:0;padding:0;background:rgba(255,255,255,.15);cursor:pointer;transition:background .15s ease}
+.design.C .pager button.on{background:#22d3ee}
+.design.C [data-accent="lime"] .pager button.on{background:#a3e635}
+.design.C [data-accent="orange"] .pager button.on{background:#fb923c}
+
+.design.C .foot{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:14px 24px;background:#0a0d12;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+.design.C .app{display:flex;align-items:center;gap:14px;min-width:0}
+.design.C .icon{
+  width:42px;height:42px;border-radius:6px;
+  display:grid;place-items:center;
+  font-family:"JetBrains Mono",monospace;font-weight:700;font-size:14px;
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);
+  flex-shrink:0;
+}
+.design.C [data-accent="cyan"] .icon{color:#22d3ee;border-color:rgba(34,211,238,.4)}
+.design.C [data-accent="lime"] .icon{color:#a3e635;border-color:rgba(163,230,53,.4)}
+.design.C [data-accent="orange"] .icon{color:#fb923c;border-color:rgba(251,146,60,.4)}
+.design.C .name{font-family:"JetBrains Mono",monospace;font-weight:600;font-size:13.5px;letter-spacing:-.005em;margin:0;color:#e9eef5}
+.design.C .tag{font:500 11px "JetBrains Mono",monospace;color:#6b7785;margin:2px 0 0;letter-spacing:.04em}
+.design.C .get{
+  font-family:"JetBrains Mono",monospace;font-weight:600;font-size:11.5px;
+  background:transparent;color:#cfd6df;
+  padding:8px 16px;border-radius:4px;
+  border:1px solid rgba(255,255,255,.18);cursor:pointer;letter-spacing:.12em;text-transform:uppercase;
+  transition:all .15s ease;
+}
+.design.C [data-accent="cyan"] .get:hover{color:#22d3ee;border-color:#22d3ee;background:rgba(34,211,238,.06)}
+.design.C [data-accent="lime"] .get:hover{color:#a3e635;border-color:#a3e635;background:rgba(163,230,53,.06)}
+.design.C [data-accent="orange"] .get:hover{color:#fb923c;border-color:#fb923c;background:rgba(251,146,60,.06)}
+
+.design.C .compact-grid{margin-top:18px}
+
+/* shared mock content (for ARIS phone slides etc) */
+.aris-mock{padding:14px 14px 0;font-size:11px;color:#222;height:100%;display:flex;flex-direction:column}
+.aris-bubble{background:#f0f3f7;border-radius:14px;padding:8px 11px;margin:5px 0;max-width:78%;font-size:11px;line-height:1.4}
+.aris-bubble.me{background:#0a84ff;color:#fff;margin-left:auto}
+.aris-pill{display:inline-flex;gap:4px;align-items:center;background:#1f2937;color:#fff;padding:3px 8px;border-radius:99px;font-size:9px;font-weight:600}
+.aris-permbar{position:absolute;left:8px;right:8px;bottom:8px;background:#fff;border:1px solid #e8e8e8;border-radius:14px;padding:7px 10px;font-size:9.5px;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.voca-card{margin:14px;background:#fff;border:1px solid #e8e8e8;border-radius:14px;padding:14px}
+.voca-word{font-family:"Inter Tight",sans-serif;font-size:22px;font-weight:800;color:#065f46;letter-spacing:-.01em}
+.voca-pron{font-family:"JetBrains Mono",monospace;font-size:10px;color:#888;margin-top:2px}
+.voca-opts{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.voca-opts .o{border:1px solid #e8e8e8;border-radius:9px;padding:7px 10px;font-size:10px}
+.voca-opts .o.correct{border-color:#10b981;background:#ecfdf5;color:#047857;font-weight:600}
+.heatmap{padding:14px;display:grid;grid-template-columns:repeat(12,1fr);gap:3px}
+.heatmap .cell{aspect-ratio:1;border-radius:2px;background:#e5e7eb}
+.heatmap .cell.l1{background:#a7f3d0}.heatmap .cell.l2{background:#34d399}.heatmap .cell.l3{background:#10b981}.heatmap .cell.l4{background:#047857}
+.prism-cats{display:flex;justify-content:space-around;padding:0 12px 14px;font-size:9px}
+.prism-cat .dot{width:22px;height:22px;border-radius:7px;margin:0 auto 3px;display:grid;place-items:center;color:#fff;font-size:10px}
+
+@media (max-width:920px){
+  .design.A .story.lg .cover, .design.B .story.lg .cover, .design.C .story.lg .cover{grid-template-columns:1fr;min-height:auto}
+  .compact-grid{grid-template-columns:1fr}
+  .opt-title{font-size:32px}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     PAGE HEADER
+     ============================================================ -->
+<div class="shell">
+  <header class="opt-head" style="font-family:'Inter',sans-serif;color:#111">
+    <div>
+      <div class="opt-eyebrow" style="font-family:'JetBrains Mono',monospace;color:#6b6b6b">Section · 03 · Project · Three design directions</div>
+      <h1 class="opt-title" style="font-family:'Inter Tight',sans-serif">하나의 구조, 세 가지 시각 언어.</h1>
+    </div>
+    <div class="opt-meta" style="font-family:'JetBrains Mono',monospace;color:#6b6b6b">
+      <div>A · Apple Today (Cinematic)</div>
+      <div>B · Editorial Print (Magazine)</div>
+      <div>C · Terminal Console (Engineering)</div>
+    </div>
+  </header>
+</div>
+
+<!-- ==================================================================
+     DESIGN A — APPLE TODAY (CINEMATIC)
+     ================================================================== -->
+<section class="design A">
+  <div class="shell" style="padding:0 28px">
+
+    <div class="design-mark">A. Apple Today<span>Cinematic · radial gradient · glass nav</span></div>
+    <div class="proj-header">
+      <div class="eyebrow">03 · Project</div>
+      <div class="title">직접 만들고, 운영하고, 고친 것들.</div>
+      <div class="meta">7 projects · Agent · RAG · EdTech · Civic</div>
+    </div>
+
+    <!-- ARIS large -->
+    <article class="story lg">
+      <div class="cover theme-aris">
+        <div class="copy">
+          <div class="eyebrow">Featured · Agent UX · 2026</div>
+          <h3 class="headline">한 화면에서 묻고, 계획하고, 실행한다.</h3>
+          <p class="sub">Ask · Plan · Execute 세 모드와 권한 토글을 한 채팅창에 모았습니다. iOS 키보드와 채팅 진입 로딩(15MB → 236KB)까지 직접 해결한 에이전트 런타임.</p>
+          <div class="tags"><span>Chat-first</span><span>Permission</span><span>Mobile viewport</span></div>
+        </div>
+        <div class="stage">
+          <div class="viewport" data-carousel data-total="3">
+            <div class="counter"><span class="cur">1</span> / <span class="tot">3</span></div>
+            <div class="slides">
+              <div class="slide on"><div class="phone"><div class="phone__notch"></div><div class="phone__screen">
+                <div class="aris-mock">
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin:18px 0 4px"><b style="font-size:12px">ARIS</b><span class="aris-pill">PLAN</span></div>
+                  <div class="aris-bubble">검색어 분포 5개를 비교 차트로 정리해줘.</div>
+                  <div class="aris-bubble me">3단계 계획 제안할게요.</div>
+                  <div class="aris-bubble" style="background:#fff;border:1px solid #e0e0e0">1. fetch_keywords<br/>2. compute<br/>3. render</div>
+                  <div class="aris-permbar"><span style="font-weight:600">권한</span><span style="display:flex;gap:4px"><span style="padding:2px 7px;background:#eef;color:#0a84ff;font-weight:600;border-radius:99px">Once</span></span></div>
+                </div>
+              </div></div></div>
+              <div class="slide"><div class="phone"><div class="phone__notch"></div><div class="phone__screen">
+                <div class="aris-mock">
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin:18px 0 4px"><b style="font-size:12px">ARIS</b><span class="aris-pill" style="background:#16a34a">EXECUTE</span></div>
+                  <div class="aris-bubble" style="background:#fff;border:1px solid #e0e0e0">▶ python: charts.compare_keywords([...])</div>
+                  <div class="aris-bubble me">실행 완료 · 결과 첨부</div>
+                  <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:8px;margin:5px 0"><svg viewBox="0 0 200 60" width="100%" height="40"><rect x="10" y="20" width="20" height="40" fill="#0a84ff"/><rect x="44" y="10" width="20" height="50" fill="#0a84ff"/><rect x="78" y="30" width="20" height="30" fill="#0a84ff"/><rect x="112" y="14" width="20" height="46" fill="#0a84ff"/><rect x="146" y="36" width="20" height="24" fill="#0a84ff"/></svg></div>
+                </div>
+              </div></div></div>
+              <div class="slide"><div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:18px;padding:22px;width:520px;max-width:100%;color:#fff;backdrop-filter:blur(8px)">
+                <h5 style="font:700 11px/1 'Inter Tight';letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.85);margin:0 0 12px">Bundle · 15MB → 236KB</h5>
+                <svg viewBox="0 0 460 200" width="100%"><text x="60" y="30" fill="#fff" font:700 11px Inter Tight font-weight="700">Before</text><rect x="60" y="50" width="380" height="22" rx="6" fill="rgba(239,68,68,.6)"/><text x="430" y="66" text-anchor="end" fill="#fff" font-weight="700" font-size="11">15.0 MB</text><text x="60" y="110" fill="#fff" font-weight="700" font-size="11">After</text><rect x="60" y="130" width="6" height="22" rx="3" fill="rgba(34,197,94,.85)"/><text x="74" y="146" fill="#fff" font-weight="700" font-size="11">236 KB</text><text x="74" y="160" fill="rgba(255,255,255,.7)" font-size="9">(64× 감소)</text></svg>
+              </div></div>
+            </div>
+            <button class="nav prev">‹</button><button class="nav next">›</button>
+            <div class="click-half l" data-act="prev"></div><div class="click-half r" data-act="next"></div>
+            <div class="dots"></div>
+          </div>
+        </div>
+      </div>
+      <div class="foot">
+        <div class="app"><div class="icon ic-aris">A</div><div><p class="name">ARIS — Agentic Runtime Interface System</p><p class="tag">Chat-first agent runtime · LIVE</p></div></div>
+        <button class="get solid">자세히</button>
+      </div>
+    </article>
+
+    <!-- compact: VocaLoop, PrismLog -->
+    <div class="compact-grid">
+      <article class="story sm">
+        <div class="cover theme-voca">
+          <div class="copy"><div class="eyebrow">EdTech · 2025</div><h3 class="headline">단어를 외우는 게 아니라, 루프를 도는 것.</h3><p class="sub">AI 단어 분석·퀴즈·하이브리드 채점·오답 재배치를 학습 루프로.</p><div class="tags"><span>Hybrid grading</span></div></div>
+          <div class="stage">
+            <div class="viewport" data-carousel><div class="counter"><span class="cur">1</span>/<span class="tot">2</span></div>
+              <div class="slides">
+                <div class="slide on"><div class="phone"><div class="phone__notch"></div><div class="phone__screen" style="background:#f8fdf9"><div style="padding:14px 12px 2px;font-size:9px;color:#065f46;font-weight:600">12 / 30</div><div class="voca-card" style="margin:10px;padding:10px"><div class="voca-word" style="font-size:18px">corroborate</div><div class="voca-pron">/kəˈrɒbəreɪt/</div><div class="voca-opts" style="margin-top:8px"><div class="o">deny</div><div class="o correct">to confirm</div><div class="o">to question</div></div></div></div></div></div>
+                <div class="slide"><div class="phone"><div class="phone__notch"></div><div class="phone__screen" style="background:#f8fdf9"><div style="padding:14px 10px 4px;font-weight:700;font-size:10px;color:#065f46">학습 히트맵</div><div class="heatmap" style="grid-template-columns:repeat(12,1fr)"><div class="cell l1"></div><div class="cell l2"></div><div class="cell l3"></div><div class="cell l1"></div><div class="cell"></div><div class="cell l4"></div><div class="cell l2"></div><div class="cell l3"></div><div class="cell l1"></div><div class="cell"></div><div class="cell l2"></div><div class="cell l3"></div><div class="cell l4"></div><div class="cell l3"></div><div class="cell l2"></div><div class="cell"></div><div class="cell l1"></div><div class="cell l2"></div><div class="cell l3"></div><div class="cell l4"></div><div class="cell l2"></div><div class="cell l1"></div><div class="cell"></div><div class="cell l3"></div></div></div></div></div>
+              </div>
+              <button class="nav prev">‹</button><button class="nav next">›</button>
+              <div class="click-half l" data-act="prev"></div><div class="click-half r" data-act="next"></div>
+              <div class="dots"></div>
+            </div>
+          </div>
+        </div>
+        <div class="foot"><div class="app"><div class="icon ic-voca">V</div><div><p class="name">VocaLoop</p><p class="tag">Adaptive vocabulary loop</p></div></div><button class="get">자세히</button></div>
+      </article>
+
+      <article class="story sm">
+        <div class="cover theme-prism">
+          <div class="copy"><div class="eyebrow">Personal · Mobile-first</div><h3 class="headline">하루를 색의 띠로 기록한다.</h3><p class="sub">독서·공부·문화생활을 색·인터랙션으로 분리한 올인원 기록 앱.</p><div class="tags"><span>mask-composite</span></div></div>
+          <div class="stage">
+            <div class="viewport" data-carousel><div class="counter"><span class="cur">1</span>/<span class="tot">2</span></div>
+              <div class="slides">
+                <div class="slide on"><div class="phone"><div class="phone__notch"></div><div class="phone__screen" style="background:#fafafa"><div style="padding:14px 0 2px;text-align:center;font-family:'Inter Tight';font-weight:800;font-size:12px;color:#7c3aed">PrismLog</div><div style="padding:6px"><svg viewBox="0 0 200 200" width="80%" style="display:block;margin:0 auto"><defs><linearGradient id="ga1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f472b6"/><stop offset="50%" stop-color="#a855f7"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs><circle cx="100" cy="100" r="78" fill="none" stroke="#eee" stroke-width="14"/><circle cx="100" cy="100" r="78" fill="none" stroke="url(#ga1)" stroke-width="14" stroke-linecap="round" stroke-dasharray="380 490" transform="rotate(-90 100 100)"/><text x="100" y="98" text-anchor="middle" font-family="Inter Tight" font-weight="800" font-size="32" fill="#1f2937">73%</text></svg></div><div class="prism-cats"><div class="prism-cat"><div class="dot" style="background:#f472b6">📚</div>읽기</div><div class="prism-cat"><div class="dot" style="background:#a855f7">✏️</div>공부</div><div class="prism-cat"><div class="dot" style="background:#3b82f6">🎬</div>문화</div></div></div></div></div>
+                <div class="slide"><div class="phone"><div class="phone__notch"></div><div class="phone__screen" style="background:#fafafa"><div style="padding:14px 10px 4px;font-weight:700;font-size:10px;color:#7c3aed">로그 · 5월</div><div class="heatmap" style="grid-template-columns:repeat(7,1fr)"><div class="cell" style="background:#fce7f3"></div><div class="cell" style="background:#a855f7"></div><div class="cell" style="background:#3b82f6"></div><div class="cell" style="background:#f472b6"></div><div class="cell" style="background:#e9d5ff"></div><div class="cell" style="background:#3b82f6"></div><div class="cell" style="background:#f472b6"></div><div class="cell" style="background:#a855f7"></div><div class="cell" style="background:#a855f7"></div><div class="cell" style="background:#f472b6"></div><div class="cell" style="background:#3b82f6"></div><div class="cell" style="background:#a855f7"></div><div class="cell" style="background:#f472b6"></div><div class="cell" style="background:#e9d5ff"></div></div></div></div></div>
+              </div>
+              <button class="nav prev">‹</button><button class="nav next">›</button>
+              <div class="click-half l" data-act="prev"></div><div class="click-half r" data-act="next"></div>
+              <div class="dots"></div>
+            </div>
+          </div>
+        </div>
+        <div class="foot"><div class="app"><div class="icon ic-prism">P</div><div><p class="name">PrismLog</p><p class="tag">Multi-category logger</p></div></div><button class="get">자세히</button></div>
+      </article>
+    </div>
+
+  </div>
+</section>
+
+<!-- ==================================================================
+     DESIGN B — EDITORIAL PRINT (MAGAZINE SPREAD)
+     ================================================================== -->
+<section class="design B">
+  <div class="shell" style="padding:0 28px">
+
+    <div class="design-mark">B. Editorial Print<span>Magazine spread · Fraunces serif · Fig. captions</span></div>
+    <div class="proj-header">
+      <div>
+        <div class="eyebrow">SECTION · 03 · PROJECT</div>
+        <div class="title">직접 만들고, 운영하고, 고친 것들.</div>
+      </div>
+      <div class="meta">SEVEN PROJECTS<br/>AGENT · RAG · EDTECH · CIVIC</div>
+    </div>
+
+    <!-- ARIS large -->
+    <article class="story lg" data-num="01">
+      <div class="number">No. 01</div>
+      <div class="accent-bar accent-aris"></div>
+      <div class="cover">
+        <div class="copy">
+          <div class="eyebrow">FEATURED · AGENT UX · 2026</div>
+          <h3 class="headline">한 화면에서 묻고, <em style="font-style:italic;color:#2563eb">계획하고</em>, 실행한다.</h3>
+          <p class="sub">Ask · Plan · Execute 세 모드와 권한 토글을 한 채팅창에 모았습니다. iOS 키보드와 채팅 진입 로딩 <b>15MB → 236KB</b>까지 직접 해결한 에이전트 런타임.</p>
+          <div class="swatches">
+            <span class="sw" style="color:#2563eb">CHAT-FIRST</span>
+            <span class="sw" style="color:#1e40af">PERMISSION</span>
+            <span class="sw" style="color:#0a1e4d">VIEWPORT</span>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="figframe">
+            <div class="figbody viewport" data-carousel>
+              <div class="slides">
+                <div class="slide on"><div class="phone" style="width:200px"><div class="phone__notch"></div><div class="phone__screen"><div class="aris-mock"><div style="display:flex;justify-content:space-between;align-items:center;margin:18px 0 4px"><b style="font-size:12px">ARIS</b><span class="aris-pill">PLAN</span></div><div class="aris-bubble">검색어 분포 5개를 비교 차트로.</div><div class="aris-bubble me">3단계 계획 제안할게요.</div><div class="aris-permbar"><span style="font-weight:600">권한</span><span style="padding:2px 7px;background:#eef;color:#0a84ff;font-weight:600;border-radius:99px">Once</span></div></div></div></div></div>
+                <div class="slide"><div class="phone" style="width:200px"><div class="phone__notch"></div><div class="phone__screen"><div class="aris-mock"><div style="display:flex;justify-content:space-between;align-items:center;margin:18px 0 4px"><b style="font-size:12px">ARIS</b><span class="aris-pill" style="background:#16a34a">EXECUTE</span></div><div class="aris-bubble" style="background:#fff;border:1px solid #e0e0e0">▶ charts.compare(...)</div><div class="aris-bubble me">실행 완료 · 6.4s</div><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:6px;margin:5px 0"><svg viewBox="0 0 200 50" width="100%" height="32"><rect x="10" y="16" width="20" height="34" fill="#2563eb"/><rect x="44" y="6" width="20" height="44" fill="#2563eb"/><rect x="78" y="24" width="20" height="26" fill="#2563eb"/><rect x="112" y="10" width="20" height="40" fill="#2563eb"/><rect x="146" y="30" width="20" height="20" fill="#2563eb"/></svg></div></div></div></div></div>
+                <div class="slide"><div style="width:100%;text-align:center;color:#1a1a1a"><div style="font-family:'Fraunces',serif;font-style:italic;font-weight:600;font-size:32px;line-height:1.05;margin:30px 0 14px">15MB <span style="color:#888">→</span> <span style="color:#2563eb">236KB</span></div><div style="font:500 11px 'JetBrains Mono';color:#3a2c1a;letter-spacing:.06em">실제 페이지네이션 + lazy media · 64× 감소</div><svg viewBox="0 0 200 60" width="80%" style="margin:24px auto 0"><rect x="10" y="10" width="170" height="14" rx="3" fill="#fecaca"/><rect x="10" y="36" width="2.7" height="14" rx="1" fill="#10b981"/></svg></div></div>
+              </div>
+              <button class="nav prev">‹</button><button class="nav next">›</button>
+              <div class="click-half l" data-act="prev"></div><div class="click-half r" data-act="next"></div>
+            </div>
+            <div class="figcaption"><b>Fig. 1</b> — ARIS의 채팅 인터페이스에서 Plan / Execute 모드와 Once / Session / Deny 권한 토글이 한 화면에 공존한다.</div>
+            <div class="pager">
+              <button class="nav prev" style="position:relative;left:auto;top:auto;transform:none">‹</button>
+              <div class="dots"></div>
+              <button class="nav next" style="position:relative;right:auto;top:auto;transform:none">›</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="foot">
+        <div class="app"><span class="num">No. 01</span><p class="name">ARIS — Agentic Runtime Interface System</p><span class="tag">Web + Server · Live</span></div>
+        <button class="get">Read →</button>
+      </div>
+    </article>
+
+    <div class="compact-grid">
+      <article class="story sm" data-num="04">
+        <div class="number">No. 04</div>
+        <div class="accent-bar accent-voca"></div>
+        <div class="cover">
+          <div class="copy"><div class="eyebrow">EDTECH · 2025</div><h3 class="headline">단어를 외우는 게 아니라, <em style="color:#10b981;font-style:italic">루프</em>를 도는 것.</h3><p class="sub">AI 단어 분석·<b>하이브리드 채점</b>·오답 재배치를 학습 루프로.</p>
+            <div class="swatches"><span class="sw" style="color:#10b981">HYBRID</span><span class="sw" style="color:#047857">ADAPTIVE</span></div>
+          </div>
+          <div class="stage">
+            <div class="figframe" style="padding:18px 14px 12px">
+              <div class="figbody viewport" data-carousel>
+                <div class="slides">
+                  <div class="slide on"><div class="phone" style="width:140px"><div class="phone__notch"></div><div class="phone__screen" style="background:#f8fdf9"><div class="voca-card" style="margin:18px 8px;padding:8px"><div class="voca-word" style="font-size:14px">corroborate</div><div class="voca-pron" style="font-size:8px">/kəˈrɒbəreɪt/</div><div class="voca-opts" style="margin-top:6px;gap:3px"><div class="o" style="font-size:8px">deny</div><div class="o correct" style="font-size:8px">to confirm</div></div></div></div></div></div>
+                  <div class="slide"><div style="text-align:center;color:#1a1a1a;padding:18px"><div style="font-family:'Fraunces',serif;font-style:italic;font-weight:600;font-size:22px;line-height:1.1">Quiz<span style="color:#10b981"> · </span>Score<span style="color:#10b981"> · </span>Re-queue</div><div style="font:500 9px 'JetBrains Mono';margin-top:10px;color:#3a2c1a">— 학습 루프 한 사이클</div></div></div>
+                </div>
+                <button class="nav prev">‹</button><button class="nav next">›</button>
+                <div class="click-half l" data-act="prev"></div><div class="click-half r" data-act="next"></div>
+              </div>
+              <div class="figcaption"><b>Fig. 4.1</b> — 4지선다 → 정오 채점 → 오답 큐 재배치.</div>
+              <div class="pager"><div class="dots"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="foot"><div class="app"><span class="num">No. 04</span><p class="name">VocaLoop</p><span class="tag">EdTech</span></div><button class="get">Read →</button></div>
+      </article>
+
+      <article class="story sm" data-num="06">
+        <div class="number">No. 06</div>
+        <div class="accent-bar accent-prism"></div>
+        <div class="cover">
+          <div class="copy"><div class="eyebrow">PERSONAL · MOBILE-FIRST</div><h3 class="headline">하루를 <em style="color:#a855f7;font-style:italic">색의 띠</em>로 기록한다.</h3><p class="sub">독서·공부·문화생활을 색·인터랙션으로 분리한 올인원 <b>기록 앱</b>.</p>
+            <div class="swatches"><span class="sw" style="color:#f472b6">SPECTRUM</span><span class="sw" style="color:#a855f7">RING</span></div>
+          </div>
+          <div class="stage">
+            <div class="figframe" style="padding:18px 14px 12px">
+              <div class="figbody viewport" data-carousel>
+                <div class="slides">
+                  <div class="slide on"><div class="phone" style="width:140px"><div class="phone__notch"></div><div class="phone__screen" style="background:#fafafa"><div style="padding:18px"><svg viewBox="0 0 200 200" width="80%" style="display:block;margin:0 auto"><defs><linearGradient id="gb1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f472b6"/><stop offset="50%" stop-color="#a855f7"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs><circle cx="100" cy="100" r="78" fill="none" stroke="#eee" stroke-width="14"/><circle cx="100" cy="100" r="78" fill="none" stroke="url(#gb1)" stroke-width="14" stroke-linecap="round" stroke-dasharray="380 490" transform="rotate(-90 100 100)"/><text x="100" y="106" text-anchor="middle" font-family="Inter Tight" font-weight="800" font-size="28" fill="#1f2937">73%</text></svg></div></div></div></div>
+                  <div class="slide"><div style="text-align:center;color:#1a1a1a;padding:18px"><div style="font-family:'Fraunces',serif;font-style:italic;font-weight:600;font-size:18px;line-height:1.1">Mask-composite<br/>not pointer-track</div><div style="font:500 9px 'JetBrains Mono';margin-top:10px;color:#3a2c1a">— iOS Safari 호환 글로우</div></div></div>
+                </div>
+                <button class="nav prev">‹</button><button class="nav next">›</button>
+                <div class="click-half l" data-act="prev"></div><div class="click-half r" data-act="next"></div>
+              </div>
+              <div class="figcaption"><b>Fig. 6.1</b> — 색·인터랙션을 카테고리별로 분리한 스펙트럼 링.</div>
+              <div class="pager"><div class="dots"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="foot"><div class="app"><span class="num">No. 06</span><p class="name">PrismLog</p><span class="tag">Personal</span></div><button class="get">Read →</button></div>
+      </article>
+    </div>
+
+  </div>
+</section>
+
+<!-- ==================================================================
+     DESIGN C — TERMINAL CONSOLE (ENGINEERING)
+     ================================================================== -->
+<section class="design C">
+  <div class="shell" style="padding:64px 28px 88px">
+
+    <div class="design-mark">C. Terminal Console<span>JetBrains Mono · neon accent · window chrome</span></div>
+    <div class="proj-header">
+      <div class="left">
+        <div class="eyebrow">SECTION_03 · PROJECT</div>
+        <div class="title">직접 만들고, 운영하고, 고친 것들.</div>
+      </div>
+      <div class="meta">$ ls projects/<br/>7 entries · agent · rag · edtech · civic</div>
+    </div>
+
+    <!-- ARIS large -->
+    <article class="story lg" data-accent="cyan">
+      <div class="winchrome">
+        <div class="dots"><i class="r"></i><i class="y"></i><i class="g"></i></div>
+        <div class="path">~ / projects / aris</div>
+        <div class="status"><span class="blink"></span> LIVE · v1.4.2</div>
+      </div>
+      <div class="cover">
+        <div class="copy">
+          <div class="eyebrow">// FEATURED · AGENT_UX · 2026</div>
+          <h3 class="headline">한 화면에서 묻고, 계획하고, 실행한다.</h3>
+          <p class="sub">Ask · Plan · Execute 세 모드와 권한 토글을 한 채팅창에 모았습니다. iOS 키보드와 채팅 진입 로딩(15MB → 236KB)까지 직접 해결한 에이전트 런타임.</p>
+          <div class="meta-row">
+            <span><b>STACK</b> · React · Vite · Node</span>
+            <span><b>PERF</b> · <span class="accent">64×</span> bundle ↓</span>
+          </div>
+          <div class="tags"><span>chat-first</span><span>permission</span><span>visual-viewport</span><span>pagination</span></div>
+        </div>
+        <div class="stage">
+          <div class="viewport" data-carousel>
+            <div class="pane">
+              <div class="pane-bar">
+                <span class="tab on">[01] chat.tsx</span>
+                <span class="tab">[02] execute.tsx</span>
+                <span class="tab">[03] perf.md</span>
+              </div>
+              <div class="pane-body">
+                <div class="slides" style="position:relative;width:100%;min-height:280px">
+                  <div class="slide on"><div class="phone"><div class="phone__notch"></div><div class="phone__screen">
+                    <div class="aris-mock">
+                      <div style="display:flex;justify-content:space-between;align-items:center;margin:18px 0 4px"><b style="font-size:12px">ARIS</b><span class="aris-pill">PLAN</span></div>
+                      <div class="aris-bubble">검색어 분포 5개를 비교 차트로.</div>
+                      <div class="aris-bubble me">3단계 계획.</div>
+                      <div class="aris-bubble" style="background:#fff;border:1px solid #e0e0e0">1. fetch<br/>2. compute<br/>3. render</div>
+                      <div class="aris-permbar"><span style="font-weight:600">권한</span><span style="padding:2px 7px;background:#eef;color:#0a84ff;font-weight:600;border-radius:99px">Once</span></div>
+                    </div>
+                  </div></div></div>
+                  <div class="slide"><div class="phone"><div class="phone__notch"></div><div class="phone__screen">
+                    <div class="aris-mock">
+                      <div style="display:flex;justify-content:space-between;align-items:center;margin:18px 0 4px"><b style="font-size:12px">ARIS</b><span class="aris-pill" style="background:#16a34a">EXECUTE</span></div>
+                      <div class="aris-bubble" style="background:#fff;border:1px solid #e0e0e0">▶ charts.compare(...)</div>
+                      <div class="aris-bubble me">완료 · 6.4s</div>
+                      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:6px;margin:5px 0"><svg viewBox="0 0 200 50" width="100%" height="34"><rect x="10" y="16" width="20" height="34" fill="#22d3ee"/><rect x="44" y="6" width="20" height="44" fill="#22d3ee"/><rect x="78" y="24" width="20" height="26" fill="#22d3ee"/><rect x="112" y="10" width="20" height="40" fill="#22d3ee"/><rect x="146" y="30" width="20" height="20" fill="#22d3ee"/></svg></div>
+                    </div>
+                  </div></div></div>
+                  <div class="slide"><div style="font-family:'JetBrains Mono';font-size:12px;color:#cfd6df;width:100%;max-width:420px;line-height:1.7">
+                    <div style="color:#22d3ee">$ vite build --analyze</div>
+                    <div>before · <span style="color:#ff5f57">15.0 MB</span></div>
+                    <div>  └ history loaded eagerly</div>
+                    <div>  └ media bundled inline</div>
+                    <div style="margin-top:10px;color:#22d3ee">$ apply pagination + lazy media</div>
+                    <div>after  · <span style="color:#a3e635">236 KB</span></div>
+                    <div style="color:#6b7785">  └ 64× 감소 · 진입 ~120ms</div>
+                  </div></div>
+                </div>
+              </div>
+            </div>
+            <button class="nav prev">‹</button><button class="nav next">›</button>
+            <div class="click-half l" data-act="prev"></div><div class="click-half r" data-act="next"></div>
+            <div class="pager">
+              <span class="counter-c">[<span class="cur">01</span>/<span class="tot">03</span>]</span>
+              <div class="dots"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="foot">
+        <div class="app"><div class="icon">$_</div><div><p class="name">aris.runtime</p><p class="tag">chat-first agent runtime · live</p></div></div>
+        <button class="get accent">Open ›</button>
+      </div>
+    </article>
+
+    <div class="compact-grid">
+      <article class="story sm" data-accent="lime">
+        <div class="winchrome"><div class="dots"><i class="r"></i><i class="y"></i><i class="g"></i></div><div class="path">~ / projects / vocaloop</div><div class="status"><span class="blink"></span> LIVE · v0.9</div></div>
+        <div class="cover">
+          <div class="copy">
+            <div class="eyebrow">// EDTECH · 2025</div>
+            <h3 class="headline">단어를 외우는 게 아니라, <span class="accent">루프</span>를 도는 것.</h3>
+            <p class="sub">AI 단어 분석·하이브리드 채점·오답 재배치를 학습 루프로.</p>
+            <div class="tags"><span>hybrid</span><span>adaptive</span><span>react-vite</span></div>
+          </div>
+          <div class="stage">
+            <div class="viewport" data-carousel>
+              <div class="pane">
+                <div class="pane-bar"><span class="tab on">[01] quiz</span><span class="tab">[02] heat</span></div>
+                <div class="pane-body" style="min-height:170px;padding:10px">
+                  <div class="slides" style="position:relative;width:100%;min-height:170px">
+                    <div class="slide on"><div class="phone" style="width:130px"><div class="phone__notch"></div><div class="phone__screen" style="background:#f8fdf9"><div class="voca-card" style="margin:18px 8px;padding:8px"><div class="voca-word" style="font-size:13px">corroborate</div><div class="voca-pron" style="font-size:7px">/kəˈrɒbəreɪt/</div><div class="voca-opts" style="margin-top:5px;gap:3px"><div class="o" style="font-size:7px">deny</div><div class="o correct" style="font-size:7px">to confirm</div></div></div></div></div></div>
+                    <div class="slide"><div style="font-family:'JetBrains Mono';font-size:10px;color:#cfd6df;width:100%"><div style="color:#a3e635">$ stats today</div><div>review · <span style="color:#a3e635">12 / 30</span></div><div>queue  · <span style="color:#fb923c">+4 wrong</span></div><div>streak · 6d</div></div></div>
+                  </div>
+                </div>
+              </div>
+              <button class="nav prev">‹</button><button class="nav next">›</button>
+              <div class="click-half l" data-act="prev"></div><div class="click-half r" data-act="next"></div>
+              <div class="pager"><span class="counter-c" style="color:#6b7785;font-family:'JetBrains Mono';font-size:9px">[<span class="cur">01</span>/<span class="tot">02</span>]</span><div class="dots"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="foot"><div class="app"><div class="icon">vc</div><div><p class="name">vocaloop.app</p><p class="tag">adaptive vocabulary loop</p></div></div><button class="get">Open ›</button></div>
+      </article>
+
+      <article class="story sm" data-accent="orange">
+        <div class="winchrome"><div class="dots"><i class="r"></i><i class="y"></i><i class="g"></i></div><div class="path">~ / projects / prismlog</div><div class="status"><span class="blink"></span> LIVE</div></div>
+        <div class="cover">
+          <div class="copy">
+            <div class="eyebrow">// PERSONAL · MOBILE-FIRST</div>
+            <h3 class="headline">하루를 <span class="accent">색의 띠</span>로 기록한다.</h3>
+            <p class="sub">독서·공부·문화생활을 색·인터랙션으로 분리한 올인원 기록 앱.</p>
+            <div class="tags"><span>spectrum-ring</span><span>mask-composite</span></div>
+          </div>
+          <div class="stage">
+            <div class="viewport" data-carousel>
+              <div class="pane">
+                <div class="pane-bar"><span class="tab on">[01] ring</span><span class="tab">[02] notes</span></div>
+                <div class="pane-body" style="min-height:170px;padding:10px">
+                  <div class="slides" style="position:relative;width:100%;min-height:170px">
+                    <div class="slide on"><div class="phone" style="width:130px"><div class="phone__notch"></div><div class="phone__screen" style="background:#fafafa"><div style="padding:18px"><svg viewBox="0 0 200 200" width="80%" style="display:block;margin:0 auto"><defs><linearGradient id="gc1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fb923c"/><stop offset="50%" stop-color="#f472b6"/><stop offset="100%" stop-color="#a855f7"/></linearGradient></defs><circle cx="100" cy="100" r="78" fill="none" stroke="#eee" stroke-width="14"/><circle cx="100" cy="100" r="78" fill="none" stroke="url(#gc1)" stroke-width="14" stroke-linecap="round" stroke-dasharray="380 490" transform="rotate(-90 100 100)"/><text x="100" y="106" text-anchor="middle" font-family="Inter Tight" font-weight="800" font-size="28" fill="#1f2937">73%</text></svg></div></div></div></div>
+                    <div class="slide"><div style="font-family:'JetBrains Mono';font-size:10px;color:#cfd6df;width:100%"><div style="color:#fb923c">// css trick</div><div>active-tab + mask-composite</div><div>→ <span style="color:#a3e635">iOS Safari OK</span></div><div style="color:#6b7785">  pointer-track 회피</div></div></div>
+                  </div>
+                </div>
+              </div>
+              <button class="nav prev">‹</button><button class="nav next">›</button>
+              <div class="click-half l" data-act="prev"></div><div class="click-half r" data-act="next"></div>
+              <div class="pager"><span class="counter-c" style="color:#6b7785;font-family:'JetBrains Mono';font-size:9px">[<span class="cur">01</span>/<span class="tot">02</span>]</span><div class="dots"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="foot"><div class="app"><div class="icon">pr</div><div><p class="name">prismlog.app</p><p class="tag">multi-category logger</p></div></div><button class="get">Open ›</button></div>
+      </article>
+    </div>
+
+  </div>
+</section>
+
+<script>
+(function(){
+  document.querySelectorAll('[data-carousel]').forEach(root => {
+    const slides = root.querySelectorAll('.slide');
+    const dotsBox = root.querySelector('.dots');
+    const cur = root.querySelector('.cur');
+    const tot = root.querySelector('.tot');
+    let idx = Math.max(0, [...slides].findIndex(s => s.classList.contains('on')));
+    if(idx < 0) idx = 0;
+    if(tot) tot.textContent = String(slides.length).padStart(slides.length>9?2:2,'0');
+    if(cur) cur.textContent = String(idx+1).padStart(slides.length>9?2:2,'0');
+
+    if(dotsBox){
+      slides.forEach((_, i) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        if(i === idx) b.classList.add('on');
+        b.addEventListener('click', e => { e.stopPropagation(); show(i); });
+        dotsBox.appendChild(b);
+      });
+    }
+    const dots = dotsBox ? dotsBox.querySelectorAll('button') : [];
+
+    function show(n){
+      const next = (n + slides.length) % slides.length;
+      slides.forEach((s, k) => {
+        s.classList.remove('on','prev');
+        if(k === next) s.classList.add('on');
+        else if(k === idx) s.classList.add('prev');
+      });
+      dots.forEach((d, k) => d.classList.toggle('on', k === next));
+      if(cur) cur.textContent = String(next+1).padStart(slides.length>9?2:2,'0');
+      idx = next;
+    }
+    root.querySelectorAll('.nav.prev').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); show(idx - 1); }));
+    root.querySelectorAll('.nav.next').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); show(idx + 1); }));
+    root.querySelectorAll('.click-half').forEach(half => {
+      half.addEventListener('click', e => {
+        e.stopPropagation();
+        if(half.dataset.act === 'prev') show(idx - 1); else show(idx + 1);
+      });
+    });
+    root.addEventListener('mouseenter', () => root.dataset.hover = '1');
+    root.addEventListener('mouseleave', () => delete root.dataset.hover);
+  });
+
+  document.addEventListener('keydown', e => {
+    if(e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    const hover = document.querySelector('[data-carousel][data-hover]');
+    if(!hover) return;
+    const dir = e.key === 'ArrowLeft' ? -1 : 1;
+    const slides = hover.querySelectorAll('.slide');
+    const cur = [...slides].findIndex(s => s.classList.contains('on'));
+    const next = (cur + dir + slides.length) % slides.length;
+    const dots = hover.querySelectorAll('.dots button');
+    if(dots[next]) dots[next].click();
+  });
+})();
+</script>
+
+</body>
+</html>
