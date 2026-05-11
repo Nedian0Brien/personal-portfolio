@@ -9,6 +9,8 @@ NGINX_AVAIL="/etc/nginx/sites-available/${CONF_NAME}"
 NGINX_ENABLED="/etc/nginx/sites-enabled/${CONF_NAME}"
 REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 SOURCE_HTML="${REPO_DIR}/web/index.html"
+ASSETS_DIR="${REPO_DIR}/assets"
+RESEARCH_DIR="${REPO_DIR}/web/research"
 
 if [[ $EUID -ne 0 ]]; then
   echo "이 스크립트는 root 권한으로 실행하세요: sudo $0" >&2
@@ -22,6 +24,21 @@ fi
 
 mkdir -p "$DOC_ROOT"
 cp -f "$SOURCE_HTML" "$DOC_ROOT/index.html"
+
+if [[ -d "$ASSETS_DIR/logo" ]]; then
+  mkdir -p "$DOC_ROOT/logo"
+  cp -a "$ASSETS_DIR/logo/." "$DOC_ROOT/logo/"
+fi
+
+if [[ -d "$ASSETS_DIR/pdf" ]]; then
+  mkdir -p "$DOC_ROOT/pdf"
+  cp -a "$ASSETS_DIR/pdf/." "$DOC_ROOT/pdf/"
+fi
+
+if [[ -d "$RESEARCH_DIR" ]]; then
+  mkdir -p "$DOC_ROOT/research"
+  cp -a "$RESEARCH_DIR/." "$DOC_ROOT/research/"
+fi
 
 cat > "$NGINX_AVAIL" <<NGINX
 server {
@@ -44,6 +61,10 @@ server {
 
     location / {
         try_files \$uri \$uri/ /index.html;
+    }
+
+    location ~ ^/(logo|pdf)/ {
+        try_files \$uri =404;
     }
 
     access_log /var/log/nginx/${DOMAIN}-access.log;

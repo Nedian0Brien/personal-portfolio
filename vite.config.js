@@ -8,7 +8,7 @@ export default defineConfig({
     host: "127.0.0.1",
     port: 8878,
     strictPort: true,
-    allowedHosts: ["portfolio.lawdigest.cloud"],
+    allowedHosts: ["portfolio.lawdigest.cloud", "lawdigest.cloud"],
     hmr: {
       protocol: "wss",
       host: "portfolio.lawdigest.cloud",

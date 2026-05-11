@@ -1,7 +1,5 @@
-import { getGlobalApi, init, registerPlugin } from "react-grab";
-
 window.__PORTFOLIO_REACT_GRAB__ = {
-  enabled: true,
+  enabled: false,
   loadedAt: new Date().toISOString(),
 };
 
@@ -13,8 +11,11 @@ let activeTarget = null;
 let panel = null;
 let overlay = null;
 const adminModeRequested = new URLSearchParams(window.location.search).get("admin") === "1";
+const currentPagePath = window.location.pathname === "/" ? "/index.html" : window.location.pathname;
+const currentPageLabel = `web${currentPagePath}`;
 let editTextMode = false;
 let reactGrabApi = null;
+let reactGrabModule = null;
 
 function injectStyles() {
   if (document.getElementById("portfolio-text-editor-style")) return;
@@ -104,44 +105,6 @@ function injectStyles() {
     .portfolio-edit-panel__cancel { background: white; border-color: hsl(0 0% 86%) !important; color: hsl(0 0% 8%); }
     .portfolio-edit-panel__message { margin-top: 9px; color: hsl(0 0% 44%); font-size: 12px; line-height: 1.45; }
     .portfolio-edit-panel__message[data-tone="error"] { color: hsl(18 100% 44%); }
-    .portfolio-admin-dock {
-      position: fixed;
-      left: 50%;
-      bottom: 18px;
-      transform: translateX(-50%);
-      z-index: 2147483599;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      min-height: 38px;
-      padding: 0 10px 0 14px;
-      border: 1px solid hsl(0 0% 86%);
-      border-radius: 8px;
-      background: hsl(0 0% 100% / .92);
-      color: hsl(0 0% 8%);
-      box-shadow: 0 12px 40px -12px rgba(0,0,0,.18);
-      backdrop-filter: saturate(160%) blur(14px);
-      font-size: 13px;
-      font-weight: 600;
-    }
-    .portfolio-admin-dock__dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: hsl(150 70% 38%);
-    }
-    .portfolio-admin-dock__dot[data-tone="locked"] { background: hsl(18 100% 52%); }
-    .portfolio-admin-dock a {
-      height: 28px;
-      display: inline-flex;
-      align-items: center;
-      padding: 0 9px;
-      border: 1px solid hsl(0 0% 86%);
-      border-radius: 6px;
-      color: inherit;
-      text-decoration: none;
-      background: hsl(0 0% 96%);
-    }
   `;
   document.head.appendChild(style);
 }
@@ -152,25 +115,25 @@ function activateEditTextMode() {
     return;
   }
   editTextMode = true;
+  reactGrabApi?.setEnabled?.(true);
   reactGrabApi?.activate?.();
 }
 
-function ensureReactGrabApi() {
-  if (reactGrabApi) return reactGrabApi;
-  reactGrabApi = getGlobalApi?.() || init?.() || null;
-  return reactGrabApi;
+function deactivateEditTextMode() {
+  editTextMode = false;
 }
 
-function showAdminDock(authenticated) {
-  if (authenticated) return;
-  if (!adminModeRequested || document.querySelector(".portfolio-admin-dock")) return;
-  injectStyles();
+async function ensureReactGrabModule() {
+  if (reactGrabModule) return reactGrabModule;
+  reactGrabModule = await import("react-grab");
+  return reactGrabModule;
+}
 
-  const dock = document.createElement("div");
-  dock.className = "portfolio-admin-dock";
-  dock.setAttribute(UI_ATTR, "");
-  dock.innerHTML = '<span class="portfolio-admin-dock__dot" data-tone="locked" aria-hidden="true"></span><span>Login required for edit mode</span><a href="/admin/login">Login</a>';
-  document.body.appendChild(dock);
+async function ensureReactGrabApi() {
+  if (reactGrabApi) return reactGrabApi;
+  const { getGlobalApi, init } = await ensureReactGrabModule();
+  reactGrabApi = getGlobalApi?.() || init?.() || null;
+  return reactGrabApi;
 }
 
 function syncAdminNav(authenticated) {
@@ -203,13 +166,33 @@ function significantTextNodes(element) {
   return nodes;
 }
 
-function makeTarget(element, textNode) {
+function elementPathFromBody(element) {
+  if (!(element instanceof Element)) return null;
+  const path = [];
+  let current = element;
+
+  while (current && current !== document.body) {
+    const parent = current.parentElement;
+    if (!parent) return null;
+    path.unshift(Array.prototype.indexOf.call(parent.children, current));
+    current = parent;
+  }
+
+  return current === document.body ? path : null;
+}
+
+function makeTarget(element, textNode, textNodeIndex) {
   const sourceText = textNode.nodeValue || "";
   return {
     element,
     textNode,
     sourceText,
     displayText: sourceText.trim(),
+    locator: {
+      root: "body",
+      elementPath: elementPathFromBody(element),
+      textNodeIndex,
+    },
   };
 }
 
@@ -219,13 +202,13 @@ function findEditableCandidates(element) {
 
   const directNodes = significantTextNodes(element);
   if (directNodes.length > 0) {
-    return directNodes.map((node) => makeTarget(element, node));
+    return directNodes.map((node, index) => makeTarget(element, node, index));
   }
 
   let current = element.parentElement;
   while (current && current !== document.body) {
     const nodes = significantTextNodes(current);
-    if (nodes.length > 0) return nodes.map((node) => makeTarget(current, node));
+    if (nodes.length > 0) return nodes.map((node, index) => makeTarget(current, node, index));
     current = current.parentElement;
   }
 
@@ -249,6 +232,7 @@ function positionOverlay(target) {
 }
 
 function closeEditor() {
+  deactivateEditTextMode();
   activeTarget = null;
   panel?.remove();
   overlay?.remove();
@@ -276,8 +260,10 @@ async function saveEdit(textarea) {
     headers: { "Content-Type": "application/json" },
     credentials: "same-origin",
     body: JSON.stringify({
+      pagePath: currentPagePath,
       sourceText: activeTarget.sourceText,
       replacementText,
+      locator: activeTarget.locator,
     }),
   });
   const result = await response.json().catch(() => ({ ok: false, error: "invalid_response" }));
@@ -291,7 +277,7 @@ async function saveEdit(textarea) {
   const suffix = activeTarget.sourceText.match(/\s*$/)?.[0] || "";
   activeTarget.textNode.nodeValue = `${prefix}${replacementText}${suffix}`;
   activeTarget.sourceText = activeTarget.textNode.nodeValue;
-  setMessage("Saved to web/index.html");
+  setMessage(`Saved to ${result.file || currentPageLabel}`);
   setTimeout(closeEditor, 650);
 }
 
@@ -350,7 +336,7 @@ function openEditor(element) {
       <button class="portfolio-edit-panel__cancel" type="button">Cancel</button>
       <button class="portfolio-edit-panel__save" type="button">Save</button>
     </div>
-    <div class="portfolio-edit-panel__message">저장하면 web/index.html에 바로 반영됩니다.</div>
+      <div class="portfolio-edit-panel__message">저장하면 ${currentPageLabel}에 바로 반영됩니다.</div>
   `;
   document.body.appendChild(panel);
 
@@ -362,7 +348,7 @@ function openEditor(element) {
     textarea.focus();
     textarea.select();
     positionOverlay(activeTarget);
-    setMessage(candidates.length > 1 ? "여러 텍스트가 감지되어 선택한 항목만 저장합니다." : "저장하면 web/index.html에 바로 반영됩니다.");
+    setMessage(candidates.length > 1 ? "여러 텍스트가 감지되어 선택한 항목만 저장합니다." : `저장하면 ${currentPageLabel}에 바로 반영됩니다.`);
   };
   if (select) {
     select.addEventListener("change", () => setActiveCandidate(Number(select.value)));
@@ -392,9 +378,26 @@ async function checkAuth() {
 
 async function initPortfolioTextEditor() {
   const authenticated = await checkAuth();
-  showAdminDock(authenticated);
   syncAdminNav(authenticated);
+  window.__PORTFOLIO_REACT_GRAB__ = {
+    ...window.__PORTFOLIO_REACT_GRAB__,
+    enabled: authenticated,
+    authenticated,
+  };
+
+  if (!authenticated) {
+    window.__PORTFOLIO_TEXT_EDITOR__ = {
+      enabled: false,
+      authenticated,
+      adminModeRequested,
+      reactGrabReady: false,
+      openEditor,
+    };
+    return;
+  }
+
   injectStyles();
+  const { registerPlugin } = await ensureReactGrabModule();
 
   registerPlugin({
     name: "portfolio-text-editor",
@@ -410,7 +413,7 @@ async function initPortfolioTextEditor() {
             window.location.href = "/admin/login";
             return;
           }
-          activateEditTextMode();
+          deactivateEditTextMode();
           openEditor(context.element);
           context.hideContextMenu?.();
         },
@@ -419,17 +422,16 @@ async function initPortfolioTextEditor() {
     hooks: {
       onElementSelect(element) {
         if (!editTextMode || !isAuthenticated) return false;
+        deactivateEditTextMode();
         openEditor(element);
         return true;
       },
     },
   });
 
-  reactGrabApi = ensureReactGrabApi();
-  if (adminModeRequested) {
-    reactGrabApi?.setEnabled?.(true);
-    reactGrabApi?.activate?.();
-  }
+  reactGrabApi = await ensureReactGrabApi();
+  reactGrabApi?.setEnabled?.(true);
+  reactGrabApi?.deactivate?.();
   window.addEventListener("portfolio-react-grab-edit-text-mode", activateEditTextMode);
 
   document.addEventListener("keydown", (event) => {
@@ -437,7 +439,7 @@ async function initPortfolioTextEditor() {
   });
 
   window.__PORTFOLIO_TEXT_EDITOR__ = {
-    enabled: true,
+    enabled: authenticated,
     authenticated,
     adminModeRequested,
     reactGrabReady: Boolean(reactGrabApi),

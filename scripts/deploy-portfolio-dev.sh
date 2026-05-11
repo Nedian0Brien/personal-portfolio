@@ -12,8 +12,6 @@ APP_USER="ubuntu"
 NODE_BIN="/home/ubuntu/.nvm/versions/node/v22.17.1/bin"
 PM2_ENV="PATH=${NODE_BIN}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin PM2_HOME=/home/ubuntu/.pm2"
 ADMIN_ENV_FILE="${REPO_DIR}/.runtime/portfolio-admin.env"
-ADMIN_USERNAME="libera3920"
-ADMIN_PASSWORD='parkmj9260!portfolio'
 
 if [[ $EUID -ne 0 ]]; then
   echo "이 스크립트는 root 권한으로 실행하세요: sudo $0" >&2
@@ -29,14 +27,14 @@ if [[ -f "$ADMIN_ENV_FILE" ]]; then
   source "$ADMIN_ENV_FILE"
   set +a
 fi
-if [[ -z "${PORTFOLIO_ADMIN_SESSION_SECRET:-}" ]]; then
-  ADMIN_SESSION_SECRET="$(openssl rand -hex 32 | tr -d '\n')"
-else
-  ADMIN_SESSION_SECRET="$PORTFOLIO_ADMIN_SESSION_SECRET"
-fi
+
+: "${PORTFOLIO_ADMIN_USERNAME:?PORTFOLIO_ADMIN_USERNAME must be set in ${ADMIN_ENV_FILE} or the shell environment}"
+: "${PORTFOLIO_ADMIN_PASSWORD:?PORTFOLIO_ADMIN_PASSWORD must be set in ${ADMIN_ENV_FILE} or the shell environment}"
+ADMIN_SESSION_SECRET="${PORTFOLIO_ADMIN_SESSION_SECRET:-$(openssl rand -hex 32 | tr -d '\n')}"
+
 {
-  printf 'PORTFOLIO_ADMIN_USERNAME=%q\n' "$ADMIN_USERNAME"
-  printf 'PORTFOLIO_ADMIN_PASSWORD=%q\n' "$ADMIN_PASSWORD"
+  printf 'PORTFOLIO_ADMIN_USERNAME=%q\n' "$PORTFOLIO_ADMIN_USERNAME"
+  printf 'PORTFOLIO_ADMIN_PASSWORD=%q\n' "$PORTFOLIO_ADMIN_PASSWORD"
   printf 'PORTFOLIO_ADMIN_SESSION_SECRET=%q\n' "$ADMIN_SESSION_SECRET"
 } > "$ADMIN_ENV_FILE"
 chmod 600 "$ADMIN_ENV_FILE"
