@@ -86,7 +86,8 @@ button { font: inherit; }
   --reveal-stagger: 80ms;
 
   --container: 1320px;
-  --gutter: 24px;
+  --gutter: clamp(24px, 5vw, 72px);
+  --section-py: clamp(72px, 8vw, 112px);
 }
 
 :root[data-theme="light"] {
@@ -254,7 +255,38 @@ a { color: inherit; text-decoration: none; }
 .hero {
   max-width: var(--container);
   margin: 0 auto;
-  padding: 64px var(--gutter) 40px;
+  padding: clamp(40px, 5vw, 64px) var(--gutter) clamp(80px, 10vh, 120px);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+.hero__scroll-cue {
+  align-self: center;
+  margin-top: clamp(40px, 7vh, 64px);
+  display: inline-flex; flex-direction: column; align-items: center; gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+.hero__scroll-cue:hover { opacity: 1; }
+.hero__scroll-cue-arrow {
+  display: inline-flex; flex-direction: column; align-items: center; gap: 0;
+  color: inherit;
+}
+.hero__scroll-cue-arrow::before {
+  content: "";
+  width: 1px;
+  height: 36px;
+  margin-bottom: 5px;
+  background: linear-gradient(to bottom, transparent 0%, currentColor 100%);
 }
 .hero__eyebrow {
   font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.1em;
@@ -289,6 +321,26 @@ a { color: inherit; text-decoration: none; }
   margin: 26px 0 0;
 }
 .hero__sub b { color: var(--text-primary); font-weight: 600; }
+.hero__sub mark {
+  color: var(--text-primary);
+  background: hsl(var(--yellow-10));
+  padding: 0 .14em;
+  border-radius: 7px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+[data-theme="dark"] .hero__sub mark {
+  background: hsla(var(--yellow-50) / .18);
+  color: hsl(var(--yellow-50));
+}
+.hero__sub .hero__underline {
+  color: var(--text-primary);
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--text-primary);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.17em;
+}
 
 .hero__tags { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 8px; }
 
@@ -301,9 +353,188 @@ a { color: inherit; text-decoration: none; }
   display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 22px;
 }
 @media (max-width: 820px) { .hero__facts { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) {
+  .hero__facts {
+    grid-template-columns: 1fr;
+    padding: 16px;
+    gap: 14px;
+  }
+  .fact .v { font-size: 17px; }
+  .fact__v-pub { flex-wrap: wrap; gap: 5px; }
+  .fact__v-pub .fact__years { min-width: 90px; }
+  .fact--blue, .fact--purp, .fact--green, .fact--yel { padding: 12px 14px 10px; }
+}
+.fact {
+  position: relative;
+  padding: 4px 2px 2px;
+  border-radius: var(--r-4);
+  transition: transform var(--dur-2) var(--ease);
+}
+.fact:hover { transform: translateY(-2px); }
 .fact .k { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); }
 .fact .v { font-family: var(--font-display); font-weight: 700; font-size: 20px; letter-spacing: -0.015em; margin-top: 4px; color: var(--text-primary); }
 .fact .s { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+
+/* fact value secondary unit */
+.fact .v small {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  letter-spacing: 0;
+  margin-left: 2px;
+}
+/* GPA progress bar */
+.fact__bar-wrap {
+  margin: 4px 0 6px;
+}
+.fact__v-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px;
+}
+.fact__bar {
+  position: relative;
+  height: 3px;
+  background: hsl(var(--neutral-20));
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+.fact__bar-fill {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 98.2%;
+  background: var(--text-primary);
+  border-radius: 999px;
+  transform-origin: left center;
+  transform: scaleX(0);
+  animation: fact-bar-fill 1.4s cubic-bezier(0.2, 0.85, 0.2, 1) 0.4s both;
+}
+@keyframes fact-bar-fill {
+  to { transform: scaleX(1); }
+}
+.fact__bar-pct {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+/* Research — typographic year chips connected by dotted line */
+.fact__years {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 6px;
+}
+.fact__year-chip {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 2px 7px;
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  border-radius: 3px;
+  line-height: 1.5;
+  animation: year-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.fact__year-chip:nth-child(3) { animation-delay: 0.18s; }
+.fact__years-link {
+  flex: 1;
+  height: 0;
+  border-top: 1.5px dotted hsl(var(--neutral-30));
+}
+@keyframes year-pop {
+  from { opacity: 0; transform: scale(0.6); }
+}
+/* Service — chevron stripes (military insignia) + pulse dot */
+.fact__chevrons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 6px;
+}
+.fact__chevron-group {
+  display: flex;
+  gap: 1px;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 13px;
+  line-height: 1;
+  letter-spacing: -0.06em;
+}
+.fact__chevron-group span {
+  animation: chevron-slide 0.5s ease both;
+}
+.fact__chevron-group span:nth-child(1) { animation-delay: 0.3s; }
+.fact__chevron-group span:nth-child(2) { animation-delay: 0.42s; opacity: 0.7; }
+.fact__chevron-group span:nth-child(3) { animation-delay: 0.54s; opacity: 0.4; }
+@keyframes chevron-slide {
+  from { opacity: 0; transform: translateX(-6px); }
+}
+.fact__live-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+.fact__live-dot::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: hsl(140 70% 45%);
+  box-shadow: 0 0 0 0 hsla(140 70% 45% / 0.6);
+  animation: pulse-dot 1.8s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0% { box-shadow: 0 0 0 0 hsla(140 70% 45% / 0.5); }
+  70% { box-shadow: 0 0 0 6px hsla(140 70% 45% / 0); }
+  100% { box-shadow: 0 0 0 0 hsla(140 70% 45% / 0); }
+}
+/* Publication — journal meta chips */
+.fact__v-pub {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 7px;
+  margin-top: 4px;
+}
+.fact__v-pub .fact__years {
+  margin: 0;
+  min-width: 100px;
+}
+.fact__meta-chips {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.fact__meta-chip {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: var(--r-3);
+  border: 1px solid var(--text-primary);
+  color: var(--text-primary);
+  background: transparent;
+  line-height: 1.5;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fact__bar-fill,
+  .fact__year-chip,
+  .fact__chevron-group span,
+  .fact__meta-chip { opacity: 1; }
+  .fact__live-dot::before { animation: none; box-shadow: none; }
+}
 
 /* ---------- Badges / chips ---------- */
 .badge {
@@ -345,7 +576,7 @@ a { color: inherit; text-decoration: none; }
 .chip[aria-pressed="true"] .count { color: hsl(var(--neutral-40)); }
 
 /* ---------- Section header ---------- */
- .sec { padding: 56px var(--gutter) 8px; }
+.sec { padding: var(--section-py) var(--gutter); }
 .sec__row {
   display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap;
   margin-bottom: 20px;
@@ -433,6 +664,18 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ---------- Generative covers ---------- */
+@property --mx { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --my { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --m-active { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --blob-a-x { syntax: "<percentage>"; inherits: false; initial-value: 0%; }
+@property --blob-a-y { syntax: "<percentage>"; inherits: false; initial-value: 0%; }
+@property --blob-a-r { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+@property --blob-a-s { syntax: "<number>"; inherits: false; initial-value: 1; }
+@property --blob-b-x { syntax: "<percentage>"; inherits: false; initial-value: 0%; }
+@property --blob-b-y { syntax: "<percentage>"; inherits: false; initial-value: 0%; }
+@property --blob-b-r { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+@property --blob-b-s { syntax: "<number>"; inherits: false; initial-value: 1; }
+
 .cover {
   position: absolute; inset: 0;
   display: flex; align-items: flex-end; justify-content: flex-start;
@@ -443,17 +686,61 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: -0.035em;
   line-height: 0.95;
   overflow: hidden;
+  background-image:
+    radial-gradient(
+      360px circle at calc(50% + var(--mx) * 0.45) calc(50% + var(--my) * 0.45),
+      rgba(255,255,255,calc(0.14 * var(--m-active))),
+      transparent 55%
+    );
+  transition: --mx 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
+              --my 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
+              --m-active 0.45s ease;
 }
 .cover::before, .cover::after {
-  content: ""; position: absolute; border-radius: 999px; filter: blur(42px); opacity: 0.75;
+  content: ""; position: absolute; border-radius: 999px; filter: blur(46px); opacity: 0.78;
+  will-change: transform;
 }
-.cover::before { width: 70%; height: 70%; left: -12%; top: -12%; background: var(--_a, hsl(var(--blue-50))); }
-.cover::after  { width: 80%; height: 80%; right: -10%; bottom: -24%; background: var(--_b, hsl(var(--pink-50))); }
+.cover::before {
+  width: 70%; height: 70%; left: -12%; top: -12%;
+  background: var(--_a, hsl(var(--blue-50)));
+  animation: blob-a 22s ease-in-out infinite;
+  transform:
+    translate(var(--blob-a-x), var(--blob-a-y))
+    translate(calc(var(--mx) * 0.06), calc(var(--my) * 0.06))
+    rotate(var(--blob-a-r))
+    scale(var(--blob-a-s));
+}
+.cover::after {
+  width: 80%; height: 80%; right: -10%; bottom: -24%;
+  background: var(--_b, hsl(var(--pink-50)));
+  animation: blob-b 26s ease-in-out infinite;
+  transform:
+    translate(var(--blob-b-x), var(--blob-b-y))
+    translate(calc(var(--mx) * -0.09), calc(var(--my) * -0.09))
+    rotate(var(--blob-b-r))
+    scale(var(--blob-b-s));
+}
+
+@keyframes blob-a {
+  0%   { --blob-a-x:  0%;  --blob-a-y:  0%;  --blob-a-r:  0deg;  --blob-a-s: 1;    }
+  25%  { --blob-a-x:  9%;  --blob-a-y:  6%;  --blob-a-r:  10deg; --blob-a-s: 1.07; }
+  50%  { --blob-a-x:  13%; --blob-a-y: -4%;  --blob-a-r: -6deg;  --blob-a-s: 0.94; }
+  75%  { --blob-a-x: -7%;  --blob-a-y:  11%; --blob-a-r:  14deg; --blob-a-s: 1.04; }
+  100% { --blob-a-x:  0%;  --blob-a-y:  0%;  --blob-a-r:  0deg;  --blob-a-s: 1;    }
+}
+@keyframes blob-b {
+  0%   { --blob-b-x:  0%;  --blob-b-y:  0%;  --blob-b-r:  0deg;  --blob-b-s: 1;    }
+  25%  { --blob-b-x: -9%;  --blob-b-y: -8%;  --blob-b-r: -12deg; --blob-b-s: 1.06; }
+  50%  { --blob-b-x:  6%;  --blob-b-y: -12%; --blob-b-r:  8deg;  --blob-b-s: 0.93; }
+  75%  { --blob-b-x:  11%; --blob-b-y: -3%;  --blob-b-r: -16deg; --blob-b-s: 1.05; }
+  100% { --blob-b-x:  0%;  --blob-b-y:  0%;  --blob-b-r:  0deg;  --blob-b-s: 1;    }
+}
 .cover__mini {
-  position: absolute; top: 0; right: 0; width: 46%; height: 46%;
-  background: rgba(255,255,255,0.08);
+  position: absolute; top: 50%; right: 0; width: 46%; height: 46%;
+  background: rgba(255,255,255,0.06);
+  border-top-left-radius: var(--r-7);
   border-bottom-left-radius: var(--r-7);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14);
   z-index: 1;
 }
 .cover__labeltag {
@@ -461,17 +748,40 @@ a { color: inherit; text-decoration: none; }
   font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase;
   color: rgba(255,255,255,0.72);
 }
+.cover__detail-btn {
+  position: absolute; bottom: 22px; left: 24px; z-index: 2;
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  color: rgba(255,255,255,0.92);
+  font-family: var(--font-body); font-size: 13px; font-weight: 700; letter-spacing: 0.01em;
+  text-decoration: none;
+  transition: color 0.22s ease, transform 0.22s var(--ease-apple);
+}
+.cover__detail-btn:hover {
+  color: #fff;
+  transform: translateY(-2px);
+}
+.cover__detail-btn__arrow {
+  display: inline-block;
+  transition: transform 0.22s var(--ease-apple);
+}
+.cover__detail-btn:hover .cover__detail-btn__arrow {
+  transform: translateX(4px);
+}
 
-.cover.theme-blue   { background: hsl(var(--blue-70));   --_a: hsl(var(--blue-30));  --_b: hsl(var(--purple-50)); }
-.cover.theme-red    { background: hsl(var(--red-60));    --_a: hsl(var(--yellow-50));--_b: hsl(var(--red-50)); }
-.cover.theme-green  { background: hsl(var(--green-60));  --_a: hsl(var(--yellow-50));--_b: hsl(var(--teal-50)); }
-.cover.theme-yellow { background: hsl(var(--yellow-50)); --_a: hsl(var(--orange-50));--_b: hsl(var(--red-50)); color: hsl(var(--neutral-100)); }
+.cover.theme-blue   { background-color: hsl(var(--blue-70));   --_a: hsl(var(--blue-30));  --_b: hsl(var(--purple-50)); }
+.cover.theme-red    { background-color: hsl(var(--red-60));    --_a: hsl(var(--yellow-50));--_b: hsl(var(--red-50)); }
+.cover.theme-green  { background-color: hsl(var(--green-60));  --_a: hsl(var(--yellow-50));--_b: hsl(var(--teal-50)); }
+.cover.theme-yellow { background-color: hsl(var(--yellow-50)); --_a: hsl(var(--orange-50));--_b: hsl(var(--red-50)); color: hsl(var(--neutral-100)); }
 .cover.theme-yellow .cover__labeltag { color: rgba(10,10,10,0.6); }
-.cover.theme-purple { background: hsl(var(--purple-60)); --_a: hsl(var(--pink-50));  --_b: hsl(var(--blue-50)); }
-.cover.theme-dark   { background: hsl(var(--neutral-100)); --_a: hsl(var(--blue-70)); --_b: hsl(var(--purple-60)); }
-.cover.theme-orange { background: hsl(var(--orange-50)); --_a: hsl(var(--yellow-50));--_b: hsl(var(--red-50)); }
-.cover.theme-pink   { background: hsl(var(--pink-50));   --_a: hsl(var(--purple-50));--_b: hsl(var(--orange-50)); }
-.cover.theme-teal   { background: hsl(var(--teal-50));   --_a: hsl(var(--blue-50));  --_b: hsl(var(--green-50)); }
+.cover.theme-purple { background-color: hsl(var(--purple-60)); --_a: hsl(var(--pink-50));  --_b: hsl(var(--blue-50)); }
+.cover.theme-dark   { background-color: hsl(var(--neutral-100)); --_a: hsl(var(--blue-70)); --_b: hsl(var(--purple-60)); }
+.cover.theme-orange { background-color: hsl(var(--orange-50)); --_a: hsl(var(--yellow-50));--_b: hsl(var(--red-50)); }
+.cover.theme-pink   { background-color: hsl(var(--pink-50));   --_a: hsl(var(--purple-50));--_b: hsl(var(--orange-50)); }
+.cover.theme-teal   { background-color: hsl(var(--teal-50));   --_a: hsl(var(--blue-50));  --_b: hsl(var(--green-50)); }
 
 /* ---------- Featured publication card ---------- */
 .feature {
@@ -497,6 +807,70 @@ a { color: inherit; text-decoration: none; }
 .feature__desc { color: var(--text-secondary); font-size: 14.5px; line-height: 1.6; }
 .feature__cta { margin-top: 18px; display: flex; gap: 8px; }
 
+/* ---------- Paper meta stats card ---------- */
+.paper-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(108px, 1fr));
+  gap: 1px;
+  margin-bottom: 16px;
+  background: var(--border-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--r-5);
+  overflow: hidden;
+}
+.paper-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 11px 14px;
+  background: var(--bg-primary);
+  min-width: 0;
+  transition: background var(--dur-1) var(--ease);
+}
+.paper-stat:hover { background: var(--bg-secondary); }
+.paper-stat {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.6s var(--ease-apple),
+    transform 0.6s var(--ease-apple),
+    background var(--dur-1) var(--ease);
+}
+.feature.is-visible .paper-stat            { opacity: 1; transform: none; }
+.feature.is-visible .paper-stat:nth-child(1) { transition-delay: 180ms; }
+.feature.is-visible .paper-stat:nth-child(2) { transition-delay: 280ms; }
+.feature.is-visible .paper-stat:nth-child(3) { transition-delay: 380ms; }
+.feature.is-visible .paper-stat:nth-child(4) { transition-delay: 480ms; }
+.feature.is-visible .paper-stat:nth-child(5) { transition-delay: 580ms; }
+.paper-stat__label {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+.paper-stat__value {
+  font-family: var(--font-display);
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: -0.012em;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.paper-stat--accent .paper-stat__value {
+  color: var(--text-brand);
+  display: inline-flex; align-items: center; gap: 7px;
+}
+.paper-stat--accent .paper-stat__value::before {
+  content: ""; width: 6px; height: 6px; border-radius: 999px;
+  background: hsl(var(--green-50));
+  box-shadow: 0 0 0 3px hsl(var(--green-50) / 0.18);
+}
+
 /* ---------- Empty state ---------- */
 .empty {
   grid-column: span 12;
@@ -512,7 +886,7 @@ a { color: inherit; text-decoration: none; }
 
 /* ---------- Contact section ---------- */
 .contact {
-  margin: 56px 0 80px;
+  margin: var(--section-py) 0;
   padding: 40px;
   border-radius: var(--r-8);
   background: var(--bg-inverse);
@@ -528,7 +902,14 @@ a { color: inherit; text-decoration: none; }
 .contact h2 span { color: hsl(var(--blue-30)); }
 .contact p { color: hsla(0 0% 100% / .7); max-width: 56ch; font-size: 15px; }
 [data-theme="dark"] .contact p { color: hsla(0 0% 0% / .6); }
-.contact__grid { display: grid; gap: 8px; }
+.contact__grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+}
+.contact__grid .contact__row:first-child {
+  grid-column: 1 / -1;
+}
 .contact__row {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
   padding: 14px 16px;
@@ -543,7 +924,7 @@ a { color: inherit; text-decoration: none; }
 [data-theme="dark"] .contact__row:hover { background: hsla(0 0% 0% / .12); }
 .contact__row .k { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: hsla(0 0% 100% / .55); }
 [data-theme="dark"] .contact__row .k { color: hsla(0 0% 0% / .5); }
-.contact__row .v { font-family: var(--font-display); font-weight: 600; font-size: 15px; }
+.contact__row .v { font-family: var(--font-display); font-weight: 600; font-size: 15px; white-space: nowrap; }
 
 /* ---------- Footer ---------- */
 footer {
@@ -624,7 +1005,7 @@ footer {
   margin-right: calc(50% - 50vw);
   background: hsl(0 0% 8%);
   color: hsl(0 0% 95%);
-  padding: 96px 0 88px;
+  padding: var(--section-py) 0;
   overflow: hidden;
 }
 [data-theme="dark"] .section--dark {
@@ -655,14 +1036,73 @@ footer {
    ================================================================ */
 .exp-list {
   margin: 40px auto 0;
-  max-width: 1080px;
+  max-width: 980px;
 }
 .exp-entry {
+  position: relative;
   padding: 80px 0;
   border-top: 1px solid hsla(0 0% 100% / .1);
+  /* no overflow:hidden — let the watermark extend past the 980px list edge.
+     section--dark already clips at the viewport. */
 }
 .exp-entry:first-child { border-top: 0; padding-top: 0; }
 .exp-entry:last-child { padding-bottom: 0; }
+
+/* Logo as background watermark in top-right */
+.exp-entry::before {
+  content: "";
+  position: absolute;
+  top: 32px;
+  right: 0;
+  width: 280px;
+  height: 280px;
+  background-repeat: no-repeat;
+  background-position: top right;
+  background-size: contain;
+  opacity: 0.10;
+  filter: grayscale(1) brightness(2.4) contrast(1.05);
+  pointer-events: none;
+  z-index: 0;
+  -webkit-mask-image: linear-gradient(225deg, hsl(0 0% 0% / .95) 30%, transparent 88%);
+          mask-image: linear-gradient(225deg, hsl(0 0% 0% / .95) 30%, transparent 88%);
+}
+.exp-entry:first-child::before { top: 0; }
+
+.exp-entry--airforce::before {
+  background-image: url("/logo/공군지능정보체계관리단%20로고.webp");
+}
+/* DAC Lab JPG has white bg — invert+lighten drops white on dark section */
+.exp-entry--dac::before {
+  background-image: url("/logo/DAC%20Lab%20로고.jpg");
+  filter: invert(1) grayscale(1) brightness(1.15) contrast(1.05);
+  mix-blend-mode: lighten;
+  opacity: 0.14;
+  top: 120px;
+}
+/* UF ELI mark is visually quiet — bump opacity */
+.exp-entry--uf::before {
+  background-image: url("/logo/UF%20ELI%20로고.webp");
+  opacity: 0.22;
+  filter: grayscale(1) brightness(2.2) contrast(1.15);
+}
+
+/* Keep all real content above the watermark */
+.exp-entry > * { position: relative; z-index: 1; }
+
+@media (max-width: 820px) {
+  .exp-entry::before {
+    top: 24px;
+    right: 0;
+    width: 160px;
+    height: 160px;
+    opacity: 0.09;
+    -webkit-mask-image: linear-gradient(220deg, hsl(0 0% 0% / .85) 22%, transparent 92%);
+            mask-image: linear-gradient(220deg, hsl(0 0% 0% / .85) 22%, transparent 92%);
+  }
+  .exp-entry:first-child::before { top: 0; }
+  .exp-entry--dac::before { opacity: 0.12; top: 64px; }
+  .exp-entry--uf::before  { opacity: 0.20; }
+}
 
 .exp-row {
   display: flex; align-items: center; gap: 24px;
@@ -706,10 +1146,10 @@ footer {
 @media (max-width: 820px) { .exp-grid { grid-template-columns: 1fr; gap: 16px; } }
 
 .exp-block-title {
-  font-family: var(--font-mono);
-  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
-  color: hsla(0 0% 100% / .4);
-  margin-bottom: 14px;
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 700; letter-spacing: -0.02em;
+  color: hsl(0 0% 100%);
+  margin: 0 0 12px;
 }
 .exp-block ul {
   list-style: none; margin: 0; padding: 0;
@@ -717,10 +1157,10 @@ footer {
 }
 .exp-block ul li {
   position: relative; padding-left: 20px;
-  font-size: 14.5px; line-height: 1.55;
+  font-size: 14.5px; line-height: 1.8;
   color: hsla(0 0% 100% / .82);
 }
-.exp-block ul li b { color: hsl(0 0% 98%); font-weight: 600; }
+.exp-block ul li b { font-weight: 400; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: hsla(0 0% 100% / .45); }
 .exp-block ul li::before {
   content: ""; position: absolute; left: 0; top: 11px;
   width: 12px; height: 1px; background: hsla(0 0% 100% / .35);
@@ -857,6 +1297,125 @@ footer {
   color: var(--text-secondary);
 }
 
+/* Research Idea variant — dashed, transparent, smaller emphasis */
+.mini-card--idea {
+  background: transparent;
+  border-style: dashed;
+  border-color: var(--border-secondary, var(--border-primary));
+}
+.mini-card--idea .mini-card__year {
+  color: hsl(var(--purple-60));
+  opacity: 0.7;
+}
+
+/* ================================================================
+   Subsection header (Publications / Research Ideas inside §01)
+   ================================================================ */
+.subsec__head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 8px 0 18px;
+}
+.subsec__head--gap { margin-top: 44px; }
+.subsec__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+.subsec__rule {
+  flex: 1;
+  height: 1px;
+  background: var(--border-primary);
+}
+.subsec__hint {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+/* ---------- Cover keyword scroll spotlight (top→bottom) ---------- */
+@keyframes kw-spotlight-1 {
+  0%,   33% { opacity: 1;    }
+  34%, 100% { opacity: 0.15; }
+}
+@keyframes kw-spotlight-2 {
+  0%,   33% { opacity: 0.15; }
+  34%,  66% { opacity: 1;    }
+  67%, 100% { opacity: 0.15; }
+}
+@keyframes kw-spotlight-3 {
+  0%,   66% { opacity: 0.15; }
+  67%, 100% { opacity: 1;    }
+}
+@supports (animation-timeline: view()) {
+  .feature[data-type="paper"] .feature__media {
+    view-timeline-name: --paper-media;
+    view-timeline-axis: block;
+  }
+  .kw-fade {
+    animation-timeline: --paper-media;
+    animation-range: cover 25% cover 80%;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+  }
+  .kw-fade--1 { animation-name: kw-spotlight-1; }
+  .kw-fade--2 { animation-name: kw-spotlight-2; }
+  .kw-fade--3 { animation-name: kw-spotlight-3; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kw-fade { animation: none; }
+}
+
+/* ---------- PDF preview stack in cover__mini ---------- */
+.cover__mini { overflow: visible; }
+.pdf-page {
+  position: absolute; top: 0; left: 0;
+  display: block;
+  background: #fafafa;
+  opacity: 0;
+  transform-origin: 100% 100%;
+  transition:
+    transform 0.65s cubic-bezier(0.34, 1.4, 0.5, 1),
+    opacity 0.55s ease;
+  border-radius: 12px;
+  box-shadow:
+    -4px 4px 16px rgba(0,0,0,0.32),
+    0 1px 4px rgba(0,0,0,0.14),
+    inset 0 0 0 0.5px rgba(0,0,0,0.07);
+  pointer-events: auto;
+  will-change: transform;
+}
+.pdf-page.ready { opacity: 1; }
+.pdf-page[data-pdf-page="1"] { z-index: 4; }
+.pdf-page[data-pdf-page="2"] { z-index: 3; }
+.pdf-page[data-pdf-page="3"] { z-index: 2; }
+.pdf-page[data-pdf-page="4"] { z-index: 1; }
+
+/* Hover: fan out — back pages rotate more, peeking from behind */
+.feature:hover .pdf-page[data-pdf-page="1"] { transform: none; }
+.feature:hover .pdf-page[data-pdf-page="2"] { transform: rotate(-4deg)  translate(-2%,   -1%);   }
+.feature:hover .pdf-page[data-pdf-page="3"] { transform: rotate(-7deg)  translate(-3.5%, -1.5%); }
+.feature:hover .pdf-page[data-pdf-page="4"] { transform: rotate(-10deg) translate(-5%,   -2%);   }
+
+/* Individual page lift on hover */
+.feature:hover .pdf-page[data-pdf-page="1"]:hover { transform: translateY(-8px); }
+.feature:hover .pdf-page[data-pdf-page="2"]:hover { transform: rotate(-4deg)  translate(-2%,   -1%)   translateY(-8px); }
+.feature:hover .pdf-page[data-pdf-page="3"]:hover { transform: rotate(-7deg)  translate(-3.5%, -1.5%) translateY(-8px); }
+.feature:hover .pdf-page[data-pdf-page="4"]:hover { transform: rotate(-10deg) translate(-5%,   -2%)   translateY(-8px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .pdf-page { transition: opacity 0.5s ease; }
+  .feature:hover .pdf-page { transform: none; }
+  .cover::before, .cover::after { animation: none; transform: none; }
+  .cover { transition: none; background-image: none; }
+}
+
 </style>
 </head>
 <body>
@@ -904,8 +1463,9 @@ footer {
   </h1>
 
   <p class="hero__sub">
-    <b>박민재 · Minjae Park</b>. 가천대학교 컴퓨터공학 학사 졸업 예정. DAC LAB에서 두 시즌 인턴 경험이 있고, 공군 데이터플랫폼팀에서는 법률 도메인 RAG 파이프라인을 설계했습니다.
-    지금 가장 크게 고민하는 질문은 <b>"적은 자원으로 더 잘 계획하고 추론하는 LLM 에이전트"</b>입니다.
+    <b>NLP와 RAG 시스템을 연구하고 구현해 온 컴퓨터공학 학부생.</b> NLP와 RAG, 데이터 시스템을 중심으로 연구와 개발을 이어왔습니다.
+    DAC LAB에서 biomedical NLP 연구를 수행하여 <b>SCI 논문</b>을 게재하고, 공군 데이터플랫폼팀에서 <b>AiRWARDS 에이전트</b>의 <b>RAG 파이프라인</b>을 설계하며 <mark>검색 정밀도와 정보량 사이의 trade-off</mark>를 줄이는 <span class="hero__underline">retrieval 전략</span>을 중점적으로 다뤘습니다.
+    현재는 작은 자원으로도 <span class="hero__underline">신뢰성 있게 계획하고 추론하는 LLM 에이전트</span>에 관심을 두고 있습니다.
   </p>
 
   <div class="hero__tags">
@@ -914,31 +1474,68 @@ footer {
     <span class="badge badge--purp">LLM Agent</span>
     <span class="badge badge--green">Biomedical</span>
     <span class="badge badge--yel">RL</span>
-    <span class="badge">Seoul · KR</span>
+    <span class="badge">Suwon · KR</span>
   </div>
 
-  <div class="hero__facts">
-    <div class="fact">
+    <div class="hero__facts">
+    <div class="fact fact--gpa">
       <div class="k">Education</div>
-      <div class="v">가천대학교 · CSE</div>
-      <div class="s">GPA 4.42 / 4.5 (전공 4.44)</div>
+      <div class="fact__v-row">
+        <div class="v">GPA 4.42 <small>/ 4.5</small></div>
+        <span class="fact__bar-pct">98.2%</span>
+      </div>
+      <div class="fact__bar-wrap" aria-hidden="true">
+        <div class="fact__bar"><div class="fact__bar-fill"></div></div>
+      </div>
+      <div class="s">가천대학교 · CSE</div>
+      <div class="s">전공 4.44/4.5 · 취득학점 110/120</div>
     </div>
     <div class="fact">
       <div class="k">Research</div>
-      <div class="v">DAC LAB '24 · '25</div>
+      <div class="fact__v-pub">
+      <div class="v">DAC LAB <small>Internship</small></div>
+      <div class="fact__years" aria-hidden="true">
+        <span class="fact__year-chip">'24</span>
+        <span class="fact__years-link"></span>
+        <span class="fact__year-chip">'25</span>
+      </div>
+      </div>
       <div class="s">Biomedical NLP · RAG · Agent</div>
     </div>
     <div class="fact">
       <div class="k">Service</div>
-      <div class="v">공군 데이터관리병</div>
-      <div class="s">AiRWARDS RAG 파이프라인</div>
+      <div class="fact__v-pub">
+        <div class="v">공군 데이터관리병</div>
+        <div class="fact__chevrons" aria-hidden="true">
+          <span class="fact__chevron-group">
+            <span>›</span><span>›</span><span>›</span>
+          </span>
+          <span class="fact__live-dot">On Duty</span>
+        </div>
+      </div>
+      <div class="s">AiRWARDS RAG 파이프라인 개발</div>
     </div>
     <div class="fact">
       <div class="k">Publication</div>
-      <div class="v">JMIR MI 2025</div>
-      <div class="s">공동 1저자 · IF 3.8</div>
+      <div class="fact__v-pub">
+        <div class="v">JMIR MI 2025</div>
+        <div class="fact__meta-chips" aria-hidden="true">
+          <span class="fact__meta-chip">SCI</span>
+          <span class="fact__meta-chip">IF 3.8</span>
+        </div>
+      </div>
+      <div class="s">공동 1저자 · SCI Q2</div>
     </div>
   </div>
+
+  <a class="hero__scroll-cue" href="#research" aria-label="아래로 스크롤하여 연구 섹션으로 이동">
+    <span>Scroll for more</span>
+    <span class="hero__scroll-cue-arrow" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 9l6 6 6-6"/>
+      </svg>
+    </span>
+  </a>
 </header>
 
 <!-- =====================================================
@@ -948,51 +1545,96 @@ footer {
   <div class="sec__row">
     <div>
       <div class="sec__eyebrow reveal">01 · Research</div>
-      <div class="sec__title reveal">한 편을 제대로 써 본 경험. 그리고 다음 질문들.</div>
+      <div class="sec__title reveal">한 편을 끝까지 써 본 경험.</div>
     </div>
-    <div class="sec__meta reveal">Publication · Conference · Research Ideas</div>
+    <div class="sec__meta reveal">Publications · Research Ideas</div>
+  </div>
+
+  <!-- Subsection: Publications -->
+  <div class="subsec__head reveal">
+    <div class="subsec__eyebrow">Publications</div>
+    <div class="subsec__rule"></div>
+    <div class="subsec__hint">Journal · Conference</div>
   </div>
 
   <div class="bento reveal-group">
     <article class="feature reveal" data-type="paper" data-topics="bio">
       <div class="feature__media">
         <div class="cover theme-dark">
-          <div class="cover__mini" aria-hidden="true"></div>
-          <span>ADR</span>
+          <div class="cover__mini" aria-hidden="true">
+            <canvas class="pdf-page" data-pdf-page="4"></canvas>
+            <canvas class="pdf-page" data-pdf-page="3"></canvas>
+            <canvas class="pdf-page" data-pdf-page="2"></canvas>
+            <canvas class="pdf-page" data-pdf-page="1"></canvas>
+          </div>
+          <div style="align-self: flex-start; position: relative; z-index: 2; display: flex; flex-direction: column; gap: 15px;">
+            <span>Biomedical NLP</span>
+            <div style="display: flex; flex-direction: column; gap: 10px; font-size: 23px; font-weight: 600; letter-spacing: -0.01em;">
+              <span class="kw-fade kw-fade--1">ADR Prediction</span>
+              <span class="kw-fade kw-fade--2">BERT Models</span>
+              <span class="kw-fade kw-fade--3">Vector Similarity</span>
+            </div>
+          </div>
           <span class="cover__labeltag">JMIR MI · 2025</span>
+          <a class="cover__detail-btn" href="research/biomedical-bert-adr.html">자세히 보기 <span class="cover__detail-btn__arrow">→</span></a>
         </div>
       </div>
       <div class="feature__body">
-        <div class="feature__tags">
-          <span class="badge badge--brand">Published</span>
-          <span class="badge badge--red">JMIR MI</span>
-          <span class="badge">IF 3.8</span>
-          <span class="badge">Co-first author</span>
+        <div class="paper-stats">
+          <div class="paper-stat">
+            <span class="paper-stat__label">Venue</span>
+            <span class="paper-stat__value">JMIR MI '25</span>
+          </div>
+          <div class="paper-stat">
+            <span class="paper-stat__label">Impact</span>
+            <span class="paper-stat__value">IF 3.8</span>
+          </div>
+          <div class="paper-stat">
+            <span class="paper-stat__label">Citations</span>
+            <span class="paper-stat__value">3</span>
+          </div>
+          <div class="paper-stat">
+            <span class="paper-stat__label">Role</span>
+            <span class="paper-stat__value">Co-first author</span>
+          </div>
+          <div class="paper-stat paper-stat--accent">
+            <span class="paper-stat__label">Status</span>
+            <span class="paper-stat__value">Published</span>
+          </div>
         </div>
         <h2 class="feature__title">Predicting Drug–Side Effect Relationships From Parametric Knowledge Embedded in Biomedical BERT Models</h2>
         <div class="feature__meta"><b>Minjae Park</b>, et al. · <i>JMIR Medical Informatics</i> · 2025/07/10</div>
         <p class="feature__desc">BioBERT 계열 언어모델이 파라미터에 이미 담고 있는 지식을 활용해, 아직 알려지지 않은 약물–부작용 관계 후보를 구조적으로 탐색했습니다. SIDER와의 구조 유사성(AUC 0.915)과 FAERS와의 통계 검증(<i>p</i> &lt; .001)을 함께 설계했고, 리뷰 대응 과정에서 한계와 주장 범위를 스스로 정리했습니다.</p>
         <div class="feature__cta">
           <a class="btn btn--primary btn--sm" href="https://medinform.jmir.org/2025/1/e67513" target="_blank" rel="noopener">Read paper ↗</a>
-          <a class="btn btn--secondary btn--sm" href="#" onclick="return false">Research note</a>
+          <a class="btn btn--secondary btn--sm" href="research/biomedical-bert-adr.html">Research detail</a>
         </div>
       </div>
     </article>
 
-    <div class="mini-card reveal">
+    <div class="mini-card reveal" style="grid-column: span 12;">
       <div class="mini-card__year">'24</div>
       <div>
         <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;">
           <span class="badge badge--purp">Conference</span>
-          <span class="badge">학부생 트랙</span>
+          <span class="badge">연제논문 · 구연발표</span>
         </div>
         <h3 class="mini-card__title">바이오메디컬 BERT 모델 기반의 약물 부작용 예측</h3>
         <div class="mini-card__meta">대한의료정보학회 춘계학술대회 · 연제논문 게재 및 구연발표</div>
       </div>
     </div>
+  </div>
 
-    <div class="mini-card reveal" style="grid-column: span 6;">
-      <div class="mini-card__year" style="color: hsl(var(--purple-60));">ATI</div>
+  <!-- Subsection: Research Ideas -->
+  <div class="subsec__head subsec__head--gap reveal">
+    <div class="subsec__eyebrow">Research Ideas</div>
+    <div class="subsec__rule"></div>
+    <div class="subsec__hint">Concept · In development</div>
+  </div>
+
+  <div class="bento reveal-group">
+    <div class="mini-card mini-card--idea reveal" style="grid-column: span 12;">
+      <div class="mini-card__year">ATI</div>
       <div>
         <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;">
           <span class="badge badge--purp">Research Idea</span>
@@ -1000,6 +1642,17 @@ footer {
         </div>
         <h3 class="mini-card__title">ATI-GRPO — Adaptive Teacher Intervention for Resource-Constrained RL Agents</h3>
         <div class="mini-card__meta">막히는 순간에만 한 스텝씩 개입하는 동적 증류. DAVID-GRPO가 cold-start는 잘 넘기지만 plateau에서 무너지는 지점을 단일 스텝 수준 개입과 curriculum decay로 풀어가는 시스템 설계.</div>
+      </div>
+    </div>
+    <div class="mini-card mini-card--idea reveal" style="grid-column: span 12;">
+      <div class="mini-card__year">RFAR</div>
+      <div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;">
+          <span class="badge badge--purp">Research Idea</span>
+          <span class="badge badge--blue">IR · RAG</span>
+        </div>
+        <h3 class="mini-card__title">RFAR — Reranker-Free Adaptive Retrieval via Graph Maturity-Based Gating</h3>
+        <div class="mini-card__meta">리랭커를 부트스트래핑 교사로, 누적 문서 그래프를 장기 메모리로 활용하는 점진적 리랭커 제거 프레임워크. graph maturity 기반 gating policy로 full → selective → graph-only reranking으로 전환하며 비용–성능 균형을 최적화한다. L2G 후속 연구.</div>
       </div>
     </div>
   </div>
@@ -1028,7 +1681,7 @@ footer {
 
     <div class="exp-list reveal-group">
 
-      <article class="exp-entry reveal">
+      <article class="exp-entry exp-entry--airforce reveal">
         <div class="exp-row">
           <div class="exp-year-tag">2025 — 2026</div>
           <div class="exp-rule"></div>
@@ -1038,7 +1691,7 @@ footer {
         <p class="exp-role">데이터관리병으로 복무하며 <b>AI신기술개발대</b>에서 <b>AiRWARDS</b> 시스템의 RAG 파이프라인과 법령·국회 도메인 데이터 수집 파이프라인을 함께 만들었습니다.</p>
         <div class="exp-grid">
           <div class="exp-block">
-            <div class="exp-block-title">RAG Pipeline · AiRWARDS</div>
+            <h4 class="exp-block-title">RAG Pipeline · AiRWARDS</h4>
             <ul>
               <li>Small-to-Big 기법을 적용한 <b>Hierarchical Chunking</b>으로 RAG 성능 고도화</li>
               <li>법령 데이터 RAG를 위한 <b>법령 계층구조 파싱 + Contextual Embedding</b></li>
@@ -1047,7 +1700,7 @@ footer {
             </ul>
           </div>
           <div class="exp-block">
-            <div class="exp-block-title">Data Collection</div>
+            <h4 class="exp-block-title">Data Collection</h4>
             <ul>
               <li><b>국가법령정보센터</b> 데이터 수집 파이프라인 개발</li>
               <li><b>열린국회정보 API</b> 및 국회 홈페이지 크롤링 기반 국회일정정보 수집 파이프라인 개발</li>
@@ -1062,7 +1715,7 @@ footer {
         </div>
       </article>
 
-      <article class="exp-entry reveal">
+      <article class="exp-entry exp-entry--dac reveal">
         <div class="exp-row">
           <div class="exp-year-tag">2024</div>
           <div class="exp-rule"></div>
@@ -1072,14 +1725,14 @@ footer {
         <p class="exp-role">Data Science &amp; AI Convergence Lab · 가천대학교. <b>Biomedical NLP</b> 연구를 수행했고, JMIR Medical Informatics 공동 1저자 publication으로 이어졌습니다.</p>
         <div class="exp-grid">
           <div class="exp-block">
-            <div class="exp-block-title">Research</div>
+            <h4 class="exp-block-title">Research</h4>
             <ul>
               <li>BioBERT 계열 모델의 <b>parametric knowledge</b>를 활용한 약물–부작용 예측 연구</li>
               <li>SIDER 구조 유사성 <b>AUC 0.915</b> · FAERS 통계 검증 <b><i>p</i> &lt; .001</b> 실험 설계</li>
             </ul>
           </div>
           <div class="exp-block">
-            <div class="exp-block-title">Publication</div>
+            <h4 class="exp-block-title">Publication</h4>
             <ul>
               <li><b>JMIR Medical Informatics 2025</b> — 공동 1저자, IF 3.8</li>
               <li>리뷰 대응 과정에서 한계와 주장 범위를 직접 정리</li>
@@ -1093,7 +1746,7 @@ footer {
         </div>
       </article>
 
-      <article class="exp-entry reveal">
+      <article class="exp-entry exp-entry--uf reveal">
         <div class="exp-row">
           <div class="exp-year-tag">2022</div>
           <div class="exp-rule"></div>
@@ -1103,7 +1756,7 @@ footer {
         <p class="exp-role">English Language Institute · Fall C 2022. 영어 학습과 Reading &amp; Writing 트랙에서 Academic Excellence를 수상했습니다.</p>
         <div class="exp-grid">
           <div class="exp-block">
-            <div class="exp-block-title">Certificates &amp; Awards</div>
+            <h4 class="exp-block-title">Certificates &amp; Awards</h4>
             <ul>
               <li><b>Semester Certificate</b> — ELI Fall C Program, University of Florida</li>
               <li><b>Academic Excellence</b> — Reading and Writing, Section 51</li>
@@ -1138,7 +1791,15 @@ footer {
       <div class="card__media">
         <div class="cover theme-blue">
           <div class="cover__mini" aria-hidden="true"></div>
-          <span>ARIS</span>
+          <div style="display:flex;flex-direction:column;">
+            <div style="display:flex;flex-direction:column;gap:10px;font-size:23px;font-weight:600;letter-spacing:-0.01em;margin-bottom:14px;">
+              <span>Agentic</span>
+              <span>Runtime</span>
+              <span>Integration</span>
+              <span>System</span>
+            </div>
+            <span>ARIS</span>
+          </div>
           <span class="cover__labeltag">Agent UX · 2026</span>
         </div>
         <div class="card__chips">
@@ -1158,7 +1819,15 @@ footer {
       <div class="card__media">
         <div class="cover theme-red">
           <div class="cover__mini" aria-hidden="true"></div>
-          <span>ARES</span>
+          <div style="display:flex;flex-direction:column;">
+            <div style="display:flex;flex-direction:column;gap:10px;font-size:23px;font-weight:600;letter-spacing:-0.01em;margin-bottom:14px;">
+              <span>Agentic</span>
+              <span>Research</span>
+              <span>Experimentation</span>
+              <span>System</span>
+            </div>
+            <span>ARES</span>
+          </div>
           <span class="cover__labeltag">Research tooling · 2026</span>
         </div>
         <div class="card__chips">
@@ -1174,11 +1843,18 @@ footer {
       </div>
     </article>
 
-    <article class="card w-4 reveal" data-type="project" data-topics="rag">
+    <article class="card w-6 reveal" data-type="project" data-topics="rag">
       <div class="card__media">
         <div class="cover theme-yellow">
           <div class="cover__mini" aria-hidden="true"></div>
-          <span>법</span>
+          <div style="display:flex;flex-direction:column;">
+            <div style="display:flex;flex-direction:column;gap:10px;font-size:23px;font-weight:600;letter-spacing:-0.01em;margin-bottom:14px;">
+              <span>AI 기반</span>
+              <span>법률 개정안</span>
+              <span>요약 플랫폼</span>
+            </div>
+            <span>모두의입법</span>
+          </div>
           <span class="cover__labeltag">Civic · RAG · 2024–</span>
         </div>
         <div class="card__chips">
@@ -1199,7 +1875,7 @@ footer {
       <div class="card__media">
         <div class="cover theme-green">
           <div class="cover__mini" aria-hidden="true"></div>
-          <span>V</span>
+          <span>Voca</span>
           <span class="cover__labeltag">EdTech · 2025</span>
         </div>
         <div class="card__chips"><span class="badge badge--solid">PROJECT</span></div>
@@ -1233,7 +1909,7 @@ footer {
       <div class="card__media">
         <div class="cover theme-pink">
           <div class="cover__mini" aria-hidden="true"></div>
-          <span>Prism</span>
+          <span>PrismLog</span>
           <span class="cover__labeltag">Personal · Mobile-first</span>
         </div>
         <div class="card__chips"><span class="badge badge--solid">PROJECT</span></div>
@@ -1250,7 +1926,7 @@ footer {
       <div class="card__media">
         <div class="cover theme-orange">
           <div class="cover__mini" aria-hidden="true"></div>
-          <span>E</span>
+          <span>Expresso</span>
           <span class="cover__labeltag">Planning · Team</span>
         </div>
         <div class="card__chips">
@@ -1353,28 +2029,28 @@ footer {
 <section id="contact" class="wrap">
   <div class="contact">
     <div>
-      <h2>연구 이야기,<br/><span>언제든 환영입니다.</span></h2>
-      <p>논문 아이디어, 연구실 방문, 공동 연구, 포트폴리오에 대한 피드백 모두 좋습니다. 간단한 소개와 함께 메일 주시면 이틀 안에 답장드립니다.</p>
+      <h2>대학원 연구실에서,<br/><span>연구로 기여하고 싶습니다.</span></h2>
+      <p>AI/NLP, RAG, LLM Agent를 중심으로 연구 문제를 찾고 구현으로 검증해 왔습니다. 연구실 지원, 면담, 프로젝트·논문 피드백과 관련해 메일 주시면 관심 주제와 준비 과정을 정리해 빠르게 답장드리겠습니다.</p>
     </div>
     <div class="contact__grid">
       <a class="contact__row" href="mailto:libera3920@gmail.com">
         <div>
           <div class="k">Email</div>
-          <div class="v">libera3920@gmail.com</div>
+          <div class="v">parkmj9260@gmail.com</div>
         </div>
         <span aria-hidden="true">→</span>
       </a>
-      <a class="contact__row" href="https://medinform.jmir.org/2025/1/e67513" target="_blank" rel="noopener">
+      <a class="contact__row" href="https://orcid.org/my-orcid?orcid=0009-0007-4291-8433" target="_blank" rel="noopener">
         <div>
-          <div class="k">Publication</div>
-          <div class="v">JMIR Medical Informatics · 2025</div>
+          <div class="k">ORCID</div>
+          <div class="v">ORCID 연구자 프로필</div>
         </div>
         <span aria-hidden="true">↗</span>
       </a>
-      <a class="contact__row" href="#" onclick="return false">
+      <a class="contact__row" href="https://github.com/Nedian0Brien" target="_blank" rel="noopener">
         <div>
           <div class="k">GitHub</div>
-          <div class="v">TBD</div>
+          <div class="v">Nedian0Brien</div>
         </div>
         <span aria-hidden="true">↗</span>
       </a>
@@ -1506,12 +2182,94 @@ footer {
   }, { passive: true });
   update();
 })();
+
+/* ---------- Cover mouse parallax + spotlight ---------- */
+(function () {
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion) return;
+  const covers = document.querySelectorAll('.cover');
+  if (!covers.length) return;
+  covers.forEach((cover) => {
+    let rafId = 0;
+    let pendingX = 0, pendingY = 0;
+    const apply = () => {
+      cover.style.setProperty('--mx', pendingX.toFixed(2) + 'px');
+      cover.style.setProperty('--my', pendingY.toFixed(2) + 'px');
+      rafId = 0;
+    };
+    cover.addEventListener('mousemove', (e) => {
+      const rect = cover.getBoundingClientRect();
+      pendingX = e.clientX - rect.left - rect.width / 2;
+      pendingY = e.clientY - rect.top - rect.height / 2;
+      if (!rafId) rafId = requestAnimationFrame(apply);
+    }, { passive: true });
+    cover.addEventListener('mouseenter', () => {
+      cover.style.setProperty('--m-active', '1');
+    });
+    cover.addEventListener('mouseleave', () => {
+      if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
+      cover.style.setProperty('--mx', '0px');
+      cover.style.setProperty('--my', '0px');
+      cover.style.setProperty('--m-active', '0');
+    });
+  });
+})();
 </script>
 
 <script type="module">
 if (import.meta.env?.DEV) {
   import('/src/react-grab-dev.js');
 }
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+(function () {
+  const WORKER_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  const PDF_PATH   = '/pdf/' + encodeURIComponent(
+    'Predicting Drug–Side Effect Relationships From Parametric Knowledge Embedded in Biomedical BERT Models.pdf'
+  );
+
+  async function renderPaperCover() {
+    const canvases = Array.from(document.querySelectorAll('.pdf-page'));
+    if (!canvases.length) return;
+    const container = canvases[0].parentElement;
+    const cw = container.offsetWidth;
+    const ch = container.offsetHeight;
+    if (!cw || !ch) return;
+
+    pdfjsLib.GlobalWorkerOptions.workerSrc = WORKER_SRC;
+    try {
+      const pdf = await pdfjsLib.getDocument(PDF_PATH).promise;
+
+      await Promise.all(canvases.map(async (canvas) => {
+        const pageNum = parseInt(canvas.dataset.pdfPage, 10) || 1;
+        if (pageNum > pdf.numPages) return;
+        const page = await pdf.getPage(pageNum);
+        const base = page.getViewport({ scale: 1 });
+        const scale    = Math.max(cw / base.width, ch / base.height);
+        const viewport = page.getViewport({ scale });
+
+        canvas.width  = Math.round(viewport.width);
+        canvas.height = Math.round(viewport.height);
+        canvas.style.top  = '0px';
+        canvas.style.left = Math.round((cw - viewport.width) / 2) + 'px';
+
+        await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+        canvas.classList.add('ready');
+      }));
+    } catch (e) {
+      console.warn('PDF preview unavailable:', e);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderPaperCover);
+  } else {
+    renderPaperCover();
+  }
+})();
 </script>
 
 </body>
