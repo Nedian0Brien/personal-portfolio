@@ -1432,9 +1432,9 @@ footer {
   min-height: 68vh;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
-  grid-template-rows: 1fr auto;
+  grid-template-rows: auto 1fr auto;
   column-gap: 36px;
-  row-gap: 18px;
+  row-gap: 28px;
   padding: 52px 52px 38px;
   border-radius: var(--r-8);
   overflow: hidden;
@@ -1475,9 +1475,13 @@ footer {
 .proj-card.theme-orange { background: radial-gradient(120% 120% at 0% 0%, hsl(var(--orange-50)) 0%, hsl(18 100% 50%) 55%, hsl(var(--red-60)) 100%); }
 
 /* Top-left phrase block */
+.proj-card__heading {
+  grid-column: 1 / -1;
+  display: flex; flex-direction: column; gap: 18px;
+}
 .proj-card__head {
   display: flex; flex-direction: column; gap: 18px;
-  max-width: 34ch;
+  max-width: 42ch;
   height: 100%;
   min-height: 0;
 }
@@ -1492,31 +1496,19 @@ footer {
 .proj-card__phrase {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(28px, 3.4vw, 46px);
-  line-height: 1.04;
-  letter-spacing: -0.025em;
+  font-size: clamp(36px, 4.6vw, 64px);
+  line-height: 1.02;
+  letter-spacing: -0.028em;
   margin: 0;
-  max-width: 18ch;
+  max-width: none;
   color: inherit;
 }
 .proj-card__phrase em { font-style: normal; opacity: 0.78; }
 .proj-card__sub {
-  font-size: 15px; line-height: 1.6;
+  font-size: 15.5px; line-height: 1.6;
   opacity: 0.92; margin: 0;
-  max-width: 44ch;
+  max-width: 46ch;
 }
-.proj-card__tags {
-  display: flex; flex-wrap: wrap; gap: 6px;
-  margin-top: 2px;
-}
-.proj-card__tags span {
-  font-family: var(--font-mono); font-size: 11px; font-weight: 600;
-  padding: 5px 11px; border-radius: 999px;
-  background: rgba(255,255,255,0.16);
-  border: 1px solid rgba(255,255,255,0.24);
-  letter-spacing: 0.02em;
-}
-.proj-card.theme-yellow .proj-card__tags span { background: rgba(0,0,0,0.07); border-color: rgba(0,0,0,0.16); }
 
 /* Right-side carousel stage */
 .proj-card__stage {
@@ -1616,14 +1608,14 @@ footer {
 }
 .proj-card__app-expand {
   margin-top: auto;
-  padding-top: 18px;
-  display: flex; flex-direction: column; gap: 6px;
+  padding-top: 24px;
+  display: flex; flex-direction: column; gap: 8px;
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(22px, 2.2vw, 30px);
-  letter-spacing: -0.02em;
-  line-height: 1.04;
-  opacity: 0.92;
+  font-weight: 700;
+  font-size: clamp(28px, 3vw, 42px);
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+  opacity: 0.95;
 }
 .proj-card__app-acronym {
   display: block;
@@ -2158,14 +2150,15 @@ footer {
     <!-- ====== 01 ARIS ====== -->
     <section class="proj-scene reveal" data-type="project" data-topics="agent" data-num="01">
       <article class="proj-card theme-blue">
-        <div class="proj-card__head">
+        <header class="proj-card__heading">
           <div class="proj-card__topline">
             <span class="proj-card__num">01 / 07</span>
             <span class="proj-card__eyebrow">Featured · Agent UX · 2026</span>
           </div>
           <h3 class="proj-card__phrase">한 화면에서 묻고, 계획하고, 실행한다.</h3>
+        </header>
+        <div class="proj-card__head">
           <p class="proj-card__sub">Ask · Plan · Execute 세 모드와 권한 토글을 한 채팅창에 모은 에이전트 런타임. iOS Safari 키보드는 <em>visualViewport</em>로, 채팅 진입은 페이지네이션으로 15MB→236KB까지 직접 해결했습니다.</p>
-          <div class="proj-card__tags"><span>Chat-first</span><span>Permission Toggle</span><span>Mobile Viewport</span><span>API Pagination</span></div>
           <div class="proj-card__app-expand">
             <span>Agentic</span><span>Runtime</span><span>Interface</span><span>System</span>
           </div>
@@ -2236,14 +2229,15 @@ footer {
     <!-- ====== 02 ARES ====== -->
     <section class="proj-scene reveal" data-type="project" data-topics="agent rag" data-num="02">
       <article class="proj-card theme-red">
-        <div class="proj-card__head">
+        <header class="proj-card__heading">
           <div class="proj-card__topline">
             <span class="proj-card__num">02 / 07</span>
             <span class="proj-card__eyebrow">Research Tooling · 2026</span>
           </div>
           <h3 class="proj-card__phrase">6단계 흐름에 역할별 에이전트를 배치한다.</h3>
+        </header>
+        <div class="proj-card__head">
           <p class="proj-card__sub">Search → Reading → Research → Result → Insight → Writing. Scout · Reader · Reproduction · Experiment · Analyst · Writing의 역할 에이전트가 각 단계를 맡고, seed fallback과 파일/Postgres 이중 저장으로 라이브 검색 불가 시에도 UI 골격을 유지합니다.</p>
-          <div class="proj-card__tags"><span>6-stage Flow</span><span>Role Agents</span><span>Fallback-first</span><span>/api/health</span></div>
           <div class="proj-card__app-expand">
             <span>Agentic</span><span>Research</span><span>Experimentation</span><span>System</span>
           </div>
@@ -2290,14 +2284,15 @@ footer {
     <!-- ====== 03 모두의입법 ====== -->
     <section class="proj-scene reveal" data-type="project" data-topics="rag" data-num="03">
       <article class="proj-card theme-yellow">
-        <div class="proj-card__head">
+        <header class="proj-card__heading">
           <div class="proj-card__topline">
             <span class="proj-card__num">03 / 07</span>
             <span class="proj-card__eyebrow">Civic · RAG · 2024–</span>
           </div>
           <h3 class="proj-card__phrase">국회 법안을 피드처럼 읽힌다.</h3>
+        </header>
+        <div class="proj-card__head">
           <p class="proj-card__sub">복잡한 개정안을 AI 요약과 태그로 피드화. Gemini primary/backup + OpenAI <em>다단 fallback</em>, Airflow DAG로 수집·AI 배치·복구를 분리, Qdrant 기반 RAG 챗봇까지 연결했습니다.</p>
-          <div class="proj-card__tags"><span>GPT Summary</span><span>Airflow DAG</span><span>Qdrant RAG</span><span>최우수상</span></div>
           <div class="proj-card__app-expand">
             <span>AI 기반</span><span>법률 개정안</span><span>요약 플랫폼</span>
           </div>
@@ -2348,14 +2343,15 @@ footer {
     <!-- ====== 04 VocaLoop ====== -->
     <section class="proj-scene reveal" data-type="project" data-topics="rag" data-num="04">
       <article class="proj-card theme-green">
-        <div class="proj-card__head">
+        <header class="proj-card__heading">
           <div class="proj-card__topline">
             <span class="proj-card__num">04 / 07</span>
             <span class="proj-card__eyebrow">EdTech · 2025</span>
           </div>
           <h3 class="proj-card__phrase">단어를 외우는 게 아니라, 루프를 도는 것.</h3>
+        </header>
+        <div class="proj-card__head">
           <p class="proj-card__sub">AI 단어 분석 · 퀴즈 · 하이브리드 채점 · 오답 재배치를 하나의 학습 루프로 묶었습니다. Vite/React 마이그레이션과 PM2 · 502 게이트웨이 트러블슈팅으로 안정화했습니다.</p>
-          <div class="proj-card__tags"><span>Hybrid Grading</span><span>Adaptive Loop</span><span>React · Vite</span></div>
           <div class="proj-card__app-expand">
             <span>Adaptive</span><span>Vocabulary</span><span>Loop</span>
           </div>
@@ -2409,14 +2405,15 @@ footer {
     <!-- ====== 05 SynapseNote ====== -->
     <section class="proj-scene reveal" data-type="project" data-topics="agent" data-num="05">
       <article class="proj-card theme-purple">
-        <div class="proj-card__head">
+        <header class="proj-card__heading">
           <div class="proj-card__topline">
             <span class="proj-card__num">05 / 07</span>
             <span class="proj-card__eyebrow">AI-Native Knowledge · 2026</span>
           </div>
           <h3 class="proj-card__phrase">생각의 동선을 한 앱에 묶는다.</h3>
+        </header>
+        <div class="proj-card__head">
           <p class="proj-card__sub">Agent Chat · Context Manager · Knowledge Graph View를 한 앱에. livesync-bridge / CouchDB / Mac Obsidian 간 동기화 장애는 환경변수 기반 패스프레이즈 반영으로 복원했습니다.</p>
-          <div class="proj-card__tags"><span>Context Control</span><span>Graph View</span><span>Sync Recovery</span></div>
           <div class="proj-card__app-expand">
             <span>Personal</span><span>Knowledge</span><span>OS</span>
           </div>
@@ -2483,14 +2480,15 @@ footer {
     <!-- ====== 06 PrismLog ====== -->
     <section class="proj-scene reveal" data-type="project" data-topics="" data-num="06">
       <article class="proj-card theme-pink">
-        <div class="proj-card__head">
+        <header class="proj-card__heading">
           <div class="proj-card__topline">
             <span class="proj-card__num">06 / 07</span>
             <span class="proj-card__eyebrow">Personal · Mobile-first</span>
           </div>
           <h3 class="proj-card__phrase">하루를 색의 띠로 기록한다.</h3>
+        </header>
+        <div class="proj-card__head">
           <p class="proj-card__sub">독서 · 공부 · 문화생활을 서로 다른 색과 인터랙션으로 분리한 올인원 기록 앱. 탭 border-glow는 포인터 추적이 아닌 <em>활성 인디케이터 + mask-composite</em>로 iOS Safari 호환을 확보했습니다.</p>
-          <div class="proj-card__tags"><span>Spectrum Ring</span><span>Heatmap</span><span>mask-composite</span></div>
           <div class="proj-card__app-expand">
             <span>Multi-category</span><span>Spectrum</span><span>Logger</span>
           </div>
@@ -2547,14 +2545,15 @@ footer {
     <!-- ====== 07 Expresso ====== -->
     <section class="proj-scene reveal" data-type="project" data-topics="" data-num="07">
       <article class="proj-card theme-orange">
-        <div class="proj-card__head">
+        <header class="proj-card__heading">
           <div class="proj-card__topline">
             <span class="proj-card__num">07 / 07</span>
             <span class="proj-card__eyebrow">Planning · Team · 2026</span>
           </div>
           <h3 class="proj-card__phrase">JD를 넣으면, 포트폴리오가 다시 배치된다.</h3>
+        </header>
+        <div class="proj-card__head">
           <p class="proj-card__sub">학생이 프로젝트와 커리어 기록을 올리면 AI가 인터뷰 · 정리 · 배치로 포트폴리오 사이트를 자동 생성·배포합니다. <em>Target-adaptive Portfolio</em>와 '거의 완성 + 마이크로 수정' 루프가 핵심 난제입니다.</p>
-          <div class="proj-card__tags"><span>Career Archive</span><span>JD Parsing</span><span>Agent / Cowork</span></div>
           <div class="proj-card__app-expand">
             <span>Career</span><span>Publishing</span><span>Platform</span>
           </div>
