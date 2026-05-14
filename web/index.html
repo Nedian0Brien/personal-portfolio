@@ -19,7 +19,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-snap-type: y mandatory; scroll-padding-top: 64px; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-snap-type: y proximity; scroll-padding-top: 64px; }
 @media (prefers-reduced-motion: reduce) { html { scroll-snap-type: none; } }
 img, svg { display: block; max-width: 100%; }
 button { font: inherit; }
@@ -1431,7 +1431,7 @@ footer {
   padding: 4vh 0;
   scroll-margin-top: 64px;
   scroll-snap-align: start;
-  scroll-snap-stop: always;
+  scroll-snap-stop: normal;
 }
 .proj-scene__edge {
   align-self: center;
@@ -3126,6 +3126,73 @@ if (import.meta.env?.DEV) {
   }, { threshold: [0, 0.15, 0.3, 0.45, 0.6, 0.85, 1] });
 
   scenes.forEach(s => obs.observe(s));
+})();
+</script>
+
+<script>
+/* Project section — slow, eased card-to-card transition on wheel.
+   Intercepts wheel inside the project area and tweens to the next/prev
+   .proj-scene with a configurable duration so the snap doesn't feel abrupt.
+   Falls back to native scroll for keyboard / touch / reduced-motion. */
+(function () {
+  const proj = document.getElementById('project');
+  if (!proj) return;
+  const scenes = Array.from(proj.querySelectorAll('.proj-scene'));
+  if (!scenes.length) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const TOPNAV = 64;
+  const DURATION = 1100;
+  let busy = false;
+  let lastTrigger = 0;
+
+  const easeInOutCubic = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+  function inProjectArea() {
+    const r = proj.getBoundingClientRect();
+    const probe = window.innerHeight * 0.4;
+    return r.top < probe && r.bottom > probe;
+  }
+
+  function currentIdx() {
+    const mid = window.innerHeight / 2;
+    let best = -1, bestDist = Infinity;
+    scenes.forEach((s, i) => {
+      const r = s.getBoundingClientRect();
+      const d = Math.abs((r.top + r.bottom) / 2 - mid);
+      if (d < bestDist) { bestDist = d; best = i; }
+    });
+    return best;
+  }
+
+  function tweenTo(targetY) {
+    const startY = window.scrollY;
+    const diff = targetY - startY;
+    if (Math.abs(diff) < 1) return;
+    const t0 = performance.now();
+    busy = true;
+    function tick(now) {
+      const t = Math.min((now - t0) / DURATION, 1);
+      window.scrollTo(0, startY + diff * easeInOutCubic(t));
+      if (t < 1) requestAnimationFrame(tick);
+      else { busy = false; }
+    }
+    requestAnimationFrame(tick);
+  }
+
+  window.addEventListener('wheel', (e) => {
+    if (!inProjectArea()) return;
+    if (busy) { e.preventDefault(); return; }
+    if (performance.now() - lastTrigger < DURATION + 120) { e.preventDefault(); return; }
+    const i = currentIdx();
+    if (i < 0) return;
+    const dir = e.deltaY > 0 ? 1 : -1;
+    const target = scenes[i + dir];
+    if (!target) return; // let native scroll carry user out of the section
+    e.preventDefault();
+    lastTrigger = performance.now();
+    tweenTo(target.getBoundingClientRect().top + window.scrollY - TOPNAV);
+  }, { passive: false });
 })();
 </script>
 
