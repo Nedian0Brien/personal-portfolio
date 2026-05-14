@@ -1496,11 +1496,12 @@ footer {
 .proj-card__phrase {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(36px, 4.6vw, 64px);
-  line-height: 1.02;
-  letter-spacing: -0.028em;
+  font-size: 48px;
+  line-height: 1.12;
+  letter-spacing: 0;
   margin: 0;
   max-width: none;
+  text-wrap: balance;
   color: inherit;
 }
 .proj-card__phrase em { font-style: normal; opacity: 0.78; }
@@ -1758,7 +1759,7 @@ footer {
   .proj-card__stage { min-height: 320px; }
   .proj-carousel, .proj-carousel__slides { min-height: 320px; }
   .proj-scene { min-height: auto; padding: 4vh 0; }
-  .proj-card__phrase { font-size: clamp(24px, 6vw, 34px); }
+  .proj-card__phrase { font-size: 30px; }
   .proj-card__sub { font-size: 14px; }
   .proj-card__foot { flex-direction: column; align-items: flex-start; gap: 12px; }
   .proj-card__cta { align-self: flex-end; }
@@ -1766,6 +1767,7 @@ footer {
 }
 @media (max-width: 520px) {
   .proj-card { padding: 26px 18px 22px; }
+  .proj-card__phrase { font-size: 26px; line-height: 1.18; }
   .proj-phone { width: 140px; border-radius: 26px; }
   .proj-phone__screen { border-radius: 22px; }
   .proj-carousel__nav { width: 32px; height: 32px; font-size: 18px; }
@@ -2155,7 +2157,7 @@ footer {
             <span class="proj-card__num">01 / 07</span>
             <span class="proj-card__eyebrow">Featured · Agent UX · 2026</span>
           </div>
-          <h3 class="proj-card__phrase">한 화면에서 묻고, 계획하고, 실행한다.</h3>
+          <h3 class="proj-card__phrase">ARIS는 채팅 안에서 질문, 계획, 실행을 이어 주는 에이전트 런타임입니다.</h3>
         </header>
         <div class="proj-card__head">
           <p class="proj-card__sub">Ask · Plan · Execute 세 모드와 권한 토글을 한 채팅창에 모은 에이전트 런타임. iOS Safari 키보드는 <em>visualViewport</em>로, 채팅 진입은 페이지네이션으로 15MB→236KB까지 직접 해결했습니다.</p>
@@ -2234,7 +2236,7 @@ footer {
             <span class="proj-card__num">02 / 07</span>
             <span class="proj-card__eyebrow">Research Tooling · 2026</span>
           </div>
-          <h3 class="proj-card__phrase">6단계 흐름에 역할별 에이전트를 배치한다.</h3>
+          <h3 class="proj-card__phrase">ARES는 논문 탐색부터 실험·작성까지 연구 흐름을 에이전트로 연결하는 시스템입니다.</h3>
         </header>
         <div class="proj-card__head">
           <p class="proj-card__sub">Search → Reading → Research → Result → Insight → Writing. Scout · Reader · Reproduction · Experiment · Analyst · Writing의 역할 에이전트가 각 단계를 맡고, seed fallback과 파일/Postgres 이중 저장으로 라이브 검색 불가 시에도 UI 골격을 유지합니다.</p>
@@ -2289,7 +2291,7 @@ footer {
             <span class="proj-card__num">03 / 07</span>
             <span class="proj-card__eyebrow">Civic · RAG · 2024–</span>
           </div>
-          <h3 class="proj-card__phrase">국회 법안을 피드처럼 읽힌다.</h3>
+          <h3 class="proj-card__phrase">모두의입법은 국회 법안을 AI 요약과 RAG 챗봇으로 쉽게 읽게 하는 시민 정보 플랫폼입니다.</h3>
         </header>
         <div class="proj-card__head">
           <p class="proj-card__sub">복잡한 개정안을 AI 요약과 태그로 피드화. Gemini primary/backup + OpenAI <em>다단 fallback</em>, Airflow DAG로 수집·AI 배치·복구를 분리, Qdrant 기반 RAG 챗봇까지 연결했습니다.</p>
@@ -2348,7 +2350,7 @@ footer {
             <span class="proj-card__num">04 / 07</span>
             <span class="proj-card__eyebrow">EdTech · 2025</span>
           </div>
-          <h3 class="proj-card__phrase">단어를 외우는 게 아니라, 루프를 도는 것.</h3>
+          <h3 class="proj-card__phrase">VocaLoop은 단어 분석, 퀴즈, 오답 복습을 반복 학습 루프로 묶은 EdTech 앱입니다.</h3>
         </header>
         <div class="proj-card__head">
           <p class="proj-card__sub">AI 단어 분석 · 퀴즈 · 하이브리드 채점 · 오답 재배치를 하나의 학습 루프로 묶었습니다. Vite/React 마이그레이션과 PM2 · 502 게이트웨이 트러블슈팅으로 안정화했습니다.</p>
@@ -2410,7 +2412,7 @@ footer {
             <span class="proj-card__num">05 / 07</span>
             <span class="proj-card__eyebrow">AI-Native Knowledge · 2026</span>
           </div>
-          <h3 class="proj-card__phrase">생각의 동선을 한 앱에 묶는다.</h3>
+          <h3 class="proj-card__phrase">SynapseNote는 메모, 지식 그래프, 에이전트 채팅을 한곳에 모은 개인 지식 OS입니다.</h3>
         </header>
         <div class="proj-card__head">
           <p class="proj-card__sub">Agent Chat · Context Manager · Knowledge Graph View를 한 앱에. livesync-bridge / CouchDB / Mac Obsidian 간 동기화 장애는 환경변수 기반 패스프레이즈 반영으로 복원했습니다.</p>
@@ -2485,7 +2487,7 @@ footer {
             <span class="proj-card__num">06 / 07</span>
             <span class="proj-card__eyebrow">Personal · Mobile-first</span>
           </div>
-          <h3 class="proj-card__phrase">하루를 색의 띠로 기록한다.</h3>
+          <h3 class="proj-card__phrase">PrismLog는 독서, 공부, 문화생활을 색상 기반 로그로 관리하는 모바일 앱입니다.</h3>
         </header>
         <div class="proj-card__head">
           <p class="proj-card__sub">독서 · 공부 · 문화생활을 서로 다른 색과 인터랙션으로 분리한 올인원 기록 앱. 탭 border-glow는 포인터 추적이 아닌 <em>활성 인디케이터 + mask-composite</em>로 iOS Safari 호환을 확보했습니다.</p>
@@ -2550,7 +2552,7 @@ footer {
             <span class="proj-card__num">07 / 07</span>
             <span class="proj-card__eyebrow">Planning · Team · 2026</span>
           </div>
-          <h3 class="proj-card__phrase">JD를 넣으면, 포트폴리오가 다시 배치된다.</h3>
+          <h3 class="proj-card__phrase">Expresso는 지원 목표에 맞춰 프로젝트 기록을 재배치하는 포트폴리오 생성 플랫폼입니다.</h3>
         </header>
         <div class="proj-card__head">
           <p class="proj-card__sub">학생이 프로젝트와 커리어 기록을 올리면 AI가 인터뷰 · 정리 · 배치로 포트폴리오 사이트를 자동 생성·배포합니다. <em>Target-adaptive Portfolio</em>와 '거의 완성 + 마이크로 수정' 루프가 핵심 난제입니다.</p>
