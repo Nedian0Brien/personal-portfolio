@@ -743,28 +743,6 @@ a { color: inherit; text-decoration: none; }
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14);
   z-index: 1;
 }
-.cover__mini--screenshot {
-  top: 49%;
-  right: -1px;
-  width: 48%;
-  height: 45%;
-  padding: 6px;
-  background: rgba(255,255,255,0.5);
-  border: 1px solid rgba(255,255,255,0.2);
-  border-right: 0;
-  box-shadow:
-    0 18px 48px rgba(13, 24, 60, 0.22),
-    inset 0 0 0 1px rgba(255,255,255,0.34);
-}
-.cover__screenshot {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: left top;
-  border-top-left-radius: calc(var(--r-7) - 7px);
-  border-bottom-left-radius: calc(var(--r-7) - 7px);
-  opacity: 0.94;
-}
 .cover__labeltag {
   position: absolute; bottom: 22px; right: 24px; z-index: 2;
   font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase;
@@ -1438,6 +1416,357 @@ footer {
   .cover { transition: none; background-image: none; }
 }
 
+/* ================================================================
+   §03 PROJECT — Scroll-driven scene cards with right-side carousels
+   ================================================================ */
+.proj-stack { display: flex; flex-direction: column; gap: 4vh; margin-top: 28px; }
+.proj-scene {
+  position: relative;
+  min-height: 90vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 4vh 0;
+}
+.proj-card {
+  position: relative;
+  width: 100%;
+  min-height: 68vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  grid-template-rows: 1fr auto;
+  column-gap: 36px;
+  row-gap: 18px;
+  padding: 52px 52px 38px;
+  border-radius: var(--r-8);
+  overflow: hidden;
+  color: #fff;
+  isolation: isolate;
+  background-color: hsl(var(--blue-70));
+  box-shadow: 0 2px 4px rgba(0,0,0,.05), 0 18px 40px rgba(0,0,0,.08);
+  transform: scale(0.9) translateY(28px);
+  opacity: 0.6;
+  filter: saturate(0.85);
+  transition:
+    transform .9s var(--ease-apple),
+    opacity .6s ease,
+    box-shadow .7s ease,
+    filter .55s ease;
+  will-change: transform, opacity;
+}
+.proj-scene.is-active .proj-card {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+  filter: saturate(1);
+  box-shadow: 0 36px 90px rgba(0,0,0,.18), 0 8px 16px rgba(0,0,0,.08);
+}
+.proj-card::before {
+  content: ""; position: absolute; inset: 0; z-index: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(0,0,0,.32) 100%);
+  pointer-events: none;
+}
+.proj-card > * { position: relative; z-index: 1; }
+
+.proj-card.theme-blue   { background: radial-gradient(120% 120% at 0% 0%, hsl(var(--blue-50)) 0%, hsl(var(--blue-70)) 60%, hsl(220 100% 22%) 100%); }
+.proj-card.theme-red    { background: radial-gradient(120% 120% at 10% 0%, hsl(var(--red-50)) 0%, hsl(var(--red-60)) 55%, hsl(12 80% 28%) 100%); }
+.proj-card.theme-yellow { background: radial-gradient(120% 120% at 0% 0%, hsl(var(--orange-50)) 0%, hsl(var(--yellow-50)) 60%, hsl(var(--yellow-60)) 100%); color: hsl(var(--neutral-100)); }
+.proj-card.theme-yellow::before { background: linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(0,0,0,.18) 100%); }
+.proj-card.theme-green  { background: radial-gradient(130% 130% at 30% 0%, hsl(var(--green-50)) 0%, hsl(var(--green-60)) 55%, hsl(160 70% 18%) 100%); }
+.proj-card.theme-purple { background: radial-gradient(120% 120% at 0% 0%, hsl(var(--purple-50)) 0%, hsl(var(--purple-60)) 55%, hsl(232 80% 28%) 100%); }
+.proj-card.theme-pink   { background: linear-gradient(125deg, hsl(var(--pink-50)) 0%, hsl(var(--purple-50)) 50%, hsl(var(--blue-50)) 100%); }
+.proj-card.theme-orange { background: radial-gradient(120% 120% at 0% 0%, hsl(var(--orange-50)) 0%, hsl(18 100% 50%) 55%, hsl(var(--red-60)) 100%); }
+
+/* Top-left phrase block */
+.proj-card__head {
+  display: flex; flex-direction: column; gap: 18px;
+  max-width: 34ch;
+}
+.proj-card__topline {
+  display: flex; align-items: baseline; gap: 14px;
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  opacity: 0.85;
+}
+.proj-card__num { font-weight: 700; opacity: 1; }
+.proj-card__eyebrow { opacity: 0.85; }
+.proj-card__phrase {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(28px, 3.4vw, 46px);
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  margin: 0;
+  max-width: 18ch;
+  color: inherit;
+}
+.proj-card__phrase em { font-style: normal; opacity: 0.78; }
+.proj-card__sub {
+  font-size: 15px; line-height: 1.6;
+  opacity: 0.92; margin: 0;
+  max-width: 44ch;
+}
+.proj-card__tags {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: 2px;
+}
+.proj-card__tags span {
+  font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+  padding: 5px 11px; border-radius: 999px;
+  background: rgba(255,255,255,0.16);
+  border: 1px solid rgba(255,255,255,0.24);
+  letter-spacing: 0.02em;
+}
+.proj-card.theme-yellow .proj-card__tags span { background: rgba(0,0,0,0.07); border-color: rgba(0,0,0,0.16); }
+
+/* Right-side carousel stage */
+.proj-card__stage {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100%;
+}
+.proj-carousel {
+  position: relative;
+  width: 100%; height: 100%;
+  min-height: 360px;
+  display: flex; align-items: center; justify-content: center;
+}
+.proj-carousel__slides {
+  position: relative;
+  width: 100%; height: 100%;
+  min-height: 360px;
+}
+.proj-carousel__slide {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  transform: translateX(28px) scale(0.985);
+  transition: opacity .42s ease, transform .42s cubic-bezier(.2,.7,.2,1);
+  pointer-events: none;
+}
+.proj-carousel__slide.on {
+  opacity: 1; transform: translateX(0) scale(1); pointer-events: auto;
+}
+.proj-carousel__slide.prev { transform: translateX(-28px) scale(0.985); }
+.proj-carousel__half {
+  position: absolute; top: 0; bottom: 0;
+  width: 44%; z-index: 4; cursor: pointer;
+}
+.proj-carousel__half.l { left: 0; }
+.proj-carousel__half.r { right: 0; }
+.proj-carousel__nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 40px; height: 40px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.26);
+  color: #fff; font-size: 22px; font-weight: 300; line-height: 1;
+  cursor: pointer; z-index: 5;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background .18s ease, transform .18s ease;
+}
+.proj-carousel__nav:hover { background: rgba(255,255,255,0.3); }
+.proj-carousel__nav.prev { left: -10px; }
+.proj-carousel__nav.next { right: -10px; }
+.proj-card.theme-yellow .proj-carousel__nav { background: rgba(0,0,0,0.08); border-color: rgba(0,0,0,0.16); color: #1a1a1a; }
+.proj-card.theme-yellow .proj-carousel__nav:hover { background: rgba(0,0,0,0.16); }
+
+.proj-carousel__dots {
+  position: absolute; left: 0; right: 0; bottom: -22px;
+  display: flex; justify-content: center; gap: 6px; z-index: 5;
+}
+.proj-carousel__dots button {
+  width: 6px; height: 6px; border-radius: 50%;
+  border: 0; padding: 0;
+  background: rgba(255,255,255,0.42);
+  cursor: pointer; transition: width .25s ease;
+}
+.proj-carousel__dots button.on {
+  background: #fff; width: 20px; border-radius: 99px;
+}
+.proj-card.theme-yellow .proj-carousel__dots button { background: rgba(0,0,0,0.3); }
+.proj-card.theme-yellow .proj-carousel__dots button.on { background: #1a1a1a; }
+
+.proj-carousel__counter {
+  position: absolute; top: 0; right: 0;
+  font-family: var(--font-mono); font-size: 10.5px; font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 4px 10px; border-radius: 999px;
+  background: rgba(0,0,0,0.3); color: #fff;
+  z-index: 5;
+}
+.proj-card.theme-yellow .proj-carousel__counter { background: rgba(0,0,0,0.55); }
+
+/* Foot bar */
+.proj-card__foot {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px;
+  padding-top: 22px;
+  margin-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
+.proj-card.theme-yellow .proj-card__foot { border-top-color: rgba(0,0,0,0.14); }
+.proj-card__app { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.proj-card__icon {
+  width: 54px; height: 54px;
+  border-radius: 13px;
+  display: grid; place-items: center;
+  font-family: var(--font-display); font-weight: 800;
+  font-size: 20px; letter-spacing: -0.02em;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.26);
+  flex-shrink: 0;
+}
+.proj-card.theme-yellow .proj-card__icon { background: rgba(0,0,0,0.08); border-color: rgba(0,0,0,0.18); color: #1a1a1a; }
+.proj-card__name {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 16px; letter-spacing: -0.01em;
+  margin: 0;
+}
+.proj-card__tag { font-size: 12.5px; margin: 3px 0 0; opacity: 0.85; }
+.proj-card__cta {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 13.5px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.26);
+  color: #fff; text-decoration: none;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  transition: background .18s ease, transform .18s ease;
+}
+.proj-card__cta:hover { background: rgba(255,255,255,0.3); transform: translateY(-1px); }
+.proj-card.theme-yellow .proj-card__cta { background: rgba(0,0,0,0.1); border-color: rgba(0,0,0,0.18); color: #1a1a1a; }
+.proj-card.theme-yellow .proj-card__cta:hover { background: rgba(0,0,0,0.18); }
+
+/* Generic glass content cards used inside slides */
+.proj-slide-glass {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.24);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 18px;
+  padding: 22px;
+  width: 100%; max-width: 460px;
+  color: #fff;
+}
+.proj-card.theme-yellow .proj-slide-glass { background: rgba(255,255,255,0.55); border-color: rgba(0,0,0,0.14); color: #1a1a1a; }
+.proj-slide-glass h5 {
+  font-family: var(--font-mono); font-size: 10.5px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  font-weight: 700; opacity: 0.85;
+  margin: 0 0 14px;
+}
+.proj-slide-glass .big {
+  font-family: var(--font-display); font-weight: 800;
+  font-size: 30px; letter-spacing: -0.02em; line-height: 1.05;
+  margin: 0;
+}
+.proj-slide-glass .line { font-family: var(--font-mono); font-size: 12px; line-height: 1.7; opacity: 0.85; }
+
+/* Phone mock used in some slides */
+.proj-phone {
+  aspect-ratio: 9 / 19;
+  width: 200px;
+  background: #0e0e10;
+  border-radius: 32px;
+  padding: 6px;
+  box-shadow: 0 30px 50px -10px rgba(0,0,0,.45), inset 0 0 0 1.5px rgba(255,255,255,.08);
+  position: relative;
+}
+.proj-phone__notch {
+  position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+  width: 64px; height: 16px; background: #000; border-radius: 99px; z-index: 2;
+}
+.proj-phone__screen {
+  width: 100%; height: 100%;
+  border-radius: 26px;
+  overflow: hidden;
+  background: #fff;
+  position: relative; color: #222;
+}
+.pp-mock { padding: 26px 12px 8px; font-size: 11px; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 4px; }
+.pp-bubble { background: #f0f3f7; border-radius: 12px; padding: 7px 10px; max-width: 80%; font-size: 11px; line-height: 1.4; }
+.pp-bubble.me { background: #0a84ff; color: #fff; margin-left: auto; }
+.pp-bubble.code { background: #fff; border: 1px solid #e6e6e6; font-family: var(--font-mono); font-size: 10px; }
+.pp-pill { display: inline-flex; align-items: center; gap: 4px; background: #1f2937; color: #fff; padding: 3px 8px; border-radius: 99px; font-size: 9px; font-weight: 700; letter-spacing: 0.06em; }
+.pp-row { display: flex; justify-content: space-between; align-items: center; margin: 2px 0 4px; }
+.pp-row b { font-size: 12px; }
+.pp-perm { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 6px 9px; font-size: 9.5px; display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+.pp-perm .ok { padding: 2px 8px; background: #eef; color: #0a84ff; font-weight: 700; border-radius: 99px; }
+
+/* Flow diagrams (ARES) */
+.proj-flow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  width: 100%;
+  max-width: 460px;
+}
+.proj-flow__node {
+  background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 12px;
+  padding: 14px 12px;
+  display: flex; flex-direction: column; gap: 4px;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+.proj-flow__node .n { font-size: 10px; opacity: 0.6; font-weight: 700; }
+.proj-flow__node .t { font-family: var(--font-display); font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
+.proj-flow__node .d { font-size: 10px; opacity: 0.78; line-height: 1.4; }
+
+/* Heatmap grid */
+.proj-heatmap {
+  display: grid;
+  grid-template-columns: repeat(14, 1fr);
+  gap: 4px;
+  width: 100%;
+  max-width: 460px;
+}
+.proj-heatmap .cell { aspect-ratio: 1; border-radius: 3px; background: rgba(255,255,255,0.12); }
+.proj-heatmap .cell.l1 { background: rgba(255,255,255,0.28); }
+.proj-heatmap .cell.l2 { background: rgba(255,255,255,0.48); }
+.proj-heatmap .cell.l3 { background: rgba(255,255,255,0.72); }
+.proj-heatmap .cell.l4 { background: #fff; }
+
+/* Section title sizing */
+#project .sec__row { margin-bottom: 0; }
+
+/* Mobile responsive */
+@media (max-width: 980px) {
+  .proj-card {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    padding: 34px 26px 26px;
+    min-height: auto;
+    column-gap: 0;
+  }
+  .proj-card__head { max-width: none; }
+  .proj-card__stage { min-height: 320px; }
+  .proj-carousel, .proj-carousel__slides { min-height: 320px; }
+  .proj-scene { min-height: auto; padding: 4vh 0; }
+  .proj-card__phrase { font-size: clamp(24px, 6vw, 34px); }
+  .proj-card__sub { font-size: 14px; }
+  .proj-card__foot { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .proj-card__cta { align-self: flex-end; }
+  .proj-phone { width: 160px; }
+}
+@media (max-width: 520px) {
+  .proj-card { padding: 26px 18px 22px; }
+  .proj-phone { width: 140px; border-radius: 26px; }
+  .proj-phone__screen { border-radius: 22px; }
+  .proj-carousel__nav { width: 32px; height: 32px; font-size: 18px; }
+  .proj-carousel__nav.prev { left: -4px; }
+  .proj-carousel__nav.next { right: -4px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .proj-card { transform: none; opacity: 1; filter: none; transition: none; }
+}
+
 </style>
 </head>
 <body>
@@ -1804,170 +2133,442 @@ footer {
       <div class="sec__eyebrow reveal">03 · Project</div>
       <div class="sec__title reveal">직접 만들고, 운영하고, 고친 것들.</div>
     </div>
-    <div class="sec__meta reveal">7 projects · Agent · RAG · EdTech · Civic</div>
+    <div class="sec__meta reveal">7 projects · Agent · RAG · EdTech · Civic · 스크롤로 카드 활성화</div>
   </div>
 
-  <div class="bento reveal-group">
+  <div class="proj-stack reveal-group">
 
-    <article class="card w-6 reveal" data-type="project" data-topics="agent">
-      <div class="card__media">
-        <div class="cover theme-blue">
-          <div class="cover__mini cover__mini--screenshot">
-            <img class="cover__screenshot" src="/project/aris-dashboard.png" alt="ARIS workspace dashboard screenshot" loading="lazy">
+    <!-- ====== 01 ARIS ====== -->
+    <section class="proj-scene reveal" data-type="project" data-topics="agent" data-num="01">
+      <article class="proj-card theme-blue">
+        <div class="proj-card__head">
+          <div class="proj-card__topline">
+            <span class="proj-card__num">01 / 07</span>
+            <span class="proj-card__eyebrow">Featured · Agent UX · 2026</span>
           </div>
-          <div style="display:flex;flex-direction:column;">
-            <div style="display:flex;flex-direction:column;gap:10px;font-size:23px;font-weight:600;letter-spacing:-0.01em;margin-bottom:14px;">
-              <span>Agentic</span>
-              <span>Runtime</span>
-              <span>Integration</span>
-              <span>System</span>
+          <h3 class="proj-card__phrase">한 화면에서 묻고, 계획하고, 실행한다.</h3>
+          <p class="proj-card__sub">Ask · Plan · Execute 세 모드와 권한 토글을 한 채팅창에 모은 에이전트 런타임. iOS Safari 키보드는 <em>visualViewport</em>로, 채팅 진입은 페이지네이션으로 15MB→236KB까지 직접 해결했습니다.</p>
+          <div class="proj-card__tags"><span>Chat-first</span><span>Permission Toggle</span><span>Mobile Viewport</span><span>API Pagination</span></div>
+        </div>
+        <div class="proj-card__stage">
+          <div class="proj-carousel" data-carousel data-total="4">
+            <div class="proj-carousel__counter"><span class="cur">1</span> / <span class="tot">4</span></div>
+            <div class="proj-carousel__slides">
+              <div class="proj-carousel__slide on">
+                <figure style="margin:0;width:100%;max-width:520px">
+                  <img src="/project/aris-dashboard.png" alt="ARIS workspace dashboard screenshot" loading="lazy" style="width:100%;height:auto;border-radius:14px;border:1px solid rgba(255,255,255,0.22);box-shadow:0 18px 36px rgba(0,0,0,0.25);background:#0a0a0a">
+                  <figcaption style="margin-top:10px;font-family:var(--font-mono);font-size:10.5px;letter-spacing:0.08em;opacity:0.85">ARIS · Live workspace · 2026</figcaption>
+                </figure>
+              </div>
+              <div class="proj-carousel__slide">
+                <div class="proj-phone"><div class="proj-phone__notch"></div><div class="proj-phone__screen">
+                  <div class="pp-mock">
+                    <div class="pp-row"><b>ARIS</b><span class="pp-pill">PLAN</span></div>
+                    <div class="pp-bubble">검색어 분포 5개를 비교 차트로 정리해줘.</div>
+                    <div class="pp-bubble me">3단계 계획을 제안할게요.</div>
+                    <div class="pp-bubble code">1. fetch_keywords<br>2. compute<br>3. render</div>
+                    <div class="pp-perm"><span style="font-weight:700">권한</span><span class="ok">Once</span></div>
+                  </div>
+                </div></div>
+              </div>
+              <div class="proj-carousel__slide">
+                <div class="proj-phone"><div class="proj-phone__notch"></div><div class="proj-phone__screen">
+                  <div class="pp-mock">
+                    <div class="pp-row"><b>ARIS</b><span class="pp-pill" style="background:#16a34a">EXECUTE</span></div>
+                    <div class="pp-bubble code">▶ charts.compare_keywords(...)</div>
+                    <div class="pp-bubble me">실행 완료 · 결과 첨부</div>
+                    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:6px;margin-top:4px"><svg viewBox="0 0 200 60" width="100%" height="44"><rect x="10" y="22" width="22" height="38" fill="#0a84ff"/><rect x="46" y="10" width="22" height="50" fill="#0a84ff"/><rect x="82" y="30" width="22" height="30" fill="#0a84ff"/><rect x="118" y="14" width="22" height="46" fill="#0a84ff"/><rect x="154" y="36" width="22" height="24" fill="#0a84ff"/></svg></div>
+                  </div>
+                </div></div>
+              </div>
+              <div class="proj-carousel__slide">
+                <div class="proj-slide-glass">
+                  <h5>Bundle · 15MB → 236KB</h5>
+                  <svg viewBox="0 0 460 160" width="100%">
+                    <text x="20" y="28" fill="currentColor" font-weight="700" font-size="11" font-family="JetBrains Mono">BEFORE</text>
+                    <rect x="20" y="44" width="420" height="20" rx="5" fill="rgba(239,68,68,.55)"/>
+                    <text x="430" y="59" text-anchor="end" fill="#fff" font-weight="700" font-size="11">15.0 MB</text>
+                    <text x="20" y="98" fill="currentColor" font-weight="700" font-size="11" font-family="JetBrains Mono">AFTER</text>
+                    <rect x="20" y="114" width="7" height="20" rx="3" fill="rgba(34,197,94,.92)"/>
+                    <text x="36" y="129" fill="#fff" font-weight="700" font-size="11">236 KB</text>
+                    <text x="36" y="144" fill="rgba(255,255,255,.72)" font-size="10">64× 감소 · 진입 ~120ms</text>
+                  </svg>
+                </div>
+              </div>
             </div>
-            <span>ARIS</span>
+            <button class="proj-carousel__nav prev" aria-label="이전 슬라이드">‹</button>
+            <button class="proj-carousel__nav next" aria-label="다음 슬라이드">›</button>
+            <div class="proj-carousel__half l" data-act="prev"></div>
+            <div class="proj-carousel__half r" data-act="next"></div>
+            <div class="proj-carousel__dots"></div>
           </div>
-          <span class="cover__labeltag">Agent UX · 2026</span>
         </div>
-        <div class="card__chips">
-          <span class="badge badge--solid">PROJECT</span>
-          <span class="badge badge--green">LIVE</span>
+        <div class="proj-card__foot">
+          <div class="proj-card__app">
+            <div class="proj-card__icon">A</div>
+            <div><p class="proj-card__name">ARIS — Agentic Runtime Interface System</p><p class="proj-card__tag">Chat-first agent runtime · LIVE</p></div>
+          </div>
+          <a class="proj-card__cta" href="#aris-detail">자세히 보기 →</a>
         </div>
-      </div>
-      <div class="card__body">
-        <div class="card__meta"><span>Chat-first agent runtime</span><span>·</span><span>Web + Server</span></div>
-        <h3 class="card__title">ARIS — Agentic Runtime Interface System</h3>
-        <p class="card__desc">응답 타입별 전용 렌더러와 운영 제어(Ask / Plan / Execute · allow once / session / deny)를 한 인터페이스에 모았습니다. iOS Safari 키보드 이슈는 <b>visualViewport 반영</b>으로, 채팅 진입은 실제 페이지네이션으로 <b>15MB → 236KB</b>로 해결했습니다.</p>
-        <div class="card__tags"><span>Chat-first</span><span>Permission</span><span>Mobile viewport</span><span>API pagination</span></div>
-      </div>
-    </article>
+      </article>
+    </section>
 
-    <article class="card w-6 reveal" data-type="project" data-topics="agent rag">
-      <div class="card__media">
-        <div class="cover theme-red">
-          <div class="cover__mini" aria-hidden="true"></div>
-          <div style="display:flex;flex-direction:column;">
-            <div style="display:flex;flex-direction:column;gap:10px;font-size:23px;font-weight:600;letter-spacing:-0.01em;margin-bottom:14px;">
-              <span>Agentic</span>
-              <span>Research</span>
-              <span>Experimentation</span>
-              <span>System</span>
+    <!-- ====== 02 ARES ====== -->
+    <section class="proj-scene reveal" data-type="project" data-topics="agent rag" data-num="02">
+      <article class="proj-card theme-red">
+        <div class="proj-card__head">
+          <div class="proj-card__topline">
+            <span class="proj-card__num">02 / 07</span>
+            <span class="proj-card__eyebrow">Research Tooling · 2026</span>
+          </div>
+          <h3 class="proj-card__phrase">6단계 흐름에 역할별 에이전트를 배치한다.</h3>
+          <p class="proj-card__sub">Search → Reading → Research → Result → Insight → Writing. Scout · Reader · Reproduction · Experiment · Analyst · Writing의 역할 에이전트가 각 단계를 맡고, seed fallback과 파일/Postgres 이중 저장으로 라이브 검색 불가 시에도 UI 골격을 유지합니다.</p>
+          <div class="proj-card__tags"><span>6-stage Flow</span><span>Role Agents</span><span>Fallback-first</span><span>/api/health</span></div>
+        </div>
+        <div class="proj-card__stage">
+          <div class="proj-carousel" data-carousel data-total="2">
+            <div class="proj-carousel__counter"><span class="cur">1</span> / <span class="tot">2</span></div>
+            <div class="proj-carousel__slides">
+              <div class="proj-carousel__slide on">
+                <div class="proj-flow">
+                  <div class="proj-flow__node"><span class="n">01</span><span class="t">Search</span><span class="d">Scout · 키워드/논문 탐색</span></div>
+                  <div class="proj-flow__node"><span class="n">02</span><span class="t">Reading</span><span class="d">Reader · 요약 / 발췌</span></div>
+                  <div class="proj-flow__node"><span class="n">03</span><span class="t">Research</span><span class="d">Reproduction · 코드 재현</span></div>
+                  <div class="proj-flow__node"><span class="n">04</span><span class="t">Result</span><span class="d">Experiment · 결과 수집</span></div>
+                  <div class="proj-flow__node"><span class="n">05</span><span class="t">Insight</span><span class="d">Analyst · 패턴 정리</span></div>
+                  <div class="proj-flow__node"><span class="n">06</span><span class="t">Writing</span><span class="d">Writing · 초안 생성</span></div>
+                </div>
+              </div>
+              <div class="proj-carousel__slide">
+                <div class="proj-slide-glass">
+                  <h5>Fallback-first 데이터 경로</h5>
+                  <p class="line" style="margin:0">$ ares health<br>· live search → <span style="color:#86efac;font-weight:700">ok</span><br>· seed fallback → <span style="color:#86efac;font-weight:700">ok</span><br>· postgres ↔ file → <span style="color:#86efac;font-weight:700">sync</span><br>· UI 골격 → <span style="color:#fde68a;font-weight:700">유지</span></p>
+                  <div style="margin-top:14px;font-family:var(--font-mono);font-size:10.5px;letter-spacing:0.06em;opacity:0.7">검색 인덱스가 죽어도 데모는 멈추지 않습니다.</div>
+                </div>
+              </div>
             </div>
-            <span>ARES</span>
+            <button class="proj-carousel__nav prev" aria-label="이전 슬라이드">‹</button>
+            <button class="proj-carousel__nav next" aria-label="다음 슬라이드">›</button>
+            <div class="proj-carousel__half l" data-act="prev"></div>
+            <div class="proj-carousel__half r" data-act="next"></div>
+            <div class="proj-carousel__dots"></div>
           </div>
-          <span class="cover__labeltag">Research tooling · 2026</span>
         </div>
-        <div class="card__chips">
-          <span class="badge badge--solid">PROJECT</span>
-          <span class="badge badge--yel">DEV</span>
+        <div class="proj-card__foot">
+          <div class="proj-card__app">
+            <div class="proj-card__icon">R</div>
+            <div><p class="proj-card__name">ARES — Agentic Research Experimentation System</p><p class="proj-card__tag">Research workflow · DEV</p></div>
+          </div>
+          <a class="proj-card__cta" href="#ares-detail">자세히 보기 →</a>
         </div>
-      </div>
-      <div class="card__body">
-        <div class="card__meta"><span>Research workflow</span><span>·</span><span>6-stage</span></div>
-        <h3 class="card__title">ARES — Agentic Research Experimentation System</h3>
-        <p class="card__desc">Search → Reading → Research → Result → Insight → Writing 6단계 흐름에 역할 기반 에이전트(Scout · Reader · Reproduction · Experiment · Analyst · Writing)를 배치했습니다. seed fallback·파일/Postgres 이중 저장·<code>/api/health</code>로 라이브 검색 불가 시에도 UI 골격 유지.</p>
-        <div class="card__tags"><span>6-stage</span><span>Role agents</span><span>Fallback first</span></div>
-      </div>
-    </article>
+      </article>
+    </section>
 
-    <article class="card w-6 reveal" data-type="project" data-topics="rag">
-      <div class="card__media">
-        <div class="cover theme-yellow">
-          <div class="cover__mini" aria-hidden="true"></div>
-          <div style="display:flex;flex-direction:column;">
-            <div style="display:flex;flex-direction:column;gap:10px;font-size:23px;font-weight:600;letter-spacing:-0.01em;margin-bottom:14px;">
-              <span>AI 기반</span>
-              <span>법률 개정안</span>
-              <span>요약 플랫폼</span>
+    <!-- ====== 03 모두의입법 ====== -->
+    <section class="proj-scene reveal" data-type="project" data-topics="rag" data-num="03">
+      <article class="proj-card theme-yellow">
+        <div class="proj-card__head">
+          <div class="proj-card__topline">
+            <span class="proj-card__num">03 / 07</span>
+            <span class="proj-card__eyebrow">Civic · RAG · 2024–</span>
+          </div>
+          <h3 class="proj-card__phrase">국회 법안을 피드처럼 읽힌다.</h3>
+          <p class="proj-card__sub">복잡한 개정안을 AI 요약과 태그로 피드화. Gemini primary/backup + OpenAI <em>다단 fallback</em>, Airflow DAG로 수집·AI 배치·복구를 분리, Qdrant 기반 RAG 챗봇까지 연결했습니다.</p>
+          <div class="proj-card__tags"><span>GPT Summary</span><span>Airflow DAG</span><span>Qdrant RAG</span><span>최우수상</span></div>
+        </div>
+        <div class="proj-card__stage">
+          <div class="proj-carousel" data-carousel data-total="2">
+            <div class="proj-carousel__counter"><span class="cur">1</span> / <span class="tot">2</span></div>
+            <div class="proj-carousel__slides">
+              <div class="proj-carousel__slide on">
+                <div class="proj-slide-glass" style="max-width:420px">
+                  <h5>피드 · 오늘의 개정안</h5>
+                  <div style="display:flex;flex-direction:column;gap:10px">
+                    <div style="background:rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.1);border-radius:10px;padding:12px"><div style="font:600 10px var(--font-mono);letter-spacing:0.1em;text-transform:uppercase;opacity:0.6">국회 · 환경노동위</div><div style="font:700 14px var(--font-display);margin-top:4px">근로기준법 일부개정법률안</div><div style="font-size:12px;margin-top:4px;line-height:1.5">주 4.5일 시범 도입과 사용자 부담 완화 조항이 추가됨.</div><div style="display:flex;gap:5px;margin-top:8px"><span style="font:600 10px var(--font-mono);padding:3px 8px;background:rgba(0,0,0,0.08);border-radius:99px">노동</span><span style="font:600 10px var(--font-mono);padding:3px 8px;background:rgba(0,0,0,0.08);border-radius:99px">시범사업</span></div></div>
+                    <div style="background:rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.1);border-radius:10px;padding:12px"><div style="font:600 10px var(--font-mono);letter-spacing:0.1em;text-transform:uppercase;opacity:0.6">국회 · 과방위</div><div style="font:700 14px var(--font-display);margin-top:4px">AI 기본법 일부개정안</div><div style="font-size:12px;margin-top:4px;line-height:1.5">고위험 AI 영향평가 의무를 단계적으로 확대.</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="proj-carousel__slide">
+                <div class="proj-slide-glass" style="max-width:420px">
+                  <h5>Multi-Model Fallback Chain</h5>
+                  <div style="display:flex;flex-direction:column;gap:8px;font-family:var(--font-mono);font-size:12px">
+                    <div style="display:flex;align-items:center;gap:8px"><span style="width:60px;font-weight:700">PRIMARY</span><span style="flex:1;padding:6px 10px;background:rgba(34,197,94,0.18);border:1px solid rgba(34,197,94,0.4);border-radius:8px">Gemini 2.5 Pro</span></div>
+                    <div style="text-align:center;opacity:0.5">↓ on rate-limit / error</div>
+                    <div style="display:flex;align-items:center;gap:8px"><span style="width:60px;font-weight:700">BACKUP</span><span style="flex:1;padding:6px 10px;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3);border-radius:8px">Gemini Flash</span></div>
+                    <div style="text-align:center;opacity:0.5">↓</div>
+                    <div style="display:flex;align-items:center;gap:8px"><span style="width:60px;font-weight:700">FINAL</span><span style="flex:1;padding:6px 10px;background:rgba(0,0,0,0.08);border:1px solid rgba(0,0,0,0.18);border-radius:8px">OpenAI GPT-4o</span></div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <span>모두의입법</span>
+            <button class="proj-carousel__nav prev" aria-label="이전 슬라이드">‹</button>
+            <button class="proj-carousel__nav next" aria-label="다음 슬라이드">›</button>
+            <div class="proj-carousel__half l" data-act="prev"></div>
+            <div class="proj-carousel__half r" data-act="next"></div>
+            <div class="proj-carousel__dots"></div>
           </div>
-          <span class="cover__labeltag">Civic · RAG · 2024–</span>
         </div>
-        <div class="card__chips">
-          <span class="badge badge--solid">PROJECT</span>
-          <span class="badge badge--green">LIVE</span>
-          <span class="badge badge--brand">Award</span>
+        <div class="proj-card__foot">
+          <div class="proj-card__app">
+            <div class="proj-card__icon">M</div>
+            <div><p class="proj-card__name">모두의입법</p><p class="proj-card__tag">Public data platform · LIVE · 최우수상</p></div>
+          </div>
+          <a class="proj-card__cta" href="#civic-detail">자세히 보기 →</a>
         </div>
-      </div>
-      <div class="card__body">
-        <div class="card__meta"><span>Public data platform</span></div>
-        <h3 class="card__title">모두의입법</h3>
-        <p class="card__desc">복잡한 국회 법안을 AI 요약과 태그로 피드화. Gemini primary/backup + OpenAI <b>다단 fallback</b>과 Airflow DAG 기반 수집·AI 배치·복구 분리. Qdrant 기반 RAG 챗봇까지.</p>
-        <div class="card__tags"><span>GPT summary</span><span>Airflow</span><span>Qdrant</span><span>최우수상</span></div>
-      </div>
-    </article>
+      </article>
+    </section>
 
-    <article class="card w-4 reveal" data-type="project" data-topics="rag">
-      <div class="card__media">
-        <div class="cover theme-green">
-          <div class="cover__mini" aria-hidden="true"></div>
-          <span>Voca</span>
-          <span class="cover__labeltag">EdTech · 2025</span>
+    <!-- ====== 04 VocaLoop ====== -->
+    <section class="proj-scene reveal" data-type="project" data-topics="rag" data-num="04">
+      <article class="proj-card theme-green">
+        <div class="proj-card__head">
+          <div class="proj-card__topline">
+            <span class="proj-card__num">04 / 07</span>
+            <span class="proj-card__eyebrow">EdTech · 2025</span>
+          </div>
+          <h3 class="proj-card__phrase">단어를 외우는 게 아니라, 루프를 도는 것.</h3>
+          <p class="proj-card__sub">AI 단어 분석 · 퀴즈 · 하이브리드 채점 · 오답 재배치를 하나의 학습 루프로 묶었습니다. Vite/React 마이그레이션과 PM2 · 502 게이트웨이 트러블슈팅으로 안정화했습니다.</p>
+          <div class="proj-card__tags"><span>Hybrid Grading</span><span>Adaptive Loop</span><span>React · Vite</span></div>
         </div>
-        <div class="card__chips"><span class="badge badge--solid">PROJECT</span></div>
-      </div>
-      <div class="card__body">
-        <div class="card__meta"><span>Adaptive vocabulary loop</span></div>
-        <h3 class="card__title">VocaLoop</h3>
-        <p class="card__desc">AI 단어 분석·퀴즈·하이브리드 채점·오답 재배치를 하나의 학습 루프로 묶었습니다. Vite/React 마이그레이션과 PM2 · 502 게이트웨이 트러블슈팅으로 안정화.</p>
-        <div class="card__tags"><span>Hybrid grading</span><span>Adaptive loop</span><span>React · Vite</span></div>
-      </div>
-    </article>
+        <div class="proj-card__stage">
+          <div class="proj-carousel" data-carousel data-total="2">
+            <div class="proj-carousel__counter"><span class="cur">1</span> / <span class="tot">2</span></div>
+            <div class="proj-carousel__slides">
+              <div class="proj-carousel__slide on">
+                <div class="proj-phone"><div class="proj-phone__notch"></div><div class="proj-phone__screen" style="background:#f8fdf9">
+                  <div style="padding:24px 12px 0;font-size:10px;color:#065f46;font-weight:700;letter-spacing:0.1em">12 / 30</div>
+                  <div style="margin:10px;background:#fff;border:1px solid #d1fae5;border-radius:14px;padding:14px">
+                    <div style="font-family:var(--font-display);font-weight:800;font-size:20px;color:#065f46;letter-spacing:-0.01em">corroborate</div>
+                    <div style="font-family:var(--font-mono);font-size:10px;color:#888;margin-top:2px">/kəˈrɒbəreɪt/</div>
+                    <div style="display:flex;flex-direction:column;gap:6px;margin-top:12px">
+                      <div style="border:1px solid #e8e8e8;border-radius:9px;padding:7px 10px;font-size:11px">deny</div>
+                      <div style="border:1px solid #10b981;background:#ecfdf5;color:#047857;font-weight:700;border-radius:9px;padding:7px 10px;font-size:11px">to confirm</div>
+                      <div style="border:1px solid #e8e8e8;border-radius:9px;padding:7px 10px;font-size:11px">to question</div>
+                    </div>
+                  </div>
+                </div></div>
+              </div>
+              <div class="proj-carousel__slide">
+                <div class="proj-slide-glass" style="max-width:380px">
+                  <h5>학습 루프 · 30일 히트맵</h5>
+                  <div class="proj-heatmap">
+                    <div class="cell"></div><div class="cell l1"></div><div class="cell l2"></div><div class="cell l1"></div><div class="cell"></div><div class="cell l4"></div><div class="cell l2"></div><div class="cell l3"></div><div class="cell l1"></div><div class="cell"></div><div class="cell l2"></div><div class="cell l3"></div><div class="cell l4"></div><div class="cell l3"></div>
+                    <div class="cell l2"></div><div class="cell"></div><div class="cell l1"></div><div class="cell l2"></div><div class="cell l3"></div><div class="cell l4"></div><div class="cell l2"></div><div class="cell l1"></div><div class="cell"></div><div class="cell l3"></div><div class="cell l4"></div><div class="cell l3"></div><div class="cell l2"></div><div class="cell l4"></div>
+                  </div>
+                  <div style="margin-top:14px;font-family:var(--font-mono);font-size:10px;opacity:0.78;letter-spacing:0.06em">streak 6d · 오답 큐 +4 · 정답률 78%</div>
+                </div>
+              </div>
+            </div>
+            <button class="proj-carousel__nav prev" aria-label="이전 슬라이드">‹</button>
+            <button class="proj-carousel__nav next" aria-label="다음 슬라이드">›</button>
+            <div class="proj-carousel__half l" data-act="prev"></div>
+            <div class="proj-carousel__half r" data-act="next"></div>
+            <div class="proj-carousel__dots"></div>
+          </div>
+        </div>
+        <div class="proj-card__foot">
+          <div class="proj-card__app">
+            <div class="proj-card__icon">V</div>
+            <div><p class="proj-card__name">VocaLoop</p><p class="proj-card__tag">Adaptive vocabulary loop</p></div>
+          </div>
+          <a class="proj-card__cta" href="#voca-detail">자세히 보기 →</a>
+        </div>
+      </article>
+    </section>
 
-    <article class="card w-4 reveal" data-type="project" data-topics="agent">
-      <div class="card__media">
-        <div class="cover theme-purple">
-          <div class="cover__mini" aria-hidden="true"></div>
-          <span>S</span>
-          <span class="cover__labeltag">AI-Native · 2026</span>
+    <!-- ====== 05 SynapseNote ====== -->
+    <section class="proj-scene reveal" data-type="project" data-topics="agent" data-num="05">
+      <article class="proj-card theme-purple">
+        <div class="proj-card__head">
+          <div class="proj-card__topline">
+            <span class="proj-card__num">05 / 07</span>
+            <span class="proj-card__eyebrow">AI-Native Knowledge · 2026</span>
+          </div>
+          <h3 class="proj-card__phrase">생각의 동선을 한 앱에 묶는다.</h3>
+          <p class="proj-card__sub">Agent Chat · Context Manager · Knowledge Graph View를 한 앱에. livesync-bridge / CouchDB / Mac Obsidian 간 동기화 장애는 환경변수 기반 패스프레이즈 반영으로 복원했습니다.</p>
+          <div class="proj-card__tags"><span>Context Control</span><span>Graph View</span><span>Sync Recovery</span></div>
         </div>
-        <div class="card__chips"><span class="badge badge--solid">PROJECT</span></div>
-      </div>
-      <div class="card__body">
-        <div class="card__meta"><span>Personal knowledge OS</span></div>
-        <h3 class="card__title">SynapseNote</h3>
-        <p class="card__desc">Agent Chat · Context Manager · Knowledge Graph View를 한 앱에 묶은 개인용 에이전틱 지식 베이스. livesync-bridge · CouchDB · Mac Obsidian 간 동기화 장애를 환경변수 기반 패스프레이즈 반영으로 복원.</p>
-        <div class="card__tags"><span>Context control</span><span>Graph view</span><span>Sync recovery</span></div>
-      </div>
-    </article>
+        <div class="proj-card__stage">
+          <div class="proj-carousel" data-carousel data-total="2">
+            <div class="proj-carousel__counter"><span class="cur">1</span> / <span class="tot">2</span></div>
+            <div class="proj-carousel__slides">
+              <div class="proj-carousel__slide on">
+                <div class="proj-slide-glass" style="max-width:420px">
+                  <h5>Knowledge Graph View</h5>
+                  <svg viewBox="0 0 360 220" width="100%">
+                    <line x1="180" y1="110" x2="80" y2="60" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/>
+                    <line x1="180" y1="110" x2="280" y2="50" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/>
+                    <line x1="180" y1="110" x2="60" y2="170" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/>
+                    <line x1="180" y1="110" x2="180" y2="200" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/>
+                    <line x1="180" y1="110" x2="300" y2="170" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/>
+                    <line x1="80" y1="60" x2="60" y2="170" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+                    <line x1="280" y1="50" x2="300" y2="170" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+                    <circle cx="180" cy="110" r="22" fill="#fff" opacity="0.95"/>
+                    <text x="180" y="115" text-anchor="middle" font-family="Inter Tight" font-weight="800" font-size="11" fill="#7c3aed">RAG</text>
+                    <circle cx="80" cy="60" r="14" fill="rgba(255,255,255,0.7)"/>
+                    <text x="80" y="64" text-anchor="middle" font-size="9" font-weight="700" fill="#4c1d95">Agent</text>
+                    <circle cx="280" cy="50" r="14" fill="rgba(255,255,255,0.7)"/>
+                    <text x="280" y="54" text-anchor="middle" font-size="9" font-weight="700" fill="#4c1d95">LLM</text>
+                    <circle cx="60" cy="170" r="14" fill="rgba(255,255,255,0.55)"/>
+                    <text x="60" y="174" text-anchor="middle" font-size="9" font-weight="700" fill="#4c1d95">Index</text>
+                    <circle cx="180" cy="200" r="14" fill="rgba(255,255,255,0.55)"/>
+                    <text x="180" y="204" text-anchor="middle" font-size="9" font-weight="700" fill="#4c1d95">Eval</text>
+                    <circle cx="300" cy="170" r="14" fill="rgba(255,255,255,0.55)"/>
+                    <text x="300" y="174" text-anchor="middle" font-size="9" font-weight="700" fill="#4c1d95">Tool</text>
+                  </svg>
+                  <div style="margin-top:10px;font-family:var(--font-mono);font-size:10.5px;opacity:0.78;letter-spacing:0.06em">노드 6 · 엣지 9 · 컨텍스트 단위로 묶인 메모</div>
+                </div>
+              </div>
+              <div class="proj-carousel__slide">
+                <div class="proj-slide-glass" style="max-width:420px">
+                  <h5>Agent Chat with Context</h5>
+                  <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;line-height:1.5">
+                    <div style="background:rgba(255,255,255,0.18);padding:8px 12px;border-radius:10px">이 노드 묶음에서 'RAG 인덱스 갱신'을 다시 정리해 줘.</div>
+                    <div style="background:rgba(255,255,255,0.34);color:#1a1a1a;padding:8px 12px;border-radius:10px;margin-left:auto;max-width:80%">컨텍스트 12개 노드 사용 · 3분 요약 생성 중…</div>
+                    <div style="margin-top:6px;font-family:var(--font-mono);font-size:10px;opacity:0.7;letter-spacing:0.06em">scope: notebook/rag/* · model: gpt-4o-mini</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button class="proj-carousel__nav prev" aria-label="이전 슬라이드">‹</button>
+            <button class="proj-carousel__nav next" aria-label="다음 슬라이드">›</button>
+            <div class="proj-carousel__half l" data-act="prev"></div>
+            <div class="proj-carousel__half r" data-act="next"></div>
+            <div class="proj-carousel__dots"></div>
+          </div>
+        </div>
+        <div class="proj-card__foot">
+          <div class="proj-card__app">
+            <div class="proj-card__icon">S</div>
+            <div><p class="proj-card__name">SynapseNote</p><p class="proj-card__tag">Personal knowledge OS</p></div>
+          </div>
+          <a class="proj-card__cta" href="#synapse-detail">자세히 보기 →</a>
+        </div>
+      </article>
+    </section>
 
-    <article class="card w-6 reveal" data-type="project" data-topics="">
-      <div class="card__media">
-        <div class="cover theme-pink">
-          <div class="cover__mini" aria-hidden="true"></div>
-          <span>PrismLog</span>
-          <span class="cover__labeltag">Personal · Mobile-first</span>
+    <!-- ====== 06 PrismLog ====== -->
+    <section class="proj-scene reveal" data-type="project" data-topics="" data-num="06">
+      <article class="proj-card theme-pink">
+        <div class="proj-card__head">
+          <div class="proj-card__topline">
+            <span class="proj-card__num">06 / 07</span>
+            <span class="proj-card__eyebrow">Personal · Mobile-first</span>
+          </div>
+          <h3 class="proj-card__phrase">하루를 색의 띠로 기록한다.</h3>
+          <p class="proj-card__sub">독서 · 공부 · 문화생활을 서로 다른 색과 인터랙션으로 분리한 올인원 기록 앱. 탭 border-glow는 포인터 추적이 아닌 <em>활성 인디케이터 + mask-composite</em>로 iOS Safari 호환을 확보했습니다.</p>
+          <div class="proj-card__tags"><span>Spectrum Ring</span><span>Heatmap</span><span>mask-composite</span></div>
         </div>
-        <div class="card__chips"><span class="badge badge--solid">PROJECT</span></div>
-      </div>
-      <div class="card__body">
-        <div class="card__meta"><span>Multi-category logger</span><span>·</span><span>Spectrum Ring</span></div>
-        <h3 class="card__title">PrismLog</h3>
-        <p class="card__desc">독서 · 공부 · 문화생활을 서로 다른 색과 인터랙션으로 분리한 올인원 기록 앱. 모바일 탭 border-glow를 포인터 추적이 아닌 <b>활성 인디케이터 위치 + mask-composite</b>로 구현해 iOS Safari 호환을 확보.</p>
-        <div class="card__tags"><span>Spectrum Ring</span><span>Heatmap</span><span>mask-composite</span></div>
-      </div>
-    </article>
+        <div class="proj-card__stage">
+          <div class="proj-carousel" data-carousel data-total="2">
+            <div class="proj-carousel__counter"><span class="cur">1</span> / <span class="tot">2</span></div>
+            <div class="proj-carousel__slides">
+              <div class="proj-carousel__slide on">
+                <div class="proj-phone"><div class="proj-phone__notch"></div><div class="proj-phone__screen" style="background:#fafafa">
+                  <div style="padding:24px 0 4px;text-align:center;font-family:var(--font-display);font-weight:800;font-size:13px;color:#7c3aed;letter-spacing:-0.01em">PrismLog</div>
+                  <svg viewBox="0 0 200 200" width="84%" style="display:block;margin:0 auto">
+                    <defs><linearGradient id="prismG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f472b6"/><stop offset="50%" stop-color="#a855f7"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs>
+                    <circle cx="100" cy="100" r="76" fill="none" stroke="#eee" stroke-width="14"/>
+                    <circle cx="100" cy="100" r="76" fill="none" stroke="url(#prismG)" stroke-width="14" stroke-linecap="round" stroke-dasharray="350 478" transform="rotate(-90 100 100)"/>
+                    <text x="100" y="105" text-anchor="middle" font-family="Inter Tight" font-weight="800" font-size="30" fill="#1f2937">73%</text>
+                  </svg>
+                  <div style="display:flex;justify-content:space-around;padding:4px 12px 14px;font-size:9px;font-weight:700">
+                    <div style="text-align:center"><div style="width:22px;height:22px;border-radius:7px;background:#f472b6;margin:0 auto 3px"></div>읽기</div>
+                    <div style="text-align:center"><div style="width:22px;height:22px;border-radius:7px;background:#a855f7;margin:0 auto 3px"></div>공부</div>
+                    <div style="text-align:center"><div style="width:22px;height:22px;border-radius:7px;background:#3b82f6;margin:0 auto 3px"></div>문화</div>
+                  </div>
+                </div></div>
+              </div>
+              <div class="proj-carousel__slide">
+                <div class="proj-slide-glass" style="max-width:380px">
+                  <h5>5월 · 컬러 스펙트럼 로그</h5>
+                  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px">
+                    <div style="aspect-ratio:1;border-radius:4px;background:#fce7f3"></div><div style="aspect-ratio:1;border-radius:4px;background:#a855f7"></div><div style="aspect-ratio:1;border-radius:4px;background:#3b82f6"></div><div style="aspect-ratio:1;border-radius:4px;background:#f472b6"></div><div style="aspect-ratio:1;border-radius:4px;background:#e9d5ff"></div><div style="aspect-ratio:1;border-radius:4px;background:#3b82f6"></div><div style="aspect-ratio:1;border-radius:4px;background:#f472b6"></div>
+                    <div style="aspect-ratio:1;border-radius:4px;background:#a855f7"></div><div style="aspect-ratio:1;border-radius:4px;background:#a855f7"></div><div style="aspect-ratio:1;border-radius:4px;background:#f472b6"></div><div style="aspect-ratio:1;border-radius:4px;background:#3b82f6"></div><div style="aspect-ratio:1;border-radius:4px;background:#a855f7"></div><div style="aspect-ratio:1;border-radius:4px;background:#f472b6"></div><div style="aspect-ratio:1;border-radius:4px;background:#e9d5ff"></div>
+                    <div style="aspect-ratio:1;border-radius:4px;background:#3b82f6"></div><div style="aspect-ratio:1;border-radius:4px;background:#a855f7"></div><div style="aspect-ratio:1;border-radius:4px;background:#f472b6"></div><div style="aspect-ratio:1;border-radius:4px;background:#a855f7"></div><div style="aspect-ratio:1;border-radius:4px;background:#3b82f6"></div><div style="aspect-ratio:1;border-radius:4px;background:#f472b6"></div><div style="aspect-ratio:1;border-radius:4px;background:#fce7f3"></div>
+                  </div>
+                  <div style="margin-top:12px;font-family:var(--font-mono);font-size:10.5px;opacity:0.85;letter-spacing:0.06em">3주간 81개 로그 · 가장 빈번한 색 · 분홍(읽기)</div>
+                </div>
+              </div>
+            </div>
+            <button class="proj-carousel__nav prev" aria-label="이전 슬라이드">‹</button>
+            <button class="proj-carousel__nav next" aria-label="다음 슬라이드">›</button>
+            <div class="proj-carousel__half l" data-act="prev"></div>
+            <div class="proj-carousel__half r" data-act="next"></div>
+            <div class="proj-carousel__dots"></div>
+          </div>
+        </div>
+        <div class="proj-card__foot">
+          <div class="proj-card__app">
+            <div class="proj-card__icon">P</div>
+            <div><p class="proj-card__name">PrismLog</p><p class="proj-card__tag">Multi-category logger · Spectrum Ring</p></div>
+          </div>
+          <a class="proj-card__cta" href="#prism-detail">자세히 보기 →</a>
+        </div>
+      </article>
+    </section>
 
-    <article class="card w-6 reveal" data-type="project" data-topics="">
-      <div class="card__media">
-        <div class="cover theme-orange">
-          <div class="cover__mini" aria-hidden="true"></div>
-          <span>Expresso</span>
-          <span class="cover__labeltag">Planning · Team</span>
+    <!-- ====== 07 Expresso ====== -->
+    <section class="proj-scene reveal" data-type="project" data-topics="" data-num="07">
+      <article class="proj-card theme-orange">
+        <div class="proj-card__head">
+          <div class="proj-card__topline">
+            <span class="proj-card__num">07 / 07</span>
+            <span class="proj-card__eyebrow">Planning · Team · 2026</span>
+          </div>
+          <h3 class="proj-card__phrase">JD를 넣으면, 포트폴리오가 다시 배치된다.</h3>
+          <p class="proj-card__sub">학생이 프로젝트와 커리어 기록을 올리면 AI가 인터뷰 · 정리 · 배치로 포트폴리오 사이트를 자동 생성·배포합니다. <em>Target-adaptive Portfolio</em>와 '거의 완성 + 마이크로 수정' 루프가 핵심 난제입니다.</p>
+          <div class="proj-card__tags"><span>Career Archive</span><span>JD Parsing</span><span>Agent / Cowork</span></div>
         </div>
-        <div class="card__chips">
-          <span class="badge badge--solid">PROJECT</span>
-          <span class="badge badge--yel">PLANNING</span>
+        <div class="proj-card__stage">
+          <div class="proj-carousel" data-carousel data-total="2">
+            <div class="proj-carousel__counter"><span class="cur">1</span> / <span class="tot">2</span></div>
+            <div class="proj-carousel__slides">
+              <div class="proj-carousel__slide on">
+                <div class="proj-slide-glass" style="max-width:430px">
+                  <h5>JD → Portfolio Re-arrange</h5>
+                  <div style="display:flex;align-items:center;gap:12px;font-family:var(--font-mono);font-size:11px">
+                    <div style="flex:1;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.24);border-radius:10px;padding:10px"><div style="font-weight:700;font-size:10px;letter-spacing:0.1em;opacity:0.75">JOB DESC</div><div style="margin-top:4px;line-height:1.5">· LLM 추론<br>· 평가 파이프라인<br>· 분산 학습</div></div>
+                    <div style="font-size:22px;opacity:0.85">→</div>
+                    <div style="flex:1;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.24);border-radius:10px;padding:10px"><div style="font-weight:700;font-size:10px;letter-spacing:0.1em;opacity:0.75">RE-ORDER</div><div style="margin-top:4px;line-height:1.5">1. ARES (평가)<br>2. ARIS (추론)<br>3. 모두의입법 (RAG)</div></div>
+                  </div>
+                  <div style="margin-top:12px;font-family:var(--font-mono);font-size:10.5px;opacity:0.85;letter-spacing:0.06em">동일한 자료로 5개 JD에 5개 포트폴리오</div>
+                </div>
+              </div>
+              <div class="proj-carousel__slide">
+                <div class="proj-slide-glass" style="max-width:430px">
+                  <h5>"거의 완성 + 마이크로 수정" 루프</h5>
+                  <div style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-mono);font-size:12px">
+                    <div style="background:rgba(255,255,255,0.15);padding:8px 10px;border-radius:8px">[draft v1] · agent build</div>
+                    <div style="background:rgba(255,255,255,0.15);padding:8px 10px;border-radius:8px;margin-left:24px">↳ "Hero의 한 줄을 더 학술적으로"</div>
+                    <div style="background:rgba(255,255,255,0.25);padding:8px 10px;border-radius:8px;margin-left:24px">[micro-edit] · only that line</div>
+                    <div style="background:rgba(255,255,255,0.15);padding:8px 10px;border-radius:8px;margin-left:24px">↳ "Project 04의 태그 3개 줄여줘"</div>
+                    <div style="background:rgba(255,255,255,0.25);padding:8px 10px;border-radius:8px;margin-left:24px">[micro-edit] · scoped diff</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button class="proj-carousel__nav prev" aria-label="이전 슬라이드">‹</button>
+            <button class="proj-carousel__nav next" aria-label="다음 슬라이드">›</button>
+            <div class="proj-carousel__half l" data-act="prev"></div>
+            <div class="proj-carousel__half r" data-act="next"></div>
+            <div class="proj-carousel__dots"></div>
+          </div>
         </div>
-      </div>
-      <div class="card__body">
-        <div class="card__meta"><span>Career publishing platform</span></div>
-        <h3 class="card__title">Expresso</h3>
-        <p class="card__desc">대학생·취준생이 자신의 프로젝트와 커리어 기록을 올리면, AI가 인터뷰·정리·배치로 포트폴리오 사이트를 자동 생성·배포하도록 설계 중. <b>Target-adaptive Portfolio</b>(JD 기반 구조 재배치)와 "거의 완성 + 마이크로 수정" 루프가 핵심 난제.</p>
-        <div class="card__tags"><span>Career archive</span><span>JD parsing</span><span>Agent / Cowork</span></div>
-      </div>
-    </article>
+        <div class="proj-card__foot">
+          <div class="proj-card__app">
+            <div class="proj-card__icon">E</div>
+            <div><p class="proj-card__name">Expresso</p><p class="proj-card__tag">Career publishing platform · PLANNING</p></div>
+          </div>
+          <a class="proj-card__cta" href="#expresso-detail">자세히 보기 →</a>
+        </div>
+      </article>
+    </section>
 
   </div>
 </section>
+
 
 <!-- =====================================================
      §04 · STUDY — 2-column reading list
@@ -2293,6 +2894,106 @@ if (import.meta.env?.DEV) {
   } else {
     renderPaperCover();
   }
+})();
+</script>
+
+<script>
+/* ================================================================
+   §03 PROJECT — Carousel + scroll-active scene
+   ================================================================ */
+(function(){
+  document.querySelectorAll('[data-carousel]').forEach(root => {
+    const slides = root.querySelectorAll('.proj-carousel__slide');
+    if (!slides.length) return;
+    const dotsBox = root.querySelector('.proj-carousel__dots');
+    const cur = root.querySelector('.cur');
+    const tot = root.querySelector('.tot');
+    let idx = Math.max(0, [...slides].findIndex(s => s.classList.contains('on')));
+    if (idx < 0) idx = 0;
+    const pad = slides.length > 9 ? 2 : 1;
+    if (tot) tot.textContent = String(slides.length).padStart(pad, '0');
+    if (cur) cur.textContent = String(idx + 1).padStart(pad, '0');
+
+    if (dotsBox) {
+      slides.forEach((_, i) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.setAttribute('aria-label', '슬라이드 ' + (i + 1));
+        if (i === idx) b.classList.add('on');
+        b.addEventListener('click', e => { e.stopPropagation(); show(i); });
+        dotsBox.appendChild(b);
+      });
+    }
+    const dots = dotsBox ? dotsBox.querySelectorAll('button') : [];
+
+    function show(n) {
+      const next = (n + slides.length) % slides.length;
+      slides.forEach((s, k) => {
+        s.classList.remove('on', 'prev');
+        if (k === next) s.classList.add('on');
+        else if (k === idx) s.classList.add('prev');
+      });
+      dots.forEach((d, k) => d.classList.toggle('on', k === next));
+      if (cur) cur.textContent = String(next + 1).padStart(pad, '0');
+      idx = next;
+    }
+    root.querySelectorAll('.proj-carousel__nav.prev').forEach(b =>
+      b.addEventListener('click', e => { e.stopPropagation(); show(idx - 1); }));
+    root.querySelectorAll('.proj-carousel__nav.next').forEach(b =>
+      b.addEventListener('click', e => { e.stopPropagation(); show(idx + 1); }));
+    root.querySelectorAll('.proj-carousel__half').forEach(half =>
+      half.addEventListener('click', e => {
+        e.stopPropagation();
+        show(half.dataset.act === 'prev' ? idx - 1 : idx + 1);
+      }));
+
+    let sx = 0, sy = 0, st = 0;
+    root.addEventListener('touchstart', e => {
+      sx = e.touches[0].clientX;
+      sy = e.touches[0].clientY;
+      st = Date.now();
+    }, { passive: true });
+    root.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - sx;
+      const dy = e.changedTouches[0].clientY - sy;
+      const dt = Date.now() - st;
+      if (dt < 500 && Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+        show(idx + (dx < 0 ? 1 : -1));
+      }
+    }, { passive: true });
+
+    root.addEventListener('mouseenter', () => root.dataset.hover = '1');
+    root.addEventListener('mouseleave', () => delete root.dataset.hover);
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    const hover = document.querySelector('[data-carousel][data-hover]');
+    if (!hover) return;
+    const slides = hover.querySelectorAll('.proj-carousel__slide');
+    const cur = [...slides].findIndex(s => s.classList.contains('on'));
+    const next = (cur + (e.key === 'ArrowLeft' ? -1 : 1) + slides.length) % slides.length;
+    const dots = hover.querySelectorAll('.proj-carousel__dots button');
+    if (dots[next]) dots[next].click();
+  });
+
+  const scenes = document.querySelectorAll('.proj-scene');
+  if (!scenes.length) return;
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion || !('IntersectionObserver' in window)) {
+    scenes.forEach(s => s.classList.add('is-active'));
+    return;
+  }
+
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.intersectionRatio > 0.45) e.target.classList.add('is-active');
+      else if (e.intersectionRatio < 0.15) e.target.classList.remove('is-active');
+    });
+  }, { threshold: [0, 0.15, 0.3, 0.45, 0.6, 0.85, 1] });
+
+  scenes.forEach(s => obs.observe(s));
 })();
 </script>
 
