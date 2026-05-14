@@ -1429,9 +1429,6 @@ footer {
   align-items: stretch;
   justify-content: center;
   padding: 4vh 0;
-  scroll-margin-top: 64px;
-  scroll-snap-align: start;
-  scroll-snap-stop: normal;
 }
 .proj-scene__edge {
   align-self: center;
@@ -1488,6 +1485,8 @@ footer {
   isolation: isolate;
   background-color: hsl(var(--blue-70));
   box-shadow: 0 2px 4px rgba(0,0,0,.05), 0 18px 40px rgba(0,0,0,.08);
+  scroll-snap-align: center;
+  scroll-snap-stop: normal;
   transform: scale(0.9) translateY(28px);
   opacity: 0.6;
   filter: saturate(0.85);
@@ -3147,6 +3146,7 @@ if (import.meta.env?.DEV) {
   let busy = false;
 
   const easeInOutCubic = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const snapCenterY = () => TOPNAV + (window.innerHeight - TOPNAV) / 2;
 
   function inProjectArea() {
     const r = proj.getBoundingClientRect();
@@ -3191,6 +3191,25 @@ if (import.meta.env?.DEV) {
     requestAnimationFrame(tick);
   }
 
+  function cardTargetY(scene) {
+    const card = scene.querySelector('.proj-card') || scene;
+    const prevSceneTransition = scene.style.transition;
+    const prevSceneTransform = scene.style.transform;
+    const prevTransition = card.style.transition;
+    const prevTransform = card.style.transform;
+    // Measure the final revealed position, not the offscreen reveal transforms.
+    scene.style.transition = 'none';
+    scene.style.transform = 'none';
+    card.style.transition = 'none';
+    card.style.transform = 'none';
+    const r = card.getBoundingClientRect();
+    scene.style.transition = prevSceneTransition;
+    scene.style.transform = prevSceneTransform;
+    card.style.transition = prevTransition;
+    card.style.transform = prevTransform;
+    return r.top + r.height / 2 + window.scrollY - snapCenterY();
+  }
+
   window.addEventListener('wheel', (e) => {
     if (!inProjectArea()) return;
     if (busy) { e.preventDefault(); return; }
@@ -3200,7 +3219,7 @@ if (import.meta.env?.DEV) {
     const target = scenes[i + dir];
     if (!target) return; // let native scroll carry user out of the section
     e.preventDefault();
-    tweenTo(target.getBoundingClientRect().top + window.scrollY - TOPNAV);
+    tweenTo(cardTargetY(target));
   }, { passive: false });
 })();
 </script>
