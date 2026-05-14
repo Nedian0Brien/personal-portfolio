@@ -3142,9 +3142,9 @@ if (import.meta.env?.DEV) {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   const TOPNAV = 64;
-  const DURATION = 1100;
+  const DURATION = 700;
+  const COOLDOWN = 180;
   let busy = false;
-  let lastTrigger = 0;
 
   const easeInOutCubic = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
@@ -3169,13 +3169,24 @@ if (import.meta.env?.DEV) {
     const startY = window.scrollY;
     const diff = targetY - startY;
     if (Math.abs(diff) < 1) return;
+    const html = document.documentElement;
+    const prevSnap = html.style.scrollSnapType;
+    const prevBehavior = html.style.scrollBehavior;
+    html.style.scrollSnapType = 'none';
+    html.style.scrollBehavior = 'auto';
     const t0 = performance.now();
     busy = true;
     function tick(now) {
       const t = Math.min((now - t0) / DURATION, 1);
-      window.scrollTo(0, startY + diff * easeInOutCubic(t));
-      if (t < 1) requestAnimationFrame(tick);
-      else { busy = false; }
+      const y = startY + diff * easeInOutCubic(t);
+      window.scrollTo({ top: y, left: 0, behavior: 'instant' });
+      if (t < 1) {
+        requestAnimationFrame(tick);
+      } else {
+        html.style.scrollSnapType = prevSnap;
+        html.style.scrollBehavior = prevBehavior;
+        setTimeout(() => { busy = false; }, COOLDOWN);
+      }
     }
     requestAnimationFrame(tick);
   }
@@ -3183,14 +3194,12 @@ if (import.meta.env?.DEV) {
   window.addEventListener('wheel', (e) => {
     if (!inProjectArea()) return;
     if (busy) { e.preventDefault(); return; }
-    if (performance.now() - lastTrigger < DURATION + 120) { e.preventDefault(); return; }
     const i = currentIdx();
     if (i < 0) return;
     const dir = e.deltaY > 0 ? 1 : -1;
     const target = scenes[i + dir];
     if (!target) return; // let native scroll carry user out of the section
     e.preventDefault();
-    lastTrigger = performance.now();
     tweenTo(target.getBoundingClientRect().top + window.scrollY - TOPNAV);
   }, { passive: false });
 })();
