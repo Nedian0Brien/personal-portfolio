@@ -1432,7 +1432,7 @@ footer {
   min-height: 68vh;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
-  grid-template-rows: 1fr auto;
+  grid-template-rows: 1fr auto auto;
   column-gap: 36px;
   row-gap: 18px;
   padding: 52px 52px 38px;
@@ -1607,18 +1607,20 @@ footer {
 }
 .proj-card.theme-yellow .proj-card__foot { border-top-color: rgba(0,0,0,0.14); }
 .proj-card__app {
-  display: flex; flex-direction: column;
-  gap: 8px;
+  display: flex; align-items: center;
   min-width: 0;
 }
 .proj-card__app-expand {
-  display: flex; flex-direction: column; gap: 4px;
+  grid-column: 1 / -1;
+  display: flex; flex-direction: column; gap: 6px;
   font-family: var(--font-display);
   font-weight: 600;
   font-size: clamp(15px, 1.4vw, 18px);
   letter-spacing: -0.01em;
   line-height: 1.06;
   opacity: 0.88;
+  margin-top: 12px;
+  align-self: end;
 }
 .proj-card__app-acronym {
   display: block;
@@ -1627,17 +1629,6 @@ footer {
   font-size: clamp(34px, 3.6vw, 48px);
   letter-spacing: -0.035em;
   line-height: 0.95;
-  margin-top: 2px;
-}
-.proj-card__app-tag {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  opacity: 0.78;
-  margin-top: 8px;
 }
 .proj-card__cta {
   font-family: var(--font-display); font-weight: 700;
@@ -2218,13 +2209,12 @@ footer {
             <div class="proj-carousel__dots"></div>
           </div>
         </div>
+        <div class="proj-card__app-expand">
+          <span>Agentic</span><span>Runtime</span><span>Interface</span><span>System</span>
+        </div>
         <div class="proj-card__foot">
           <div class="proj-card__app">
-            <div class="proj-card__app-expand">
-              <span>Agentic</span><span>Runtime</span><span>Interface</span><span>System</span>
-            </div>
             <span class="proj-card__app-acronym">ARIS</span>
-            <span class="proj-card__app-tag">Chat-first agent runtime · LIVE</span>
           </div>
           <a class="proj-card__cta" href="#aris-detail">자세히 보기 →</a>
         </div>
@@ -2272,13 +2262,12 @@ footer {
             <div class="proj-carousel__dots"></div>
           </div>
         </div>
+        <div class="proj-card__app-expand">
+          <span>Agentic</span><span>Research</span><span>Experimentation</span><span>System</span>
+        </div>
         <div class="proj-card__foot">
           <div class="proj-card__app">
-            <div class="proj-card__app-expand">
-              <span>Agentic</span><span>Research</span><span>Experimentation</span><span>System</span>
-            </div>
             <span class="proj-card__app-acronym">ARES</span>
-            <span class="proj-card__app-tag">Research workflow · DEV</span>
           </div>
           <a class="proj-card__cta" href="#ares-detail">자세히 보기 →</a>
         </div>
@@ -2330,13 +2319,12 @@ footer {
             <div class="proj-carousel__dots"></div>
           </div>
         </div>
+        <div class="proj-card__app-expand">
+          <span>AI 기반</span><span>법률 개정안</span><span>요약 플랫폼</span>
+        </div>
         <div class="proj-card__foot">
           <div class="proj-card__app">
-            <div class="proj-card__app-expand">
-              <span>AI 기반</span><span>법률 개정안</span><span>요약 플랫폼</span>
-            </div>
             <span class="proj-card__app-acronym">모두의입법</span>
-            <span class="proj-card__app-tag">Public data platform · LIVE · 최우수상</span>
           </div>
           <a class="proj-card__cta" href="#civic-detail">자세히 보기 →</a>
         </div>
@@ -2391,13 +2379,12 @@ footer {
             <div class="proj-carousel__dots"></div>
           </div>
         </div>
+        <div class="proj-card__app-expand">
+          <span>Adaptive</span><span>Vocabulary</span><span>Loop</span>
+        </div>
         <div class="proj-card__foot">
           <div class="proj-card__app">
-            <div class="proj-card__app-expand">
-              <span>Adaptive</span><span>Vocabulary</span><span>Loop</span>
-            </div>
             <span class="proj-card__app-acronym">VocaLoop</span>
-            <span class="proj-card__app-tag">EdTech · Hybrid grading</span>
           </div>
           <a class="proj-card__cta" href="#voca-detail">자세히 보기 →</a>
         </div>
@@ -2465,13 +2452,12 @@ footer {
             <div class="proj-carousel__dots"></div>
           </div>
         </div>
+        <div class="proj-card__app-expand">
+          <span>Personal</span><span>Knowledge</span><span>OS</span>
+        </div>
         <div class="proj-card__foot">
           <div class="proj-card__app">
-            <div class="proj-card__app-expand">
-              <span>Personal</span><span>Knowledge</span><span>OS</span>
-            </div>
             <span class="proj-card__app-acronym">SynapseNote</span>
-            <span class="proj-card__app-tag">AI-Native Knowledge · 2026</span>
           </div>
           <a class="proj-card__cta" href="#synapse-detail">자세히 보기 →</a>
         </div>
@@ -2529,13 +2515,12 @@ footer {
             <div class="proj-carousel__dots"></div>
           </div>
         </div>
+        <div class="proj-card__app-expand">
+          <span>Multi-category</span><span>Spectrum</span><span>Logger</span>
+        </div>
         <div class="proj-card__foot">
           <div class="proj-card__app">
-            <div class="proj-card__app-expand">
-              <span>Multi-category</span><span>Spectrum</span><span>Logger</span>
-            </div>
             <span class="proj-card__app-acronym">PrismLog</span>
-            <span class="proj-card__app-tag">Personal · Mobile-first</span>
           </div>
           <a class="proj-card__cta" href="#prism-detail">자세히 보기 →</a>
         </div>
@@ -2589,13 +2574,12 @@ footer {
             <div class="proj-carousel__dots"></div>
           </div>
         </div>
+        <div class="proj-card__app-expand">
+          <span>Career</span><span>Publishing</span><span>Platform</span>
+        </div>
         <div class="proj-card__foot">
           <div class="proj-card__app">
-            <div class="proj-card__app-expand">
-              <span>Career</span><span>Publishing</span><span>Platform</span>
-            </div>
             <span class="proj-card__app-acronym">Expresso</span>
-            <span class="proj-card__app-tag">Planning · Team · 2026</span>
           </div>
           <a class="proj-card__cta" href="#expresso-detail">자세히 보기 →</a>
         </div>
