@@ -1423,8 +1423,51 @@ footer {
 .proj-scene {
   position: relative;
   min-height: 90vh;
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
   padding: 4vh 0;
+  scroll-margin-top: 60px;
+}
+.proj-scene__edge {
+  align-self: center;
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: 14px 18px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  opacity: 0.55;
+  text-decoration: none;
+  transition: opacity .22s ease, transform .35s var(--ease-apple);
+  cursor: pointer;
+}
+.proj-scene__edge:hover { opacity: 1; }
+.proj-scene__edge--top { margin-bottom: 22px; }
+.proj-scene__edge--bottom { margin-top: 22px; }
+.proj-scene__edge--top:hover { transform: translateY(-4px); }
+.proj-scene__edge--bottom:hover { transform: translateY(4px); }
+.proj-scene__edge .chev {
+  display: inline-flex;
+  width: 28px; height: 28px;
+  align-items: center; justify-content: center;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: var(--font-display);
+  line-height: 1;
+}
+.proj-scene__edge .name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--text-primary);
 }
 .proj-card {
   position: relative;
@@ -1622,9 +1665,9 @@ footer {
   display: block;
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(34px, 3.6vw, 48px);
-  letter-spacing: -0.035em;
-  line-height: 0.95;
+  font-size: clamp(52px, 7vw, 96px);
+  letter-spacing: -0.045em;
+  line-height: 0.92;
 }
 .proj-card__app-tag {
   font-family: var(--font-mono);
@@ -2150,7 +2193,7 @@ footer {
   <div class="proj-stack reveal-group">
 
     <!-- ====== 01 ARIS ====== -->
-    <section class="proj-scene reveal" data-type="project" data-topics="agent" data-num="01">
+    <section class="proj-scene reveal" id="proj-01" data-type="project" data-topics="agent" data-num="01">
       <article class="proj-card theme-blue">
         <header class="proj-card__heading">
           <div class="proj-card__topline">
@@ -2226,10 +2269,16 @@ footer {
           <a class="proj-card__cta" href="#aris-detail">자세히 보기 →</a>
         </div>
       </article>
+      <a class="proj-scene__edge proj-scene__edge--bottom" href="#proj-02">
+        <span>Next</span><span class="name">ARES</span><span class="chev">↓</span>
+      </a>
     </section>
 
     <!-- ====== 02 ARES ====== -->
-    <section class="proj-scene reveal" data-type="project" data-topics="agent rag" data-num="02">
+    <section class="proj-scene reveal" id="proj-02" data-type="project" data-topics="agent rag" data-num="02">
+      <a class="proj-scene__edge proj-scene__edge--top" href="#proj-01">
+        <span class="chev">↑</span><span class="name">ARIS</span><span>Prev</span>
+      </a>
       <article class="proj-card theme-red">
         <header class="proj-card__heading">
           <div class="proj-card__topline">
@@ -2281,10 +2330,16 @@ footer {
           <a class="proj-card__cta" href="#ares-detail">자세히 보기 →</a>
         </div>
       </article>
+      <a class="proj-scene__edge proj-scene__edge--bottom" href="#proj-03">
+        <span>Next</span><span class="name">모두의입법</span><span class="chev">↓</span>
+      </a>
     </section>
 
     <!-- ====== 03 모두의입법 ====== -->
-    <section class="proj-scene reveal" data-type="project" data-topics="rag" data-num="03">
+    <section class="proj-scene reveal" id="proj-03" data-type="project" data-topics="rag" data-num="03">
+      <a class="proj-scene__edge proj-scene__edge--top" href="#proj-02">
+        <span class="chev">↑</span><span class="name">ARES</span><span>Prev</span>
+      </a>
       <article class="proj-card theme-yellow">
         <header class="proj-card__heading">
           <div class="proj-card__topline">
@@ -2340,10 +2395,16 @@ footer {
           <a class="proj-card__cta" href="#civic-detail">자세히 보기 →</a>
         </div>
       </article>
+      <a class="proj-scene__edge proj-scene__edge--bottom" href="#proj-04">
+        <span>Next</span><span class="name">VocaLoop</span><span class="chev">↓</span>
+      </a>
     </section>
 
     <!-- ====== 04 VocaLoop ====== -->
-    <section class="proj-scene reveal" data-type="project" data-topics="rag" data-num="04">
+    <section class="proj-scene reveal" id="proj-04" data-type="project" data-topics="rag" data-num="04">
+      <a class="proj-scene__edge proj-scene__edge--top" href="#proj-03">
+        <span class="chev">↑</span><span class="name">모두의입법</span><span>Prev</span>
+      </a>
       <article class="proj-card theme-green">
         <header class="proj-card__heading">
           <div class="proj-card__topline">
@@ -2402,10 +2463,16 @@ footer {
           <a class="proj-card__cta" href="#voca-detail">자세히 보기 →</a>
         </div>
       </article>
+      <a class="proj-scene__edge proj-scene__edge--bottom" href="#proj-05">
+        <span>Next</span><span class="name">SynapseNote</span><span class="chev">↓</span>
+      </a>
     </section>
 
     <!-- ====== 05 SynapseNote ====== -->
-    <section class="proj-scene reveal" data-type="project" data-topics="agent" data-num="05">
+    <section class="proj-scene reveal" id="proj-05" data-type="project" data-topics="agent" data-num="05">
+      <a class="proj-scene__edge proj-scene__edge--top" href="#proj-04">
+        <span class="chev">↑</span><span class="name">VocaLoop</span><span>Prev</span>
+      </a>
       <article class="proj-card theme-purple">
         <header class="proj-card__heading">
           <div class="proj-card__topline">
@@ -2477,10 +2544,16 @@ footer {
           <a class="proj-card__cta" href="#synapse-detail">자세히 보기 →</a>
         </div>
       </article>
+      <a class="proj-scene__edge proj-scene__edge--bottom" href="#proj-06">
+        <span>Next</span><span class="name">PrismLog</span><span class="chev">↓</span>
+      </a>
     </section>
 
     <!-- ====== 06 PrismLog ====== -->
-    <section class="proj-scene reveal" data-type="project" data-topics="" data-num="06">
+    <section class="proj-scene reveal" id="proj-06" data-type="project" data-topics="" data-num="06">
+      <a class="proj-scene__edge proj-scene__edge--top" href="#proj-05">
+        <span class="chev">↑</span><span class="name">SynapseNote</span><span>Prev</span>
+      </a>
       <article class="proj-card theme-pink">
         <header class="proj-card__heading">
           <div class="proj-card__topline">
@@ -2542,10 +2615,16 @@ footer {
           <a class="proj-card__cta" href="#prism-detail">자세히 보기 →</a>
         </div>
       </article>
+      <a class="proj-scene__edge proj-scene__edge--bottom" href="#proj-07">
+        <span>Next</span><span class="name">Expresso</span><span class="chev">↓</span>
+      </a>
     </section>
 
     <!-- ====== 07 Expresso ====== -->
-    <section class="proj-scene reveal" data-type="project" data-topics="" data-num="07">
+    <section class="proj-scene reveal" id="proj-07" data-type="project" data-topics="" data-num="07">
+      <a class="proj-scene__edge proj-scene__edge--top" href="#proj-06">
+        <span class="chev">↑</span><span class="name">PrismLog</span><span>Prev</span>
+      </a>
       <article class="proj-card theme-orange">
         <header class="proj-card__heading">
           <div class="proj-card__topline">
