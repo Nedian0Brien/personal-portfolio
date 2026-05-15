@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+<link rel="stylesheet" href="/aris-msg.css" />
 
 <style>
 /* ================================================================
@@ -1475,7 +1476,7 @@ footer {
   min-height: 68vh;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
-  grid-template-rows: auto 1fr auto auto;
+  grid-template-rows: auto 1fr auto;
   column-gap: 36px;
   row-gap: 24px;
   padding: 52px 52px 38px;
@@ -1571,12 +1572,15 @@ footer {
   position: relative;
   width: 100%; height: 100%;
   min-height: 360px;
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 .proj-carousel__slides {
   position: relative;
-  width: 100%; height: 100%;
-  min-height: 360px;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
 }
 .proj-carousel__slide {
   position: absolute; inset: 0;
@@ -1616,8 +1620,9 @@ footer {
 .proj-card.theme-yellow .proj-carousel__nav:hover { background: rgba(0,0,0,0.16); }
 
 .proj-carousel__dots {
-  position: absolute; left: 0; right: 0; bottom: -22px;
-  display: flex; justify-content: center; gap: 6px; z-index: 5;
+  display: flex; justify-content: center; gap: 6px;
+  flex-shrink: 0;
+  margin: 0;
 }
 .proj-carousel__dots button {
   width: 6px; height: 6px; border-radius: 50%;
@@ -1644,7 +1649,7 @@ footer {
 /* Foot bar */
 .proj-card__foot {
   grid-column: 1 / -1;
-  grid-row: 4;
+  grid-row: 3;
   display: flex; align-items: center; justify-content: space-between;
   gap: 16px;
   padding-top: 22px;
@@ -1660,8 +1665,8 @@ footer {
 }
 .proj-card__app-expand {
   grid-column: 1;
-  grid-row: 3;
-  align-self: end;
+  grid-row: 2;
+  align-self: center;
   display: flex; flex-direction: column; gap: 8px;
   font-family: var(--font-display);
   font-weight: 700;
@@ -1796,6 +1801,73 @@ footer {
 .proj-heatmap .cell.l3 { background: rgba(255,255,255,0.72); }
 .proj-heatmap .cell.l4 { background: #fff; }
 
+
+
+/* Prototype iframe preview (auto-scaled) */
+.proj-preview {
+  position: relative;
+  width: 100%; max-width: 520px;
+  aspect-ratio: 1440 / 900;
+  overflow: hidden;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.22);
+  box-shadow: 0 18px 36px rgba(0,0,0,0.28);
+  background: #F7F8FA;
+}
+
+
+
+/* Carousel title — describes current slide, top-centered above carousel */
+.proj-carousel__title {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.82);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ARIS only: keep the carousel full-width and treat the expanded name as background type. */
+#proj-01 .proj-card__stage--with-expand {
+  grid-column: 1 / -1;
+  display: block;
+  min-height: clamp(380px, 44vh, 500px);
+}
+#proj-01 .proj-card__stage--with-expand .proj-card__app-expand {
+  position: absolute;
+  left: 0;
+  bottom: clamp(-66px, -4vw, -38px);
+  z-index: 0;
+  pointer-events: none;
+  width: min(44%, 360px);
+  display: flex; flex-direction: column;
+  gap: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(30px, 4.4vw, 64px);
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+  opacity: 0.22;
+  margin: 0;
+}
+#proj-01 .proj-card__stage--with-expand .proj-card__app-expand span { display: block; }
+#proj-01 .proj-card__stage--with-expand .proj-carousel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: inherit;
+}
+#proj-01 .proj-card__stage--with-expand .proj-carousel__slide figure {
+  max-width: min(82%, 640px) !important;
+}
+
 /* Section title sizing */
 #project .sec__row { margin-bottom: 0; }
 
@@ -1820,6 +1892,20 @@ footer {
   .proj-card__sub { font-size: 14px; }
   .proj-card__cta { align-self: flex-end; }
   .proj-phone { width: 160px; }
+  #proj-01 .proj-card__stage--with-expand {
+    grid-column: 1;
+    grid-row: 3;
+    min-height: 340px;
+  }
+  #proj-01 .proj-card__stage--with-expand .proj-card__app-expand {
+    width: min(62%, 260px);
+    bottom: -60px;
+    font-size: clamp(26px, 4.2vw, 36px);
+    opacity: 0.2;
+  }
+  #proj-01 .proj-card__stage--with-expand .proj-carousel__slide figure {
+    max-width: min(100%, 560px) !important;
+  }
 }
 @media (max-width: 520px) {
   .proj-card { padding: 26px 18px 22px; }
@@ -1829,6 +1915,15 @@ footer {
   .proj-carousel__nav { width: 32px; height: 32px; font-size: 18px; }
   .proj-carousel__nav.prev { left: -4px; }
   .proj-carousel__nav.next { right: -4px; }
+  #proj-01 .proj-card__stage--with-expand {
+    min-height: 320px;
+  }
+  #proj-01 .proj-card__stage--with-expand .proj-card__app-expand {
+    width: min(76%, 240px);
+    bottom: -44px;
+    font-size: 24px;
+    opacity: 0.14;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .proj-card { transform: none; opacity: 1; filter: none; transition: none; }
@@ -2200,7 +2295,7 @@ footer {
       <div class="sec__eyebrow reveal">03 · Project</div>
       <div class="sec__title reveal">직접 만들고, 운영하고, 고친 것들.</div>
     </div>
-    <div class="sec__meta reveal">7 projects · Agent · RAG · EdTech · Civic · 스크롤로 카드 활성화</div>
+    <div class="sec__meta reveal">7 projects · Agent · RAG · EdTech · LegalAI</div>
   </div>
 
   <div class="proj-stack reveal-group">
@@ -2213,22 +2308,70 @@ footer {
             <span class="proj-card__num">01 / 07</span>
             <span class="proj-card__eyebrow">Featured · Agent UX · 2026</span>
           </div>
-          <h3 class="proj-card__phrase">질문하고, 계획하고, 실행하는 하나의 대화.</h3>
+          <h3 class="proj-card__phrase">언제 어디서든, 에이전트와 함께하는 개발</h3>
         </header>
-        <div class="proj-card__head">
-          <p class="proj-card__sub">Ask · Plan · Execute 세 모드와 권한 토글을 한 채팅창에 모은 에이전트 런타임. iOS Safari 키보드는 <em>visualViewport</em>로, 채팅 진입은 페이지네이션으로 15MB→236KB까지 직접 해결했습니다.</p>
-        </div>
-        <div class="proj-card__stage">
+        <div class="proj-card__stage proj-card__stage--with-expand">
+          <div class="proj-card__app-expand" aria-hidden="true">
+            <span>Agentic</span><span>Runtime</span><span>Interface</span><span>System</span>
+          </div>
           <div class="proj-carousel" data-carousel data-total="4">
+            <div class="proj-carousel__title" aria-live="polite">Chat thread</div>
             <div class="proj-carousel__counter"><span class="cur">1</span> / <span class="tot">4</span></div>
             <div class="proj-carousel__slides">
-              <div class="proj-carousel__slide on">
-                <figure style="margin:0;width:100%;max-width:520px">
-                  <img src="/project/aris-dashboard.png" alt="ARIS workspace dashboard screenshot" loading="lazy" style="width:100%;height:auto;border-radius:14px;border:1px solid rgba(255,255,255,0.22);box-shadow:0 18px 36px rgba(0,0,0,0.25);background:#0a0a0a">
-                  <figcaption style="margin-top:10px;font-family:var(--font-mono);font-size:10.5px;letter-spacing:0.08em;opacity:0.85">ARIS · Live workspace · 2026</figcaption>
+              <div class="proj-carousel__slide on" data-title="Chat thread">
+                <figure style="margin:0;width:100%;max-width:640px">
+                  <div class="aris-thread" data-theme="light">
+                    <div class="msg">
+                      <span class="msg__avatar msg__avatar--user" aria-hidden="true">U</span>
+                      <div class="msg__body">
+                        <div class="msg__header">
+                          <span class="msg__name">You</span>
+                          <span class="msg__time">1d ago</span>
+                        </div>
+                        <div class="msg__bubble">선택기에서 바꾼 모델이 새 채팅 만들 때도 그대로 유지되는지 확인해줘.</div>
+                      </div>
+                    </div>
+                    <div class="msg">
+                      <span class="msg__avatar msg__avatar--codex" aria-hidden="true">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.142-.08 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.495 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z"/></svg>
+                      </span>
+                      <div class="msg__body">
+                        <div class="msg__header">
+                          <span class="msg__name">Codex · gpt-5.4</span>
+                          <span class="msg__time">1d ago</span>
+                        </div>
+                        <div class="msg__text">추가로 한 가지 더 봐야 할 부분이 있습니다. 설령 첫 전송에 모델명이 들어가더라도, 그 선택이 채팅 레코드에 저장되지 않으면 화면을 다시 열었을 때 다시 원래 모델로 돌아갈 수 있어서 그 지속성까지 확인하겠습니다.</div>
+                      </div>
+                    </div>
+                    <div class="msg msg--action">
+                      <div class="cmd-mini-stack">
+                        <div class="cmd-mini-stack__row">
+                          <span class="cmd-mini-badge-wrap">
+                            <button type="button" class="cmd-badge" data-tone="read" data-clickable="true">
+                              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                              <span>Read</span>
+                            </button>
+                          </span>
+                          <span class="cmd-mini-badge-wrap">
+                            <button type="button" class="cmd-badge" data-tone="search" data-clickable="true">
+                              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                              <span>rg</span>
+                            </button>
+                          </span>
+                          <span class="cmd-mini-badge-wrap">
+                            <button type="button" class="cmd-badge" data-tone="shell" data-clickable="true">
+                              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                              <span>./node_modules/.bin/tsx</span>
+                            </button>
+                          </span>
+                          <span class="cmd-mini-stack__label">3 actions</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </figure>
               </div>
-              <div class="proj-carousel__slide">
+              <div class="proj-carousel__slide" data-title="Plan mode">
                 <div class="proj-phone"><div class="proj-phone__notch"></div><div class="proj-phone__screen">
                   <div class="pp-mock">
                     <div class="pp-row"><b>ARIS</b><span class="pp-pill">PLAN</span></div>
@@ -2239,7 +2382,7 @@ footer {
                   </div>
                 </div></div>
               </div>
-              <div class="proj-carousel__slide">
+              <div class="proj-carousel__slide" data-title="Execute mode">
                 <div class="proj-phone"><div class="proj-phone__notch"></div><div class="proj-phone__screen">
                   <div class="pp-mock">
                     <div class="pp-row"><b>ARIS</b><span class="pp-pill" style="background:#16a34a">EXECUTE</span></div>
@@ -2249,7 +2392,7 @@ footer {
                   </div>
                 </div></div>
               </div>
-              <div class="proj-carousel__slide">
+              <div class="proj-carousel__slide" data-title="Bundle · 15MB → 236KB">
                 <div class="proj-slide-glass">
                   <h5>Bundle · 15MB → 236KB</h5>
                   <svg viewBox="0 0 460 160" width="100%">
@@ -2270,9 +2413,6 @@ footer {
             <div class="proj-carousel__half r" data-act="next"></div>
             <div class="proj-carousel__dots"></div>
           </div>
-        </div>
-        <div class="proj-card__app-expand">
-          <span>Agentic</span><span>Runtime</span><span>Interface</span><span>System</span>
         </div>
         <div class="proj-card__foot">
           <div class="proj-card__app">
@@ -3044,6 +3184,11 @@ if (import.meta.env?.DEV) {
     const pad = slides.length > 9 ? 2 : 1;
     if (tot) tot.textContent = String(slides.length).padStart(pad, '0');
     if (cur) cur.textContent = String(idx + 1).padStart(pad, '0');
+    const initialTitleEl = root.querySelector('.proj-carousel__title');
+    if (initialTitleEl) {
+      const t0 = slides[idx].dataset.title;
+      if (t0) initialTitleEl.textContent = t0;
+    }
 
     if (dotsBox) {
       slides.forEach((_, i) => {
@@ -3066,6 +3211,11 @@ if (import.meta.env?.DEV) {
       });
       dots.forEach((d, k) => d.classList.toggle('on', k === next));
       if (cur) cur.textContent = String(next + 1).padStart(pad, '0');
+      const titleEl = root.querySelector('.proj-carousel__title');
+      if (titleEl) {
+        const t = slides[next].dataset.title;
+        if (t) titleEl.textContent = t;
+      }
       idx = next;
     }
     root.querySelectorAll('.proj-carousel__nav.prev').forEach(b =>
@@ -3125,6 +3275,32 @@ if (import.meta.env?.DEV) {
   }, { threshold: [0, 0.15, 0.3, 0.45, 0.6, 0.85, 1] });
 
   scenes.forEach(s => obs.observe(s));
+})();
+</script>
+
+<script>
+/* Auto-fit prototype iframes to wrapper width (transform: scale).
+   Each .proj-preview has data-base-width (default 1440). */
+(function(){
+  const previews = document.querySelectorAll('.proj-preview');
+  if (!previews.length) return;
+  function fit() {
+    previews.forEach(wrap => {
+      const frame = wrap.querySelector('.aris-screen, .proj-preview__frame');
+      if (!frame) return;
+      const baseW = parseFloat(wrap.dataset.baseWidth || '1440');
+      const w = wrap.clientWidth;
+      if (!w) return;
+      frame.style.transform = 'scale(' + (w / baseW) + ')';
+    });
+  }
+  let raf = 0;
+  function schedule(){ if (raf) cancelAnimationFrame(raf); raf = requestAnimationFrame(fit); }
+  window.addEventListener('resize', schedule);
+  if (document.readyState === 'complete') fit();
+  else window.addEventListener('load', fit);
+  setTimeout(fit, 50);
+  setTimeout(fit, 300);
 })();
 </script>
 
