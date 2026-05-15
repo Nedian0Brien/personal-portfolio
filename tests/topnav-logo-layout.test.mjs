@@ -3,8 +3,12 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 const html = readFileSync(new URL("../web/index.html", import.meta.url), "utf8");
-const styles = readFileSync(new URL("../web/styles.css", import.meta.url), "utf8");
-const source = `${html}\n${styles}`;
+const stylesEntry = readFileSync(new URL("../web/styles.css", import.meta.url), "utf8");
+const importedStyles = [...stylesEntry.matchAll(/@import\s+["'](.+?)["'];/g)].map((match) => {
+  const importPath = match[1].replace(/^\.\//, "");
+  return readFileSync(new URL(`../web/${importPath}`, import.meta.url), "utf8");
+});
+const source = [html, stylesEntry, ...importedStyles].join("\n");
 
 function getCssBlock(selector) {
   const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");

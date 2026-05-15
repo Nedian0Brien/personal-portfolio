@@ -1,0 +1,236 @@
+/* ================================================================
+   Apple-style scroll reveal
+   ================================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(var(--reveal-distance));
+  transition:
+    opacity var(--dur-reveal) var(--ease-apple),
+    transform var(--dur-reveal) var(--ease-apple);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  will-change: auto;
+}
+.reveal-group .reveal {
+  transition-delay: calc(var(--i, 0) * var(--reveal-stagger));
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal.is-visible {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .hero__title,
+  .hero__sub,
+  .hero__tags,
+  .hero__facts,
+  .hero__eyebrow {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* hero parallax (scroll-driven) */
+.hero {
+  will-change: transform, opacity;
+}
+
+/* ================================================================
+   Section nav scroll-spy active state
+   ================================================================ */
+.topnav__nav a[aria-current="page"] {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* ================================================================
+   Full-bleed dark Experience section
+   ================================================================ */
+.section--dark {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  background: hsl(0 0% 8%);
+  color: hsl(0 0% 95%);
+  padding: var(--section-py) 0;
+  overflow: hidden;
+}
+[data-theme="dark"] .section--dark {
+  background: hsl(0 0% 4%);
+}
+.section--dark .sec__eyebrow {
+  color: hsla(0 0% 100% / .5);
+}
+.section--dark .sec__title {
+  color: hsl(0 0% 98%);
+}
+.section--dark .sec__meta {
+  color: hsla(0 0% 100% / .55);
+}
+.section--dark .badge {
+  background: hsla(0 0% 100% / .08);
+  color: hsl(0 0% 88%);
+  border-color: hsla(0 0% 100% / .14);
+}
+.section--dark__inner {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+/* ================================================================
+   Experience — Track + Accent Rule (Variant B)
+   ================================================================ */
+.exp-list {
+  margin: 40px auto 0;
+  max-width: 980px;
+}
+.exp-entry {
+  position: relative;
+  padding: 80px 0;
+  border-top: 1px solid hsla(0 0% 100% / .1);
+  /* no overflow:hidden — let the watermark extend past the 980px list edge.
+     section--dark already clips at the viewport. */
+}
+.exp-entry:first-child { border-top: 0; padding-top: 0; }
+.exp-entry:last-child { padding-bottom: 0; }
+
+/* Logo as background watermark in top-right */
+.exp-entry::before {
+  content: "";
+  position: absolute;
+  top: 32px;
+  right: 0;
+  width: 280px;
+  height: 280px;
+  background-repeat: no-repeat;
+  background-position: top right;
+  background-size: contain;
+  opacity: 0.10;
+  filter: grayscale(1) brightness(2.4) contrast(1.05);
+  pointer-events: none;
+  z-index: 0;
+  -webkit-mask-image: linear-gradient(225deg, hsl(0 0% 0% / .95) 30%, transparent 88%);
+          mask-image: linear-gradient(225deg, hsl(0 0% 0% / .95) 30%, transparent 88%);
+}
+.exp-entry:first-child::before { top: 0; }
+
+.exp-entry--airforce::before {
+  background-image: url("/logo/공군지능정보체계관리단%20로고.webp");
+}
+/* DAC Lab JPG has white bg — invert+lighten drops white on dark section */
+.exp-entry--dac::before {
+  background-image: url("/logo/DAC%20Lab%20로고.jpg");
+  filter: invert(1) grayscale(1) brightness(1.15) contrast(1.05);
+  mix-blend-mode: lighten;
+  opacity: 0.14;
+  top: 120px;
+}
+/* UF ELI mark is visually quiet — bump opacity */
+.exp-entry--uf::before {
+  background-image: url("/logo/UF%20ELI%20로고.webp");
+  opacity: 0.22;
+  filter: grayscale(1) brightness(2.2) contrast(1.15);
+}
+
+/* Keep all real content above the watermark */
+.exp-entry > * { position: relative; z-index: 1; }
+
+@media (max-width: 820px) {
+  .exp-entry::before {
+    top: 24px;
+    right: 0;
+    width: 160px;
+    height: 160px;
+    opacity: 0.09;
+    -webkit-mask-image: linear-gradient(220deg, hsl(0 0% 0% / .85) 22%, transparent 92%);
+            mask-image: linear-gradient(220deg, hsl(0 0% 0% / .85) 22%, transparent 92%);
+  }
+  .exp-entry:first-child::before { top: 0; }
+  .exp-entry--dac::before { opacity: 0.12; top: 64px; }
+  .exp-entry--uf::before  { opacity: 0.20; }
+}
+
+.exp-row {
+  display: flex; align-items: center; gap: 24px;
+  margin-bottom: 28px;
+}
+.exp-year-tag {
+  font-family: var(--font-mono);
+  font-size: 12.5px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: hsl(216 100% 70%);
+  white-space: nowrap;
+}
+.exp-row-meta {
+  font-family: var(--font-mono);
+  font-size: 12.5px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: hsla(0 0% 100% / .35);
+  white-space: nowrap;
+}
+.exp-rule { flex: 1; height: 1px; background: hsla(0 0% 100% / .15); }
+
+.exp-title {
+  font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(34px, 5vw, 64px);
+  letter-spacing: -0.035em;
+  line-height: 1.0;
+  margin: 0 0 18px;
+  color: hsl(0 0% 98%);
+}
+.exp-role {
+  font-size: 15px;
+  color: hsla(0 0% 100% / .65);
+  margin: 0 0 36px;
+  max-width: 60ch;
+}
+.exp-role b { color: hsl(0 0% 92%); font-weight: 600; }
+
+.exp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+@media (max-width: 820px) { .exp-grid { grid-template-columns: 1fr; gap: 16px; } }
+
+.exp-block-title {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 700; letter-spacing: -0.02em;
+  color: hsl(0 0% 100%);
+  margin: 0 0 12px;
+}
+.exp-block ul {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.exp-block ul li {
+  position: relative; padding-left: 20px;
+  font-size: 14.5px; line-height: 1.8;
+  color: hsla(0 0% 100% / .82);
+}
+.exp-block ul li b { font-weight: 400; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: hsla(0 0% 100% / .45); }
+.exp-block ul li::before {
+  content: ""; position: absolute; left: 0; top: 11px;
+  width: 12px; height: 1px; background: hsla(0 0% 100% / .35);
+}
+
+.exp-tags {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-top: 36px;
+}
+.section--dark .exp-tags .badge {
+  background: hsla(0 0% 100% / .08);
+  color: hsl(0 0% 88%);
+  border-color: hsla(0 0% 100% / .14);
+}
+
+@media (max-width: 820px) {
+  .exp-row { gap: 12px; }
+  .exp-row-meta { display: none; }
+  .exp-entry { padding: 56px 0; }
+}
+
