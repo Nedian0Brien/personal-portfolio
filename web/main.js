@@ -321,6 +321,55 @@ if (import.meta.env?.DEV) {
   scenes.forEach(s => obs.observe(s));
 })();
 
+/* §03 PROJECT — Desktop full-screen background slide transition.
+   Each project's gradient layer rises from the bottom of the viewport
+   as its scene scrolls into view, covering the previous one. */
+(function(){
+  const stage = document.querySelector('.proj-bg-stage');
+  if (!stage) return;
+  const layers = Array.from(stage.querySelectorAll('.proj-bg-layer'));
+  const scenes = Array.from(document.querySelectorAll('#project .proj-scene'));
+  if (!layers.length || layers.length !== scenes.length) return;
+
+  const mq = window.matchMedia('(min-width: 981px)');
+  let active = false;
+  let ticking = false;
+
+  function update(){
+    ticking = false;
+    if (!active) return;
+    const vh = window.innerHeight;
+    for (let i = 0; i < layers.length; i++) {
+      if (i === 0) { layers[i].style.transform = 'translate3d(0, 0, 0)'; continue; }
+      const r = scenes[i].getBoundingClientRect();
+      const p = Math.max(0, Math.min(1, 1 - r.top / vh));
+      layers[i].style.transform = 'translate3d(0, ' + ((1 - p) * 100).toFixed(3) + '%, 0)';
+    }
+  }
+  function schedule(){
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  }
+  function activate(on){
+    active = on;
+    if (on) {
+      schedule();
+    } else {
+      layers.forEach((l, i) => {
+        l.style.transform = i === 0 ? 'translate3d(0, 0, 0)' : 'translate3d(0, 100%, 0)';
+      });
+    }
+  }
+
+  activate(mq.matches);
+  if (mq.addEventListener) mq.addEventListener('change', e => activate(e.matches));
+  else if (mq.addListener) mq.addListener(e => activate(e.matches));
+
+  window.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', schedule);
+})();
+
 /* Auto-fit prototype iframes to wrapper width (transform: scale).
    Each .proj-preview has data-base-width (default 1440). */
 (function(){

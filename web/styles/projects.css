@@ -562,3 +562,82 @@
 @media (prefers-reduced-motion: reduce) {
   .proj-card { transform: none; opacity: 1; filter: none; transition: none; }
 }
+
+/* ============================================================
+   §03 PROJECT — Desktop full-screen slide mode
+   각 프로젝트가 viewport 전체를 차지하는 슬라이드로 보이고,
+   다음 슬라이드의 그러데이션이 아래에서 위로 차오르며 전환된다.
+   ============================================================ */
+.proj-bg-stage { display: none; }
+
+@media (min-width: 981px) {
+  #project { position: relative; }
+  #project > .proj-stack { position: relative; }
+
+  .proj-bg-stage {
+    display: block;
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 50%;
+    width: 100vw;
+    margin-left: -50vw;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .proj-scene { z-index: 1; }
+  .proj-bg-stage__sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .proj-bg-layer {
+    position: absolute;
+    inset: 0;
+    transform: translate3d(0, 100%, 0);
+    will-change: transform;
+    transition: transform .05s linear;
+  }
+  .proj-bg-layer[data-idx="0"] { transform: translate3d(0, 0, 0); }
+
+  .proj-bg-layer.theme-blue   { background: radial-gradient(120% 120% at 0% 0%, hsl(var(--blue-50)) 0%, hsl(var(--blue-70)) 60%, hsl(220 100% 22%) 100%); }
+  .proj-bg-layer.theme-red    { background: radial-gradient(120% 120% at 10% 0%, hsl(var(--red-50)) 0%, hsl(var(--red-60)) 55%, hsl(12 80% 28%) 100%); }
+  .proj-bg-layer.theme-yellow { background: radial-gradient(120% 120% at 0% 0%, hsl(var(--orange-50)) 0%, hsl(var(--yellow-50)) 60%, hsl(var(--yellow-60)) 100%); }
+  .proj-bg-layer.theme-green  { background: radial-gradient(130% 130% at 30% 0%, hsl(var(--green-50)) 0%, hsl(var(--green-60)) 55%, hsl(160 70% 18%) 100%); }
+  .proj-bg-layer.theme-purple { background: radial-gradient(120% 120% at 0% 0%, hsl(var(--purple-50)) 0%, hsl(var(--purple-60)) 55%, hsl(232 80% 28%) 100%); }
+  .proj-bg-layer.theme-pink   { background: linear-gradient(125deg, hsl(var(--pink-50)) 0%, hsl(var(--purple-50)) 50%, hsl(var(--blue-50)) 100%); }
+  .proj-bg-layer.theme-orange { background: radial-gradient(120% 120% at 0% 0%, hsl(var(--orange-50)) 0%, hsl(18 100% 50%) 55%, hsl(var(--red-60)) 100%); }
+
+  /* Flatten the card to a full-screen slide */
+  .proj-stack { gap: 0; }
+  .proj-scene {
+    min-height: 100vh;
+    padding: 0;
+  }
+  .proj-card {
+    width: 100%;
+    min-height: 100vh;
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0;
+    transform: none !important;
+    opacity: 1 !important;
+    filter: none !important;
+    padding: 9vh clamp(28px, 4.5vw, 64px) 7vh;
+  }
+  .proj-card::before { display: none !important; }
+
+  /* Edge nav: float to top/bottom center over the slide */
+  .proj-scene__edge {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    padding: 10px 16px;
+    opacity: 0.7;
+  }
+  .proj-scene__edge--top    { top: 16px; }
+  .proj-scene__edge--bottom { bottom: 16px; }
+  .proj-scene__edge--top:hover    { transform: translateX(-50%) translateY(-4px); }
+  .proj-scene__edge--bottom:hover { transform: translateX(-50%) translateY(4px); }
+}
