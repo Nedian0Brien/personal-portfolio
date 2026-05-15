@@ -1476,7 +1476,7 @@ footer {
   min-height: 68vh;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto 1fr auto auto;
   column-gap: 36px;
   row-gap: 24px;
   padding: 52px 52px 38px;
@@ -1572,15 +1572,12 @@ footer {
   position: relative;
   width: 100%; height: 100%;
   min-height: 360px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  display: flex; align-items: center; justify-content: center;
 }
 .proj-carousel__slides {
   position: relative;
-  width: 100%;
-  flex: 1;
-  min-height: 0;
+  width: 100%; height: 100%;
+  min-height: 360px;
 }
 .proj-carousel__slide {
   position: absolute; inset: 0;
@@ -1620,9 +1617,8 @@ footer {
 .proj-card.theme-yellow .proj-carousel__nav:hover { background: rgba(0,0,0,0.16); }
 
 .proj-carousel__dots {
-  display: flex; justify-content: center; gap: 6px;
-  flex-shrink: 0;
-  margin: 0;
+  position: absolute; left: 0; right: 0; bottom: -22px;
+  display: flex; justify-content: center; gap: 6px; z-index: 5;
 }
 .proj-carousel__dots button {
   width: 6px; height: 6px; border-radius: 50%;
@@ -1649,7 +1645,7 @@ footer {
 /* Foot bar */
 .proj-card__foot {
   grid-column: 1 / -1;
-  grid-row: 3;
+  grid-row: 4;
   display: flex; align-items: center; justify-content: space-between;
   gap: 16px;
   padding-top: 22px;
@@ -1665,8 +1661,8 @@ footer {
 }
 .proj-card__app-expand {
   grid-column: 1;
-  grid-row: 2;
-  align-self: center;
+  grid-row: 3;
+  align-self: end;
   display: flex; flex-direction: column; gap: 8px;
   font-family: var(--font-display);
   font-weight: 700;
@@ -1832,40 +1828,67 @@ footer {
   flex-shrink: 0;
 }
 
-/* ARIS only: keep the carousel full-width and treat the expanded name as background type. */
+/* ARIS only: catchphrase / carousel / expanded name + slide note / footer. */
+#proj-01 .proj-card {
+  grid-template-rows: auto minmax(360px, 1fr) auto auto;
+}
 #proj-01 .proj-card__stage--with-expand {
   grid-column: 1 / -1;
-  display: block;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-height: clamp(380px, 44vh, 500px);
 }
-#proj-01 .proj-card__stage--with-expand .proj-card__app-expand {
-  position: absolute;
-  left: 0;
-  bottom: clamp(-66px, -4vw, -38px);
-  z-index: 0;
-  pointer-events: none;
-  width: min(44%, 360px);
-  display: flex; flex-direction: column;
-  gap: 0;
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(30px, 4.4vw, 64px);
-  letter-spacing: -0.045em;
-  line-height: 0.95;
-  opacity: 0.22;
-  margin: 0;
-}
-#proj-01 .proj-card__stage--with-expand .proj-card__app-expand span { display: block; }
 #proj-01 .proj-card__stage--with-expand .proj-carousel {
   position: relative;
-  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
   width: 100%;
   height: 100%;
   min-width: 0;
   min-height: inherit;
 }
+#proj-01 .proj-card__stage--with-expand .proj-carousel__slides {
+  flex: 1;
+  min-height: 0;
+}
+#proj-01 .proj-card__stage--with-expand .proj-carousel__dots {
+  position: static;
+  flex-shrink: 0;
+  margin: 0;
+}
 #proj-01 .proj-card__stage--with-expand .proj-carousel__slide figure {
   max-width: min(82%, 640px) !important;
+}
+#proj-01 .proj-card__identity {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  display: grid;
+  grid-template-columns: minmax(220px, 0.82fr) minmax(280px, 1fr);
+  gap: 32px;
+  align-items: end;
+}
+#proj-01 .proj-card__identity .proj-card__app-expand {
+  grid-column: auto;
+  grid-row: auto;
+  align-self: end;
+  display: flex; flex-direction: column;
+  gap: 10px;
+  font-size: clamp(36px, 4.3vw, 64px);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  opacity: 0.92;
+}
+#proj-01 .proj-card__slide-desc {
+  justify-self: end;
+  max-width: 52ch;
+  margin: 0 0 2px;
+  color: rgba(255,255,255,0.9);
+  font-size: 15.5px;
+  line-height: 1.62;
+  text-wrap: pretty;
 }
 
 /* Section title sizing */
@@ -1892,19 +1915,44 @@ footer {
   .proj-card__sub { font-size: 14px; }
   .proj-card__cta { align-self: flex-end; }
   .proj-phone { width: 160px; }
+  #proj-01 .proj-card {
+    grid-template-rows: auto auto auto auto;
+  }
   #proj-01 .proj-card__stage--with-expand {
     grid-column: 1;
-    grid-row: 3;
+    grid-row: 2;
     min-height: 340px;
-  }
-  #proj-01 .proj-card__stage--with-expand .proj-card__app-expand {
-    width: min(62%, 260px);
-    bottom: -60px;
-    font-size: clamp(26px, 4.2vw, 36px);
-    opacity: 0.2;
   }
   #proj-01 .proj-card__stage--with-expand .proj-carousel__slide figure {
     max-width: min(100%, 560px) !important;
+  }
+  #proj-01 .proj-card__identity {
+    grid-column: 1;
+    grid-row: 3;
+    grid-template-columns: minmax(190px, 0.78fr) minmax(240px, 1fr);
+    gap: 24px;
+  }
+  #proj-01 .proj-card__identity .proj-card__app-expand {
+    font-size: clamp(31px, 6vw, 44px);
+  }
+  #proj-01 .proj-card__slide-desc {
+    justify-self: end;
+    max-width: 48ch;
+    font-size: 14px;
+  }
+  #proj-01 .proj-card__foot {
+    grid-row: 4;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  #proj-01 .proj-card__app {
+    flex: 1 1 auto;
+  }
+  #proj-01 .proj-card__cta {
+    align-self: center;
+    flex: 0 0 auto;
   }
 }
 @media (max-width: 520px) {
@@ -1918,11 +1966,27 @@ footer {
   #proj-01 .proj-card__stage--with-expand {
     min-height: 320px;
   }
-  #proj-01 .proj-card__stage--with-expand .proj-card__app-expand {
-    width: min(76%, 240px);
-    bottom: -44px;
-    font-size: 24px;
-    opacity: 0.14;
+  #proj-01 .proj-card__identity .proj-card__app-expand {
+    gap: 7px;
+    font-size: 29px;
+  }
+  #proj-01 .proj-card__identity {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  #proj-01 .proj-card__slide-desc {
+    justify-self: start;
+    max-width: none;
+    font-size: 13px;
+  }
+  #proj-01 .proj-card__foot {
+    align-items: flex-end;
+  }
+  #proj-01 .proj-card__app {
+    gap: 8px;
+  }
+  #proj-01 .proj-card__app-tag {
+    font-size: 9px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -2311,14 +2375,11 @@ footer {
           <h3 class="proj-card__phrase">언제 어디서든, 에이전트와 함께하는 개발</h3>
         </header>
         <div class="proj-card__stage proj-card__stage--with-expand">
-          <div class="proj-card__app-expand" aria-hidden="true">
-            <span>Agentic</span><span>Runtime</span><span>Interface</span><span>System</span>
-          </div>
           <div class="proj-carousel" data-carousel data-total="4">
             <div class="proj-carousel__title" aria-live="polite">Chat thread</div>
             <div class="proj-carousel__counter"><span class="cur">1</span> / <span class="tot">4</span></div>
             <div class="proj-carousel__slides">
-              <div class="proj-carousel__slide on" data-title="Chat thread">
+              <div class="proj-carousel__slide on" data-title="Chat thread" data-desc="모델 선택이 새 채팅 생성과 저장된 채팅 레코드까지 이어지는지 확인한 실제 디버깅 흐름입니다. 선택 상태, payload, 저장값을 같은 대화 안에서 끝까지 추적합니다.">
                 <figure style="margin:0;width:100%;max-width:640px">
                   <div class="aris-thread" data-theme="light">
                     <div class="msg">
@@ -2371,7 +2432,7 @@ footer {
                   </div>
                 </figure>
               </div>
-              <div class="proj-carousel__slide" data-title="Plan mode">
+              <div class="proj-carousel__slide" data-title="Plan mode" data-desc="권한이 필요한 작업을 실행 전에 계획으로 나누고, 사용자가 승인 범위를 고를 수 있게 만든 플래닝 화면입니다. Ask에서 실행으로 넘어가기 전의 판단 과정을 보여줍니다.">
                 <div class="proj-phone"><div class="proj-phone__notch"></div><div class="proj-phone__screen">
                   <div class="pp-mock">
                     <div class="pp-row"><b>ARIS</b><span class="pp-pill">PLAN</span></div>
@@ -2382,7 +2443,7 @@ footer {
                   </div>
                 </div></div>
               </div>
-              <div class="proj-carousel__slide" data-title="Execute mode">
+              <div class="proj-carousel__slide" data-title="Execute mode" data-desc="승인된 명령을 실행하고 결과물을 같은 대화 맥락에 남기는 실행 모드입니다. 작업 결과와 산출물이 분리되지 않고 채팅 흐름 안에 남도록 설계했습니다.">
                 <div class="proj-phone"><div class="proj-phone__notch"></div><div class="proj-phone__screen">
                   <div class="pp-mock">
                     <div class="pp-row"><b>ARIS</b><span class="pp-pill" style="background:#16a34a">EXECUTE</span></div>
@@ -2392,7 +2453,7 @@ footer {
                   </div>
                 </div></div>
               </div>
-              <div class="proj-carousel__slide" data-title="Bundle · 15MB → 236KB">
+              <div class="proj-carousel__slide" data-title="Bundle · 15MB → 236KB" data-desc="채팅 진입 번들을 15MB에서 236KB로 줄인 최적화 기록입니다. 실제 사용자가 처음 대화 화면에 들어오는 시간을 줄이기 위해 라우팅과 로딩 경계를 다시 잡았습니다.">
                 <div class="proj-slide-glass">
                   <h5>Bundle · 15MB → 236KB</h5>
                   <svg viewBox="0 0 460 160" width="100%">
@@ -2413,6 +2474,12 @@ footer {
             <div class="proj-carousel__half r" data-act="next"></div>
             <div class="proj-carousel__dots"></div>
           </div>
+        </div>
+        <div class="proj-card__identity">
+          <div class="proj-card__app-expand">
+            <span>Agentic</span><span>Runtime</span><span>Interface</span><span>System</span>
+          </div>
+          <p class="proj-card__slide-desc" data-carousel-desc>모델 선택이 새 채팅 생성과 저장된 채팅 레코드까지 이어지는지 확인한 실제 디버깅 흐름입니다. 선택 상태, payload, 저장값을 같은 대화 안에서 끝까지 추적합니다.</p>
         </div>
         <div class="proj-card__foot">
           <div class="proj-card__app">
@@ -3179,6 +3246,7 @@ if (import.meta.env?.DEV) {
     const dotsBox = root.querySelector('.proj-carousel__dots');
     const cur = root.querySelector('.cur');
     const tot = root.querySelector('.tot');
+    const cardRoot = root.closest('.proj-card') || root;
     let idx = Math.max(0, [...slides].findIndex(s => s.classList.contains('on')));
     if (idx < 0) idx = 0;
     const pad = slides.length > 9 ? 2 : 1;
@@ -3188,6 +3256,11 @@ if (import.meta.env?.DEV) {
     if (initialTitleEl) {
       const t0 = slides[idx].dataset.title;
       if (t0) initialTitleEl.textContent = t0;
+    }
+    const initialDescEl = cardRoot.querySelector('[data-carousel-desc]');
+    if (initialDescEl) {
+      const d0 = slides[idx].dataset.desc;
+      if (d0) initialDescEl.textContent = d0;
     }
 
     if (dotsBox) {
@@ -3215,6 +3288,11 @@ if (import.meta.env?.DEV) {
       if (titleEl) {
         const t = slides[next].dataset.title;
         if (t) titleEl.textContent = t;
+      }
+      const descEl = cardRoot.querySelector('[data-carousel-desc]');
+      if (descEl) {
+        const d = slides[next].dataset.desc;
+        if (d) descEl.textContent = d;
       }
       idx = next;
     }
