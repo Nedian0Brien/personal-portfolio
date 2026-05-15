@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import test from "node:test";
 
@@ -15,8 +14,8 @@ function hasVisibleTagIdentityFormatter(source) {
   );
 }
 
-test("react-grab patch carries selected element class into selection labels", () => {
-  execFileSync("node", ["scripts/patch-react-grab.js"], { stdio: "pipe" });
+test("react-grab patch carries selected element class into selection labels", async () => {
+  await import(new URL("../scripts/patch-react-grab.js", import.meta.url));
 
   const distIndex = readFileSync("node_modules/react-grab/dist/index.js", "utf8");
   const runtimeCoreFile = distIndex.match(/from"\.\/(core-[^"]+\.js)"/)?.[1];

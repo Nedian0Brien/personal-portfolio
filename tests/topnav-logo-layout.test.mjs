@@ -3,10 +3,12 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 const html = readFileSync(new URL("../web/index.html", import.meta.url), "utf8");
+const styles = readFileSync(new URL("../web/styles.css", import.meta.url), "utf8");
+const source = `${html}\n${styles}`;
 
 function getCssBlock(selector) {
   const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const match = html.match(new RegExp(`${escapedSelector}\\s*\\{([^}]*)\\}`, "s"));
+  const match = source.match(new RegExp(`${escapedSelector}\\s*\\{([^}]*)\\}`, "s"));
   assert.ok(match, `Expected CSS block for ${selector}`);
   return match[1];
 }
