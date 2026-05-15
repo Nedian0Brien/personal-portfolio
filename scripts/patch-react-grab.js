@@ -14,6 +14,13 @@ const legacyStackedIconButtonTemplate = String.raw`<button data-react-grab-ignor
 const legacyTightIconButtonTemplate = String.raw`<button data-react-grab-ignore-events data-react-grab-portfolio-edit-text title="Edit text" aria-label="Edit text" class="contain-layout shrink-0 flex items-center justify-center cursor-pointer interactive-scale touch-hitbox size-[22px] rounded-sm border-none bg-transparent p-0 text-black/70 hover:bg-black/10 hover:text-black"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>`;
 const legacyFloatingIconButtonTemplate = String.raw`<button data-react-grab-ignore-events data-react-grab-portfolio-edit-text title="Edit text" aria-label="Edit text" class="contain-layout shrink-0 flex items-center justify-center cursor-pointer interactive-scale mx-[2px] size-[24px] rounded-sm border-none bg-transparent p-0 text-black/70 hover:bg-black/10 hover:text-black"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>`;
 const buttonTemplate = String.raw`<button data-react-grab-ignore-events data-react-grab-portfolio-edit-text title="Edit text" aria-label="Edit text" class="contain-layout flex items-center justify-center cursor-pointer interactive-scale touch-hitbox mr-1.5 before:!min-w-full text-black/70 hover:text-black"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>`;
+const compactIdentityFormatter = "portfolioFormatElementIdentity=(e,t)=>{let n=String(e||`element`).trim()||`element`,r=String(t||``).trim().split(/\\s+/).filter(Boolean)[0];return r?n+`.`+r:n}";
+const formattedIdentityFormatter = String.raw`const portfolioFormatElementIdentity = (kind, className) => {
+	const safeKind = String(kind || "element").trim() || "element";
+	const firstClassName = String(className || "").trim().split(/\s+/).filter(Boolean)[0];
+	return firstClassName ? safeKind + "." + firstClassName : safeKind;
+};
+`;
 
 function listRendererFiles() {
   const dirs = [
@@ -28,6 +35,26 @@ function listRendererFiles() {
       .filter((file) => /^renderer-.*\.js$/.test(file))
       .map((file) => path.join(dir, file));
   });
+}
+
+function listCoreFiles() {
+  const distDir = path.join(ROOT, "node_modules/react-grab/dist");
+  const viteDepsDir = path.join(ROOT, "node_modules/.vite/deps");
+  const files = [];
+
+  if (fs.existsSync(distDir)) {
+    files.push(
+      ...fs
+        .readdirSync(distDir)
+        .filter((file) => /^core-.*\.js$/.test(file))
+        .map((file) => path.join(distDir, file)),
+    );
+  }
+
+  const viteEntry = path.join(viteDepsDir, "react-grab.js");
+  if (fs.existsSync(viteEntry)) files.push(viteEntry);
+
+  return files;
 }
 
 function replaceOnce(source, from, to, file, label) {
@@ -116,6 +143,44 @@ function patchCompactRenderer(source, file) {
     "compact renderer prop",
   );
 
+  if (!next.includes("portfolioFormatElementIdentity")) {
+    next = next.replace(
+      /(componentName:e\.tagName\?e\.componentName:void 0\}),([A-Za-z_$][\w$]*=e=>e===`Enter`\?)/,
+      `$1,${compactIdentityFormatter},$2`,
+    );
+    next = next.replace(
+      /(var [A-Za-z_$][\w$]* = \(e\) => e\.elementsCount && e\.elementsCount > 1 \? \{ tagName: `\$\{e\.elementsCount\} elements`, componentName: void 0 \} : \{ tagName: e\.tagName \|\| e\.componentName \|\| `element`, componentName: e\.tagName \? e\.componentName : void 0 \};)/,
+      `$1\nvar ${compactIdentityFormatter};`,
+    );
+  }
+
+  const tagDisplayFunction =
+    next.match(
+      /([A-Za-z_$][\w$]*)=\(\)=>[A-Za-z_$][\w$]*\(\{tagName:e\.tagName,componentName:e\.componentName,elementsCount:e\.elementsCount\}\)/,
+    )?.[1] ??
+    next.match(
+      /([A-Za-z_$][\w$]*)\s*=\s*\(\)\s*=>\s*[A-Za-z_$][\w$]*\(\{\s*tagName:\s*e\.tagName,\s*componentName:\s*e\.componentName,\s*elementsCount:\s*e\.elementsCount\s*\}\)/,
+    )?.[1];
+  if (tagDisplayFunction) {
+    next = next.replace(
+      /get children\(\)\{return i\(([A-Za-z_$][\w$]*),\{get onConfirm\(\)\{return e\.onConfirmDismiss\},/,
+      `get children(){return i($1,{get label(){return portfolioFormatElementIdentity(${tagDisplayFunction}().componentName||${tagDisplayFunction}().tagName,e.selectionClassName)},get onConfirm(){return e.onConfirmDismiss},`,
+    );
+    next = next.replace(
+      /return he\(([A-Za-z_$][\w$]*), \{ get onConfirm\(\) \{\n\s+return e\.onConfirmDismiss;\n\s+\},/,
+      `return he($1, { get label() {\n        const display = ${tagDisplayFunction}();\n        return portfolioFormatElementIdentity(display.componentName || display.tagName, e.selectionClassName);\n      }, get onConfirm() {\n        return e.onConfirmDismiss;\n      },`,
+    );
+  }
+
+  next = next.replace(
+    "get componentName(){return e.selectionComponentName},get elementsCount(){",
+    "get componentName(){return e.selectionComponentName},get selectionClassName(){return e.selectionClassName},get elementsCount(){",
+  );
+  next = next.replace(
+    "get componentName() {\n    return e.selectionComponentName;\n  }, get elementsCount() {",
+    "get componentName() {\n    return e.selectionComponentName;\n  }, get selectionClassName() {\n    return e.selectionClassName;\n  }, get elementsCount() {",
+  );
+
   return next;
 }
 
@@ -200,6 +265,76 @@ function patchFormattedRenderer(source, file) {
     "formatted renderer prop",
   );
 
+  if (!next.includes("portfolioFormatElementIdentity")) {
+    next = replaceOnce(
+      next,
+      "const getTagDisplay = (input) => {\n\tif (input.elementsCount && input.elementsCount > 1) return {\n\t\ttagName: `${input.elementsCount} elements`,\n\t\tcomponentName: void 0\n\t};\n\treturn {\n\t\ttagName: input.tagName || input.componentName || \"element\",\n\t\tcomponentName: input.tagName ? input.componentName : void 0\n\t};\n};\n",
+      `const getTagDisplay = (input) => {\n\tif (input.elementsCount && input.elementsCount > 1) return {\n\t\ttagName: \`\${input.elementsCount} elements\`,\n\t\tcomponentName: void 0\n\t};\n\treturn {\n\t\ttagName: input.tagName || input.componentName || "element",\n\t\tcomponentName: input.tagName ? input.componentName : void 0\n\t};\n};\n${formattedIdentityFormatter}`,
+      file,
+      "formatted identity formatter",
+    );
+  }
+
+  next = replaceOnce(
+    next,
+    "\t\t\t\t\treturn createComponent(DiscardPrompt, {\n\t\t\t\t\t\tget onConfirm() {\n\t\t\t\t\t\t\treturn props.onConfirmDismiss;\n\t\t\t\t\t\t},",
+    "\t\t\t\t\treturn createComponent(DiscardPrompt, {\n\t\t\t\t\t\tget label() {\n\t\t\t\t\t\t\tconst display = tagDisplayResult();\n\t\t\t\t\t\t\treturn portfolioFormatElementIdentity(display.componentName || display.tagName, props.selectionClassName);\n\t\t\t\t\t\t},\n\t\t\t\t\t\tget onConfirm() {\n\t\t\t\t\t\t\treturn props.onConfirmDismiss;\n\t\t\t\t\t\t},",
+    file,
+    "formatted discard prompt label",
+  );
+
+  next = replaceOnce(
+    next,
+    "\t\t\t\t\tget componentName() {\n\t\t\t\t\t\treturn props.selectionComponentName;\n\t\t\t\t\t},\n\t\t\t\t\tget elementsCount() {",
+    "\t\t\t\t\tget componentName() {\n\t\t\t\t\t\treturn props.selectionComponentName;\n\t\t\t\t\t},\n\t\t\t\t\tget selectionClassName() {\n\t\t\t\t\t\treturn props.selectionClassName;\n\t\t\t\t\t},\n\t\t\t\t\tget elementsCount() {",
+    file,
+    "formatted selection class prop",
+  );
+
+  return next;
+}
+
+function patchCore(source) {
+  let next = source;
+
+  const formattedSelectionElement = next.match(
+    /const selectionTagName = createMemo\(\(\) => \{\n\t\t\tconst element = ([A-Za-z_$][\w$]*)\(\);\n\t\t\tif \(!element\) return void 0;\n\t\t\treturn [A-Za-z_$][\w$]*\(element\) \|\| void 0;\n\t\t\}\);/,
+  )?.[1];
+  if (formattedSelectionElement) {
+    next = next.replace(
+      "\t\t\t\t\tget selectionComponentName() {\n\t\t\t\t\t\treturn resolvedComponentName();\n\t\t\t\t\t},\n\t\t\t\t\tget selectionLabelVisible() {",
+      `\t\t\t\t\tget selectionComponentName() {\n\t\t\t\t\t\treturn resolvedComponentName();\n\t\t\t\t\t},\n\t\t\t\t\tget selectionClassName() {\n\t\t\t\t\t\tconst element = ${formattedSelectionElement}();\n\t\t\t\t\t\treturn element?.getAttribute?.("class") || void 0;\n\t\t\t\t\t},\n\t\t\t\t\tget selectionLabelVisible() {`,
+    );
+  }
+
+  const compactSelectionElement =
+    next.match(
+      /(?:let\s+|,)([A-Za-z_$][\w$]*)=[A-Za-z_$][\w$]*\(\(\)=>\{let e=([A-Za-z_$][\w$]*)\(\);if\(!e\)return void 0;return [A-Za-z_$][\w$]*\(e\)\|\|void 0\}\);/,
+    )?.[2] ??
+    next.match(
+      /(?:let\s+|,)([A-Za-z_$][\w$]*)=[A-Za-z_$][\w$]*\(\(\)=>\{let e=([A-Za-z_$][\w$]*)\(\);if\(e\)return [A-Za-z_$][\w$]*\(e\)\|\|void 0\}\);/,
+    )?.[2];
+  if (compactSelectionElement) {
+    next = next.replace(
+      /(get selectionComponentName\(\)\{return [A-Za-z_$][\w$]*\(\)\},)get selectionLabelVisible\(\)\{/,
+      `$1get selectionClassName(){return ${compactSelectionElement}()?.getAttribute?.("class")||void 0},get selectionLabelVisible(){`,
+    );
+  }
+
+  const viteSelectionElement =
+    next.match(
+      /var ([A-Za-z_$][\w$]*) = [A-Za-z_$][\w$]*\(\(\) => \{\n\s+let e = ([A-Za-z_$][\w$]*)\(\);\n\s+if \(!e\) return void 0;\n\s+return [A-Za-z_$][\w$]*\(e\) \|\| void 0;\n\s+\}\);/,
+    )?.[2] ??
+    next.match(
+      /([A-Za-z_$][\w$]*) = [A-Za-z_$][\w$]*\(\(\) => \{\n\s+let ([A-Za-z_$][\w$]*) = ([A-Za-z_$][\w$]*)\(\);\n\s+if \(\2\) return [A-Za-z_$][\w$]*\(\2\) \|\| void 0;\n\s+\}\);/,
+    )?.[3];
+  if (viteSelectionElement) {
+    next = next.replace(
+      /get selectionComponentName\(\) \{\n(\s+)return ([A-Za-z_$][\w$]*)\(\);\n\s+\}, get selectionLabelVisible\(\) \{/,
+      `get selectionComponentName() {\n$1return $2();\n      }, get selectionClassName() {\n$1return ${viteSelectionElement}()?.getAttribute?.("class") || void 0;\n      }, get selectionLabelVisible() {`,
+    );
+  }
+
   return next;
 }
 
@@ -216,8 +351,18 @@ for (const file of listRendererFiles()) {
   }
 }
 
+for (const file of listCoreFiles()) {
+  const source = fs.readFileSync(file, "utf8");
+  const patched = patchCore(source);
+
+  if (patched !== source) {
+    fs.writeFileSync(file, patched);
+    patchedCount += 1;
+  }
+}
+
 if (patchedCount === 0) {
-  console.log("react-grab patch: already applied or no matching renderer bundle found");
+  console.log("react-grab patch: already applied or no matching bundle found");
 } else {
-  console.log(`react-grab patch: applied to ${patchedCount} renderer bundle(s)`);
+  console.log(`react-grab patch: applied to ${patchedCount} bundle(s)`);
 }
