@@ -1828,11 +1828,11 @@ footer {
   flex-shrink: 0;
 }
 
-/* ARIS only: catchphrase / carousel / expanded name + slide note / footer. */
-#proj-01 .proj-card {
+/* Project cards: catchphrase / carousel / expanded name + slide note / footer. */
+.proj-card--stacked {
   grid-template-rows: auto minmax(360px, 1fr) auto auto;
 }
-#proj-01 .proj-card__stage--with-expand {
+.proj-card--stacked .proj-card__stage {
   grid-column: 1 / -1;
   grid-row: 2;
   display: flex;
@@ -1840,7 +1840,7 @@ footer {
   justify-content: center;
   min-height: clamp(380px, 44vh, 500px);
 }
-#proj-01 .proj-card__stage--with-expand .proj-carousel {
+.proj-card--stacked .proj-carousel {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -1850,19 +1850,19 @@ footer {
   min-width: 0;
   min-height: inherit;
 }
-#proj-01 .proj-card__stage--with-expand .proj-carousel__slides {
+.proj-card--stacked .proj-carousel__slides {
   flex: 1;
   min-height: 0;
 }
-#proj-01 .proj-card__stage--with-expand .proj-carousel__dots {
+.proj-card--stacked .proj-carousel__dots {
   position: static;
   flex-shrink: 0;
   margin: 0;
 }
-#proj-01 .proj-card__stage--with-expand .proj-carousel__slide figure {
+.proj-card--stacked .proj-carousel__slide figure {
   max-width: min(82%, 640px) !important;
 }
-#proj-01 .proj-card__identity {
+.proj-card--stacked .proj-card__identity {
   grid-column: 1 / -1;
   grid-row: 3;
   display: grid;
@@ -1870,12 +1870,12 @@ footer {
   gap: 32px;
   align-items: end;
 }
-#proj-01 .proj-card__identity .proj-card__app-expand {
+.proj-card--stacked .proj-card__identity .proj-card__app-expand {
   grid-column: auto;
   grid-row: auto;
   align-self: end;
 }
-#proj-01 .proj-card__slide-desc {
+.proj-card--stacked .proj-card__slide-desc {
   justify-self: end;
   max-width: 52ch;
   margin: 0 0 2px;
@@ -1883,6 +1883,9 @@ footer {
   font-size: 15.5px;
   line-height: 1.62;
   text-wrap: pretty;
+}
+.proj-card.theme-yellow .proj-card__slide-desc {
+  color: rgba(0,0,0,0.72);
 }
 
 /* Section title sizing */
@@ -1909,39 +1912,39 @@ footer {
   .proj-card__sub { font-size: 14px; }
   .proj-card__cta { align-self: flex-end; }
   .proj-phone { width: 160px; }
-  #proj-01 .proj-card {
+  .proj-card--stacked {
     grid-template-rows: auto auto auto auto;
   }
-  #proj-01 .proj-card__stage--with-expand {
+  .proj-card--stacked .proj-card__stage {
     grid-column: 1;
     grid-row: 2;
     min-height: 340px;
   }
-  #proj-01 .proj-card__stage--with-expand .proj-carousel__slide figure {
+  .proj-card--stacked .proj-carousel__slide figure {
     max-width: min(100%, 560px) !important;
   }
-  #proj-01 .proj-card__identity {
+  .proj-card--stacked .proj-card__identity {
     grid-column: 1;
     grid-row: 3;
     grid-template-columns: minmax(190px, 0.78fr) minmax(240px, 1fr);
     gap: 24px;
   }
-  #proj-01 .proj-card__slide-desc {
+  .proj-card--stacked .proj-card__slide-desc {
     justify-self: end;
     max-width: 48ch;
     font-size: 14px;
   }
-  #proj-01 .proj-card__foot {
+  .proj-card--stacked .proj-card__foot {
     grid-row: 4;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
   }
-  #proj-01 .proj-card__app {
+  .proj-card--stacked .proj-card__app {
     flex: 1 1 auto;
   }
-  #proj-01 .proj-card__cta {
+  .proj-card--stacked .proj-card__cta {
     align-self: center;
     flex: 0 0 auto;
   }
@@ -1954,25 +1957,25 @@ footer {
   .proj-carousel__nav { width: 32px; height: 32px; font-size: 18px; }
   .proj-carousel__nav.prev { left: -4px; }
   .proj-carousel__nav.next { right: -4px; }
-  #proj-01 .proj-card__stage--with-expand {
+  .proj-card--stacked .proj-card__stage {
     min-height: 320px;
   }
-  #proj-01 .proj-card__identity {
+  .proj-card--stacked .proj-card__identity {
     grid-template-columns: 1fr;
     gap: 12px;
   }
-  #proj-01 .proj-card__slide-desc {
+  .proj-card--stacked .proj-card__slide-desc {
     justify-self: start;
     max-width: none;
     font-size: 13px;
   }
-  #proj-01 .proj-card__foot {
+  .proj-card--stacked .proj-card__foot {
     align-items: flex-end;
   }
-  #proj-01 .proj-card__app {
+  .proj-card--stacked .proj-card__app {
     gap: 8px;
   }
-  #proj-01 .proj-card__app-tag {
+  .proj-card--stacked .proj-card__app-tag {
     font-size: 9px;
   }
 }
@@ -2353,7 +2356,7 @@ footer {
 
     <!-- ====== 01 ARIS ====== -->
     <section class="proj-scene reveal" id="proj-01" data-type="project" data-topics="agent" data-num="01">
-      <article class="proj-card theme-blue">
+      <article class="proj-card proj-card--stacked theme-blue">
         <header class="proj-card__heading">
           <div class="proj-card__topline">
             <span class="proj-card__num">01 / 07</span>
@@ -2363,7 +2366,7 @@ footer {
         </header>
         <div class="proj-card__stage proj-card__stage--with-expand">
           <div class="proj-carousel" data-carousel data-total="4">
-            <div class="proj-carousel__title" aria-live="polite">Chat thread</div>
+            <div class="proj-carousel__title" aria-live="polite">에이전트 채팅 화면</div>
             <div class="proj-carousel__counter"><span class="cur">1</span> / <span class="tot">4</span></div>
             <div class="proj-carousel__slides">
               <div class="proj-carousel__slide on" data-title="Chat thread" data-desc="모델 선택이 새 채팅 생성과 저장된 채팅 레코드까지 이어지는지 확인한 실제 디버깅 흐름입니다. 선택 상태, payload, 저장값을 같은 대화 안에서 끝까지 추적합니다.">
@@ -2486,7 +2489,7 @@ footer {
       <a class="proj-scene__edge proj-scene__edge--top" href="#proj-01">
         <span class="chev">↑</span><span class="name">ARIS</span><span>Prev</span>
       </a>
-      <article class="proj-card theme-red">
+      <article class="proj-card proj-card--stacked theme-red">
         <header class="proj-card__heading">
           <div class="proj-card__topline">
             <span class="proj-card__num">02 / 07</span>
@@ -2494,14 +2497,12 @@ footer {
           </div>
           <h3 class="proj-card__phrase">논문 탐색부터 작성까지, 연구를 이어 주는 에이전트 흐름.</h3>
         </header>
-        <div class="proj-card__head">
-          <p class="proj-card__sub">Search → Reading → Research → Result → Insight → Writing. Scout · Reader · Reproduction · Experiment · Analyst · Writing의 역할 에이전트가 각 단계를 맡고, seed fallback과 파일/Postgres 이중 저장으로 라이브 검색 불가 시에도 UI 골격을 유지합니다.</p>
-        </div>
         <div class="proj-card__stage">
           <div class="proj-carousel" data-carousel data-total="2">
+            <div class="proj-carousel__title" aria-live="polite">Research workflow map</div>
             <div class="proj-carousel__counter"><span class="cur">1</span> / <span class="tot">2</span></div>
             <div class="proj-carousel__slides">
-              <div class="proj-carousel__slide on">
+              <div class="proj-carousel__slide on" data-title="Research workflow map" data-desc="Search → Reading → Research → Result → Insight → Writing. Scout · Reader · Reproduction · Experiment · Analyst · Writing의 역할 에이전트가 각 단계를 맡는 연구 흐름입니다.">
                 <div class="proj-flow">
                   <div class="proj-flow__node"><span class="n">01</span><span class="t">Search</span><span class="d">Scout · 키워드/논문 탐색</span></div>
                   <div class="proj-flow__node"><span class="n">02</span><span class="t">Reading</span><span class="d">Reader · 요약 / 발췌</span></div>
@@ -2511,7 +2512,7 @@ footer {
                   <div class="proj-flow__node"><span class="n">06</span><span class="t">Writing</span><span class="d">Writing · 초안 생성</span></div>
                 </div>
               </div>
-              <div class="proj-carousel__slide">
+              <div class="proj-carousel__slide" data-title="Fallback-first data path" data-desc="라이브 검색이 실패해도 seed fallback과 파일/Postgres 이중 저장으로 UI 골격을 유지합니다. 데모 가능성과 실제 검색 경로를 분리해 연구 워크플로우가 멈추지 않게 했습니다.">
                 <div class="proj-slide-glass">
                   <h5>Fallback-first 데이터 경로</h5>
                   <p class="line" style="margin:0">$ ares health<br>· live search → <span style="color:#86efac;font-weight:700">ok</span><br>· seed fallback → <span style="color:#86efac;font-weight:700">ok</span><br>· postgres ↔ file → <span style="color:#86efac;font-weight:700">sync</span><br>· UI 골격 → <span style="color:#fde68a;font-weight:700">유지</span></p>
@@ -2526,8 +2527,11 @@ footer {
             <div class="proj-carousel__dots"></div>
           </div>
         </div>
-        <div class="proj-card__app-expand">
-          <span>Agentic</span><span>Research</span><span>Experimentation</span><span>System</span>
+        <div class="proj-card__identity">
+          <div class="proj-card__app-expand">
+            <span>Agentic</span><span>Research</span><span>Experimentation</span><span>System</span>
+          </div>
+          <p class="proj-card__slide-desc" data-carousel-desc>Search → Reading → Research → Result → Insight → Writing. Scout · Reader · Reproduction · Experiment · Analyst · Writing의 역할 에이전트가 각 단계를 맡는 연구 흐름입니다.</p>
         </div>
         <div class="proj-card__foot">
           <div class="proj-card__app">
@@ -2547,7 +2551,7 @@ footer {
       <a class="proj-scene__edge proj-scene__edge--top" href="#proj-02">
         <span class="chev">↑</span><span class="name">ARES</span><span>Prev</span>
       </a>
-      <article class="proj-card theme-yellow">
+      <article class="proj-card proj-card--stacked theme-yellow">
         <header class="proj-card__heading">
           <div class="proj-card__topline">
             <span class="proj-card__num">03 / 07</span>
@@ -2555,14 +2559,12 @@ footer {
           </div>
           <h3 class="proj-card__phrase">복잡한 법안을 쉽고 빠르게 읽는 AI 입법 피드.</h3>
         </header>
-        <div class="proj-card__head">
-          <p class="proj-card__sub">복잡한 개정안을 AI 요약과 태그로 피드화. Gemini primary/backup + OpenAI <em>다단 fallback</em>, Airflow DAG로 수집·AI 배치·복구를 분리, Qdrant 기반 RAG 챗봇까지 연결했습니다.</p>
-        </div>
         <div class="proj-card__stage">
           <div class="proj-carousel" data-carousel data-total="2">
+            <div class="proj-carousel__title" aria-live="polite">입법 피드 화면</div>
             <div class="proj-carousel__counter"><span class="cur">1</span> / <span class="tot">2</span></div>
             <div class="proj-carousel__slides">
-              <div class="proj-carousel__slide on">
+              <div class="proj-carousel__slide on" data-title="입법 피드 화면" data-desc="복잡한 개정안을 AI 요약과 태그로 피드화합니다. 사용자가 법안 전문을 열기 전에도 핵심 변화와 정책 범주를 빠르게 훑을 수 있게 만든 화면입니다.">
                 <div class="proj-slide-glass" style="max-width:420px">
                   <h5>피드 · 오늘의 개정안</h5>
                   <div style="display:flex;flex-direction:column;gap:10px">
@@ -2571,7 +2573,7 @@ footer {
                   </div>
                 </div>
               </div>
-              <div class="proj-carousel__slide">
+              <div class="proj-carousel__slide" data-title="Multi-model fallback chain" data-desc="Gemini primary/backup + OpenAI 다단 fallback으로 요약 실패를 줄였습니다. Airflow DAG로 수집, AI 배치, 복구를 분리하고 Qdrant 기반 RAG 챗봇까지 연결했습니다.">
                 <div class="proj-slide-glass" style="max-width:420px">
                   <h5>Multi-Model Fallback Chain</h5>
                   <div style="display:flex;flex-direction:column;gap:8px;font-family:var(--font-mono);font-size:12px">
@@ -2591,8 +2593,11 @@ footer {
             <div class="proj-carousel__dots"></div>
           </div>
         </div>
-        <div class="proj-card__app-expand">
-          <span>AI 기반</span><span>법률 개정안</span><span>요약 플랫폼</span>
+        <div class="proj-card__identity">
+          <div class="proj-card__app-expand">
+            <span>AI 기반</span><span>법률 개정안</span><span>요약 플랫폼</span>
+          </div>
+          <p class="proj-card__slide-desc" data-carousel-desc>복잡한 개정안을 AI 요약과 태그로 피드화합니다. 사용자가 법안 전문을 열기 전에도 핵심 변화와 정책 범주를 빠르게 훑을 수 있게 만든 화면입니다.</p>
         </div>
         <div class="proj-card__foot">
           <div class="proj-card__app">
@@ -2612,7 +2617,7 @@ footer {
       <a class="proj-scene__edge proj-scene__edge--top" href="#proj-03">
         <span class="chev">↑</span><span class="name">모두의입법</span><span>Prev</span>
       </a>
-      <article class="proj-card theme-green">
+      <article class="proj-card proj-card--stacked theme-green">
         <header class="proj-card__heading">
           <div class="proj-card__topline">
             <span class="proj-card__num">04 / 07</span>
@@ -2620,14 +2625,12 @@ footer {
           </div>
           <h3 class="proj-card__phrase">분석하고, 풀고, 다시 만나는 단어 학습 루프.</h3>
         </header>
-        <div class="proj-card__head">
-          <p class="proj-card__sub">AI 단어 분석 · 퀴즈 · 하이브리드 채점 · 오답 재배치를 하나의 학습 루프로 묶었습니다. Vite/React 마이그레이션과 PM2 · 502 게이트웨이 트러블슈팅으로 안정화했습니다.</p>
-        </div>
         <div class="proj-card__stage">
           <div class="proj-carousel" data-carousel data-total="2">
+            <div class="proj-carousel__title" aria-live="polite">단어 퀴즈 화면</div>
             <div class="proj-carousel__counter"><span class="cur">1</span> / <span class="tot">2</span></div>
             <div class="proj-carousel__slides">
-              <div class="proj-carousel__slide on">
+              <div class="proj-carousel__slide on" data-title="단어 퀴즈 화면" data-desc="AI 단어 분석, 퀴즈, 하이브리드 채점, 오답 재배치를 하나의 학습 루프로 묶었습니다. 정답 여부가 다음 복습 큐와 학습 난이도에 바로 반영됩니다.">
                 <div class="proj-phone"><div class="proj-phone__notch"></div><div class="proj-phone__screen" style="background:#f8fdf9">
                   <div style="padding:24px 12px 0;font-size:10px;color:#065f46;font-weight:700;letter-spacing:0.1em">12 / 30</div>
                   <div style="margin:10px;background:#fff;border:1px solid #d1fae5;border-radius:14px;padding:14px">
@@ -2641,7 +2644,7 @@ footer {
                   </div>
                 </div></div>
               </div>
-              <div class="proj-carousel__slide">
+              <div class="proj-carousel__slide" data-title="학습 루프 히트맵" data-desc="30일 학습 히트맵과 오답 큐를 통해 학습 흐름을 시각화했습니다. Vite/React 마이그레이션과 PM2, 502 게이트웨이 트러블슈팅으로 운영 안정성까지 다뤘습니다.">
                 <div class="proj-slide-glass" style="max-width:380px">
                   <h5>학습 루프 · 30일 히트맵</h5>
                   <div class="proj-heatmap">
@@ -2659,8 +2662,11 @@ footer {
             <div class="proj-carousel__dots"></div>
           </div>
         </div>
-        <div class="proj-card__app-expand">
-          <span>Adaptive</span><span>Vocabulary</span><span>Loop</span>
+        <div class="proj-card__identity">
+          <div class="proj-card__app-expand">
+            <span>Adaptive</span><span>Vocabulary</span><span>Loop</span>
+          </div>
+          <p class="proj-card__slide-desc" data-carousel-desc>AI 단어 분석, 퀴즈, 하이브리드 채점, 오답 재배치를 하나의 학습 루프로 묶었습니다. 정답 여부가 다음 복습 큐와 학습 난이도에 바로 반영됩니다.</p>
         </div>
         <div class="proj-card__foot">
           <div class="proj-card__app">
@@ -2680,7 +2686,7 @@ footer {
       <a class="proj-scene__edge proj-scene__edge--top" href="#proj-04">
         <span class="chev">↑</span><span class="name">VocaLoop</span><span>Prev</span>
       </a>
-      <article class="proj-card theme-purple">
+      <article class="proj-card proj-card--stacked theme-purple">
         <header class="proj-card__heading">
           <div class="proj-card__topline">
             <span class="proj-card__num">05 / 07</span>
@@ -2688,14 +2694,12 @@ footer {
           </div>
           <h3 class="proj-card__phrase">메모와 지식 그래프, 에이전트 채팅이 만나는 개인 지식 공간.</h3>
         </header>
-        <div class="proj-card__head">
-          <p class="proj-card__sub">Agent Chat · Context Manager · Knowledge Graph View를 한 앱에. livesync-bridge / CouchDB / Mac Obsidian 간 동기화 장애는 환경변수 기반 패스프레이즈 반영으로 복원했습니다.</p>
-        </div>
         <div class="proj-card__stage">
           <div class="proj-carousel" data-carousel data-total="2">
+            <div class="proj-carousel__title" aria-live="polite">Knowledge graph view</div>
             <div class="proj-carousel__counter"><span class="cur">1</span> / <span class="tot">2</span></div>
             <div class="proj-carousel__slides">
-              <div class="proj-carousel__slide on">
+              <div class="proj-carousel__slide on" data-title="Knowledge graph view" data-desc="Agent Chat, Context Manager, Knowledge Graph View를 한 앱에 묶었습니다. 메모를 노드와 엣지로 재구성해 에이전트가 사용할 수 있는 컨텍스트 단위로 보여줍니다.">
                 <div class="proj-slide-glass" style="max-width:420px">
                   <h5>Knowledge Graph View</h5>
                   <svg viewBox="0 0 360 220" width="100%">
@@ -2722,7 +2726,7 @@ footer {
                   <div style="margin-top:10px;font-family:var(--font-mono);font-size:10.5px;opacity:0.78;letter-spacing:0.06em">노드 6 · 엣지 9 · 컨텍스트 단위로 묶인 메모</div>
                 </div>
               </div>
-              <div class="proj-carousel__slide">
+              <div class="proj-carousel__slide" data-title="Agent chat with context" data-desc="컨텍스트 묶음을 지정한 뒤 에이전트에게 바로 질의하는 흐름입니다. livesync-bridge, CouchDB, Mac Obsidian 동기화 장애는 환경변수 기반 패스프레이즈 반영으로 복원했습니다.">
                 <div class="proj-slide-glass" style="max-width:420px">
                   <h5>Agent Chat with Context</h5>
                   <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;line-height:1.5">
@@ -2740,8 +2744,11 @@ footer {
             <div class="proj-carousel__dots"></div>
           </div>
         </div>
-        <div class="proj-card__app-expand">
-          <span>Personal</span><span>Knowledge</span><span>OS</span>
+        <div class="proj-card__identity">
+          <div class="proj-card__app-expand">
+            <span>Personal</span><span>Knowledge</span><span>OS</span>
+          </div>
+          <p class="proj-card__slide-desc" data-carousel-desc>Agent Chat, Context Manager, Knowledge Graph View를 한 앱에 묶었습니다. 메모를 노드와 엣지로 재구성해 에이전트가 사용할 수 있는 컨텍스트 단위로 보여줍니다.</p>
         </div>
         <div class="proj-card__foot">
           <div class="proj-card__app">
@@ -2761,7 +2768,7 @@ footer {
       <a class="proj-scene__edge proj-scene__edge--top" href="#proj-05">
         <span class="chev">↑</span><span class="name">SynapseNote</span><span>Prev</span>
       </a>
-      <article class="proj-card theme-pink">
+      <article class="proj-card proj-card--stacked theme-pink">
         <header class="proj-card__heading">
           <div class="proj-card__topline">
             <span class="proj-card__num">06 / 07</span>
@@ -2769,14 +2776,12 @@ footer {
           </div>
           <h3 class="proj-card__phrase">독서, 공부, 문화생활을 색으로 남기는 모바일 기록.</h3>
         </header>
-        <div class="proj-card__head">
-          <p class="proj-card__sub">독서 · 공부 · 문화생활을 서로 다른 색과 인터랙션으로 분리한 올인원 기록 앱. 탭 border-glow는 포인터 추적이 아닌 <em>활성 인디케이터 + mask-composite</em>로 iOS Safari 호환을 확보했습니다.</p>
-        </div>
         <div class="proj-card__stage">
           <div class="proj-carousel" data-carousel data-total="2">
+            <div class="proj-carousel__title" aria-live="polite">모바일 기록 대시보드</div>
             <div class="proj-carousel__counter"><span class="cur">1</span> / <span class="tot">2</span></div>
             <div class="proj-carousel__slides">
-              <div class="proj-carousel__slide on">
+              <div class="proj-carousel__slide on" data-title="모바일 기록 대시보드" data-desc="독서, 공부, 문화생활을 서로 다른 색과 인터랙션으로 분리한 올인원 기록 앱입니다. 하루의 활동 비중을 모바일 첫 화면에서 바로 읽을 수 있게 구성했습니다.">
                 <div class="proj-phone"><div class="proj-phone__notch"></div><div class="proj-phone__screen" style="background:#fafafa">
                   <div style="padding:24px 0 4px;text-align:center;font-family:var(--font-display);font-weight:800;font-size:13px;color:#7c3aed;letter-spacing:-0.01em">PrismLog</div>
                   <svg viewBox="0 0 200 200" width="84%" style="display:block;margin:0 auto">
@@ -2792,7 +2797,7 @@ footer {
                   </div>
                 </div></div>
               </div>
-              <div class="proj-carousel__slide">
+              <div class="proj-carousel__slide" data-title="월간 컬러 로그" data-desc="월간 기록을 컬러 스펙트럼으로 정리해 습관의 밀도와 주제를 함께 보여줍니다. 탭 border-glow는 포인터 추적 대신 활성 인디케이터와 mask-composite로 iOS Safari 호환을 확보했습니다.">
                 <div class="proj-slide-glass" style="max-width:380px">
                   <h5>5월 · 컬러 스펙트럼 로그</h5>
                   <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px">
@@ -2811,8 +2816,11 @@ footer {
             <div class="proj-carousel__dots"></div>
           </div>
         </div>
-        <div class="proj-card__app-expand">
-          <span>Multi-category</span><span>Spectrum</span><span>Logger</span>
+        <div class="proj-card__identity">
+          <div class="proj-card__app-expand">
+            <span>Multi-category</span><span>Spectrum</span><span>Logger</span>
+          </div>
+          <p class="proj-card__slide-desc" data-carousel-desc>독서, 공부, 문화생활을 서로 다른 색과 인터랙션으로 분리한 올인원 기록 앱입니다. 하루의 활동 비중을 모바일 첫 화면에서 바로 읽을 수 있게 구성했습니다.</p>
         </div>
         <div class="proj-card__foot">
           <div class="proj-card__app">
@@ -2832,7 +2840,7 @@ footer {
       <a class="proj-scene__edge proj-scene__edge--top" href="#proj-06">
         <span class="chev">↑</span><span class="name">PrismLog</span><span>Prev</span>
       </a>
-      <article class="proj-card theme-orange">
+      <article class="proj-card proj-card--stacked theme-orange">
         <header class="proj-card__heading">
           <div class="proj-card__topline">
             <span class="proj-card__num">07 / 07</span>
@@ -2840,14 +2848,12 @@ footer {
           </div>
           <h3 class="proj-card__phrase">지원 목표에 맞춰 다시 배열되는 포트폴리오.</h3>
         </header>
-        <div class="proj-card__head">
-          <p class="proj-card__sub">학생이 프로젝트와 커리어 기록을 올리면 AI가 인터뷰 · 정리 · 배치로 포트폴리오 사이트를 자동 생성·배포합니다. <em>Target-adaptive Portfolio</em>와 '거의 완성 + 마이크로 수정' 루프가 핵심 난제입니다.</p>
-        </div>
         <div class="proj-card__stage">
           <div class="proj-carousel" data-carousel data-total="2">
+            <div class="proj-carousel__title" aria-live="polite">JD 기반 재배열</div>
             <div class="proj-carousel__counter"><span class="cur">1</span> / <span class="tot">2</span></div>
             <div class="proj-carousel__slides">
-              <div class="proj-carousel__slide on">
+              <div class="proj-carousel__slide on" data-title="JD 기반 재배열" data-desc="학생이 프로젝트와 커리어 기록을 올리면 AI가 지원 목표에 맞춰 인터뷰, 정리, 배치를 수행합니다. 같은 자료도 JD에 따라 강조 순서가 달라지는 포트폴리오 생성 흐름입니다.">
                 <div class="proj-slide-glass" style="max-width:430px">
                   <h5>JD → Portfolio Re-arrange</h5>
                   <div style="display:flex;align-items:center;gap:12px;font-family:var(--font-mono);font-size:11px">
@@ -2858,7 +2864,7 @@ footer {
                   <div style="margin-top:12px;font-family:var(--font-mono);font-size:10.5px;opacity:0.85;letter-spacing:0.06em">동일한 자료로 5개 JD에 5개 포트폴리오</div>
                 </div>
               </div>
-              <div class="proj-carousel__slide">
+              <div class="proj-carousel__slide" data-title="마이크로 수정 루프" data-desc="처음부터 완벽한 자동 생성을 목표로 하기보다 거의 완성된 초안을 만들고 작은 수정만 빠르게 반영하는 루프입니다. Target-adaptive Portfolio의 핵심 제품 가설입니다.">
                 <div class="proj-slide-glass" style="max-width:430px">
                   <h5>"거의 완성 + 마이크로 수정" 루프</h5>
                   <div style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-mono);font-size:12px">
@@ -2878,8 +2884,11 @@ footer {
             <div class="proj-carousel__dots"></div>
           </div>
         </div>
-        <div class="proj-card__app-expand">
-          <span>Career</span><span>Publishing</span><span>Platform</span>
+        <div class="proj-card__identity">
+          <div class="proj-card__app-expand">
+            <span>Career</span><span>Publishing</span><span>Platform</span>
+          </div>
+          <p class="proj-card__slide-desc" data-carousel-desc>학생이 프로젝트와 커리어 기록을 올리면 AI가 지원 목표에 맞춰 인터뷰, 정리, 배치를 수행합니다. 같은 자료도 JD에 따라 강조 순서가 달라지는 포트폴리오 생성 흐름입니다.</p>
         </div>
         <div class="proj-card__foot">
           <div class="proj-card__app">
