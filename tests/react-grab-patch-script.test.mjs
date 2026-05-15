@@ -3,7 +3,19 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import test from "node:test";
 
-test("react-grab patch carries selected element class into the discard prompt label", () => {
+function hasTagDisplayClassInput(source) {
+  return source.includes("className:e.selectionClassName") || source.includes("className: e.selectionClassName");
+}
+
+function hasVisibleTagIdentityFormatter(source) {
+  return (
+    source.includes("portfolioFormatElementIdentity(n||t,e.className)") ||
+    source.includes("portfolioFormatElementIdentity(n || t2, e.className)") ||
+    source.includes("portfolioFormatElementIdentity(componentName || tagName, input.className)")
+  );
+}
+
+test("react-grab patch carries selected element class into selection labels", () => {
   execFileSync("node", ["scripts/patch-react-grab.js"], { stdio: "pipe" });
 
   const distIndex = readFileSync("node_modules/react-grab/dist/index.js", "utf8");
@@ -31,6 +43,16 @@ test("react-grab patch carries selected element class into the discard prompt la
     true,
     "runtime renderer formats the discard prompt label as an element identity",
   );
+  assert.equal(
+    hasTagDisplayClassInput(runtimeRendererSource),
+    true,
+    "runtime selection label includes the selected element class name in tag display",
+  );
+  assert.equal(
+    hasVisibleTagIdentityFormatter(runtimeRendererSource),
+    true,
+    "runtime tag display formats the visible selection label as an element identity",
+  );
 
   const distFiles = readdirSync("node_modules/react-grab/dist");
   const rendererSource = distFiles
@@ -48,6 +70,16 @@ test("react-grab patch carries selected element class into the discard prompt la
     rendererSource.includes("portfolioFormatElementIdentity"),
     true,
     "renderer formats the discard prompt label as an element identity",
+  );
+  assert.equal(
+    hasTagDisplayClassInput(rendererSource) || rendererSource.includes("className: props.selectionClassName"),
+    true,
+    "renderer selection label includes the selected element class name in tag display",
+  );
+  assert.equal(
+    hasVisibleTagIdentityFormatter(rendererSource),
+    true,
+    "renderer tag display formats the visible selection label as an element identity",
   );
 
   const coreSource = distFiles
@@ -79,6 +111,16 @@ test("react-grab patch carries selected element class into the discard prompt la
       viteRendererSource.includes("portfolioFormatElementIdentity"),
       true,
       "Vite renderer formats the discard prompt label as an element identity",
+    );
+    assert.equal(
+      hasTagDisplayClassInput(viteRendererSource),
+      true,
+      "Vite selection label includes the selected element class name in tag display",
+    );
+    assert.equal(
+      hasVisibleTagIdentityFormatter(viteRendererSource),
+      true,
+      "Vite tag display formats the visible selection label as an element identity",
     );
   }
   if (existsSync(viteCore)) {

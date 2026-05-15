@@ -153,6 +153,14 @@ function patchCompactRenderer(source, file) {
       `$1\nvar ${compactIdentityFormatter};`,
     );
   }
+  next = next.replace(
+    /([A-Za-z_$][\w$]*)=e=>e\.elementsCount&&e\.elementsCount>1\?\{tagName:`\$\{e\.elementsCount\} elements`,componentName:void 0\}:\{tagName:e\.tagName\|\|e\.componentName\|\|`element`,componentName:e\.tagName\?e\.componentName:void 0\}/,
+    "$1=e=>{if(e.elementsCount&&e.elementsCount>1)return{tagName:`${e.elementsCount} elements`,componentName:void 0};let t=e.tagName||e.componentName||`element`,n=e.tagName?e.componentName:void 0;return e.className?{tagName:portfolioFormatElementIdentity(n||t,e.className),componentName:void 0}:{tagName:t,componentName:n}}",
+  );
+  next = next.replace(
+    /var ([A-Za-z_$][\w$]*) = \(e\) => e\.elementsCount && e\.elementsCount > 1 \? \{ tagName: `\$\{e\.elementsCount\} elements`, componentName: void 0 \} : \{ tagName: e\.tagName \|\| e\.componentName \|\| `element`, componentName: e\.tagName \? e\.componentName : void 0 \};/,
+    "var $1 = (e) => { if (e.elementsCount && e.elementsCount > 1) return { tagName: `${e.elementsCount} elements`, componentName: void 0 }; let t = e.tagName || e.componentName || `element`, n = e.tagName ? e.componentName : void 0; return e.className ? { tagName: portfolioFormatElementIdentity(n || t, e.className), componentName: void 0 } : { tagName: t, componentName: n }; };",
+  );
 
   const tagDisplayFunction =
     next.match(
@@ -162,6 +170,14 @@ function patchCompactRenderer(source, file) {
       /([A-Za-z_$][\w$]*)\s*=\s*\(\)\s*=>\s*[A-Za-z_$][\w$]*\(\{\s*tagName:\s*e\.tagName,\s*componentName:\s*e\.componentName,\s*elementsCount:\s*e\.elementsCount\s*\}\)/,
     )?.[1];
   if (tagDisplayFunction) {
+    next = next.replace(
+      `${tagDisplayFunction}=()=>Me({tagName:e.tagName,componentName:e.componentName,elementsCount:e.elementsCount})`,
+      `${tagDisplayFunction}=()=>Me({tagName:e.tagName,componentName:e.componentName,className:e.selectionClassName,elementsCount:e.elementsCount})`,
+    );
+    next = next.replace(
+      new RegExp(`${tagDisplayFunction} = \\(\\) => Me\\(\\{ tagName: e\\.tagName, componentName: e\\.componentName, elementsCount: e\\.elementsCount \\}\\)`),
+      `${tagDisplayFunction} = () => Me({ tagName: e.tagName, componentName: e.componentName, className: e.selectionClassName, elementsCount: e.elementsCount })`,
+    );
     next = next.replace(
       /get children\(\)\{return i\(([A-Za-z_$][\w$]*),\{get onConfirm\(\)\{return e\.onConfirmDismiss\},/,
       `get children(){return i($1,{get label(){return portfolioFormatElementIdentity(${tagDisplayFunction}().componentName||${tagDisplayFunction}().tagName,e.selectionClassName)},get onConfirm(){return e.onConfirmDismiss},`,
@@ -269,11 +285,18 @@ function patchFormattedRenderer(source, file) {
     next = replaceOnce(
       next,
       "const getTagDisplay = (input) => {\n\tif (input.elementsCount && input.elementsCount > 1) return {\n\t\ttagName: `${input.elementsCount} elements`,\n\t\tcomponentName: void 0\n\t};\n\treturn {\n\t\ttagName: input.tagName || input.componentName || \"element\",\n\t\tcomponentName: input.tagName ? input.componentName : void 0\n\t};\n};\n",
-      `const getTagDisplay = (input) => {\n\tif (input.elementsCount && input.elementsCount > 1) return {\n\t\ttagName: \`\${input.elementsCount} elements\`,\n\t\tcomponentName: void 0\n\t};\n\treturn {\n\t\ttagName: input.tagName || input.componentName || "element",\n\t\tcomponentName: input.tagName ? input.componentName : void 0\n\t};\n};\n${formattedIdentityFormatter}`,
+      `const getTagDisplay = (input) => {\n\tif (input.elementsCount && input.elementsCount > 1) return {\n\t\ttagName: \`\${input.elementsCount} elements\`,\n\t\tcomponentName: void 0\n\t};\n\tconst tagName = input.tagName || input.componentName || "element";\n\tconst componentName = input.tagName ? input.componentName : void 0;\n\tif (input.className) return {\n\t\ttagName: portfolioFormatElementIdentity(componentName || tagName, input.className),\n\t\tcomponentName: void 0\n\t};\n\treturn { tagName, componentName };\n};\n${formattedIdentityFormatter}`,
       file,
       "formatted identity formatter",
     );
   }
+  next = replaceOnce(
+    next,
+    "const getTagDisplay = (input) => {\n\tif (input.elementsCount && input.elementsCount > 1) return {\n\t\ttagName: `${input.elementsCount} elements`,\n\t\tcomponentName: void 0\n\t};\n\treturn {\n\t\ttagName: input.tagName || input.componentName || \"element\",\n\t\tcomponentName: input.tagName ? input.componentName : void 0\n\t};\n};\n",
+    "const getTagDisplay = (input) => {\n\tif (input.elementsCount && input.elementsCount > 1) return {\n\t\ttagName: `${input.elementsCount} elements`,\n\t\tcomponentName: void 0\n\t};\n\tconst tagName = input.tagName || input.componentName || \"element\";\n\tconst componentName = input.tagName ? input.componentName : void 0;\n\tif (input.className) return {\n\t\ttagName: portfolioFormatElementIdentity(componentName || tagName, input.className),\n\t\tcomponentName: void 0\n\t};\n\treturn { tagName, componentName };\n};\n",
+    file,
+    "formatted tag display class identity",
+  );
 
   next = replaceOnce(
     next,
@@ -289,6 +312,13 @@ function patchFormattedRenderer(source, file) {
     "\t\t\t\t\tget componentName() {\n\t\t\t\t\t\treturn props.selectionComponentName;\n\t\t\t\t\t},\n\t\t\t\t\tget selectionClassName() {\n\t\t\t\t\t\treturn props.selectionClassName;\n\t\t\t\t\t},\n\t\t\t\t\tget elementsCount() {",
     file,
     "formatted selection class prop",
+  );
+  next = replaceOnce(
+    next,
+    "\t\tcomponentName: props.componentName,\n\t\telementsCount: props.elementsCount\n\t});",
+    "\t\tcomponentName: props.componentName,\n\t\tclassName: props.selectionClassName,\n\t\telementsCount: props.elementsCount\n\t});",
+    file,
+    "formatted tag display class input",
   );
 
   return next;
