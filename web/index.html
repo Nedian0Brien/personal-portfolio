@@ -20,8 +20,8 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-snap-type: y proximity; scroll-padding-top: 64px; }
-@media (prefers-reduced-motion: reduce) { html { scroll-snap-type: none; } }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 64px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 img, svg { display: block; max-width: 100%; }
 button { font: inherit; }
 
@@ -3384,6 +3384,7 @@ if (import.meta.env?.DEV) {
   const TOPNAV = 64;
   const DURATION = 700;
   const COOLDOWN = 180;
+  const SETTLE_TOLERANCE = 36;
   let busy = false;
 
   const easeInOutCubic = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -3451,16 +3452,37 @@ if (import.meta.env?.DEV) {
     return r.top + r.height / 2 + window.scrollY - snapCenterY();
   }
 
+  function wheelTarget(dir) {
+    const i = currentIdx();
+    if (i < 0) return null;
+
+    const startY = window.scrollY;
+    const currentY = cardTargetY(scenes[i]);
+    const distanceToCurrent = currentY - startY;
+    let targetIdx = i + dir;
+
+    if (dir > 0 && distanceToCurrent > SETTLE_TOLERANCE) targetIdx = i;
+    if (dir < 0 && distanceToCurrent < -SETTLE_TOLERANCE) targetIdx = i;
+
+    while (targetIdx >= 0 && targetIdx < scenes.length) {
+      const targetY = targetIdx === i ? currentY : cardTargetY(scenes[targetIdx]);
+      const movesInWheelDirection = dir > 0 ? targetY > startY + 1 : targetY < startY - 1;
+      if (movesInWheelDirection) return { y: targetY };
+      targetIdx += dir;
+    }
+
+    return null;
+  }
+
   window.addEventListener('wheel', (e) => {
     if (!inProjectArea()) return;
     if (busy) { e.preventDefault(); return; }
-    const i = currentIdx();
-    if (i < 0) return;
+    if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
     const dir = e.deltaY > 0 ? 1 : -1;
-    const target = scenes[i + dir];
+    const target = wheelTarget(dir);
     if (!target) return; // let native scroll carry user out of the section
     e.preventDefault();
-    tweenTo(cardTargetY(target));
+    tweenTo(target.y);
   }, { passive: false });
 })();
 </script>
