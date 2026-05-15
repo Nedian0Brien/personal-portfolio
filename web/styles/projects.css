@@ -618,23 +618,22 @@
     overflow: hidden;
   }
 
-  /* 2-column slide: text left, carousel right, footer full-width */
   .proj-card,
   .proj-card--stacked {
     display: grid !important;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) !important;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr) !important;
     grid-template-rows: auto 1fr auto !important;
     grid-template-areas:
-      "heading  carousel"
+      "heading  heading"
       "identity carousel"
       "footer   footer" !important;
-    column-gap: clamp(36px, 4.5vw, 96px);
+    column-gap: clamp(32px, 4vw, 72px);
     row-gap: 0;
     width: 100%;
     height: 100vh;
     min-height: 0 !important;
     max-height: 100vh;
-    padding: 7vh 0 4vh;
+    padding: 6vh 0 3.5vh;
     background: transparent !important;
     box-shadow: none !important;
     border-radius: 0;
@@ -645,27 +644,27 @@
   }
   .proj-card::before { display: none !important; }
 
-  /* Left top — heading */
+  /* Heading — full-width top row */
   .proj-card > .proj-card__heading {
     grid-area: heading;
     grid-column: auto !important;
     grid-row: auto !important;
     align-self: start;
-    gap: 20px;
-    padding: 0;
+    gap: 14px;
+    padding-bottom: 3vh;
   }
   .proj-card .proj-card__topline {
     font-size: 12px;
     letter-spacing: 0.22em;
   }
   .proj-card .proj-card__phrase {
-    font-size: clamp(38px, 4vw, 64px);
-    line-height: 1.08;
-    max-width: 18ch;
+    font-size: clamp(34px, 3.2vw, 52px);
+    line-height: 1.12;
+    max-width: 28ch;
     margin: 0;
   }
 
-  /* Right (rows 1-2) — carousel hero */
+  /* Carousel — right column, stretches middle row */
   .proj-card > .proj-card__stage,
   .proj-card--stacked > .proj-card__stage {
     grid-area: carousel;
@@ -677,10 +676,10 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    padding: 0;
+    padding: 2vh 0;
   }
   .proj-card--stacked .proj-carousel {
-    gap: 14px;
+    gap: 12px;
     width: 100%;
     height: 100%;
     min-height: 0 !important;
@@ -692,47 +691,45 @@
     max-height: 100%;
   }
   .proj-card--stacked .proj-carousel__slide figure {
-    max-width: min(96%, 720px) !important;
-    max-height: 100%;
+    max-width: min(92%, 580px) !important;
+    max-height: 90%;
   }
-  .proj-card .proj-phone { width: clamp(200px, 26vh, 260px); }
+  .proj-card .proj-phone { width: clamp(170px, 20vh, 220px); }
   .proj-card .proj-flow,
   .proj-card .proj-heatmap,
-  .proj-card .proj-slide-glass { max-width: 600px; }
+  .proj-card .proj-slide-glass { max-width: 480px; }
 
-  /* Left middle — stacked acronym words + slide description, packed under heading */
+  /* Identity — left column, vertically centered, children grouped */
   .proj-card--stacked > .proj-card__identity {
     grid-area: identity;
     grid-column: auto !important;
     grid-row: auto !important;
-    align-self: stretch;
+    align-self: center;
     display: flex !important;
     flex-direction: column;
-    justify-content: space-between;
-    gap: 24px;
-    padding: 5vh 0 2vh;
+    justify-content: flex-start;
+    gap: clamp(20px, 3vh, 36px);
+    padding: 0;
   }
   .proj-card--stacked .proj-card__identity .proj-card__app-expand {
     display: flex !important;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
     font-family: var(--font-display);
     font-weight: 800;
-    font-size: clamp(40px, 5vw, 80px);
-    line-height: 0.94;
+    font-size: clamp(34px, 4vw, 60px);
+    line-height: 0.96;
     letter-spacing: -0.035em;
     margin: 0;
-    align-self: start;
   }
   .proj-card--stacked .proj-card__slide-desc {
-    max-width: 48ch;
-    font-size: 15.5px;
-    line-height: 1.55;
+    max-width: 42ch;
+    font-size: 15px;
+    line-height: 1.6;
     margin: 0;
-    justify-self: start;
   }
 
-  /* Bottom — footer spans both columns (compact meta) */
+  /* Footer — full-width bottom row */
   .proj-card > .proj-card__foot,
   .proj-card--stacked > .proj-card__foot {
     grid-area: footer;
@@ -740,11 +737,11 @@
     grid-row: auto !important;
     align-self: end;
     margin-top: 0;
-    padding: 2.4vh 0 0;
+    padding: 2vh 0 0;
     border-top-color: rgba(255, 255, 255, 0.16);
   }
   .proj-card .proj-card__app-acronym {
-    font-size: 22px;
+    font-size: 20px;
     letter-spacing: -0.02em;
     line-height: 1;
   }
@@ -756,11 +753,11 @@
     border-top-color: rgba(0, 0, 0, 0.14);
   }
   .proj-card .proj-card__cta {
-    font-size: 14.5px;
-    padding: 11px 24px;
+    font-size: 14px;
+    padding: 10px 22px;
   }
 
-  /* Right carousel — scale fixed-pixel mocks up for desktop slide */
+  /* Carousel slide content — natural size, no scaling */
   .proj-card--stacked .proj-carousel__slide > figure,
   .proj-card--stacked .proj-carousel__slide > div {
     width: 100%;
@@ -768,13 +765,8 @@
     align-items: center;
     justify-content: center;
   }
-  .proj-card--stacked .aris-thread {
-    transform: scale(1.25);
-    transform-origin: center;
-  }
-  .proj-card .proj-phone { transform: scale(1.15); transform-origin: center; }
 
-  /* Edge nav: float to top/bottom center over the slide */
+  /* Edge nav */
   .proj-scene__edge {
     position: absolute;
     left: 50%;
