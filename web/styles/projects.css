@@ -700,31 +700,39 @@
   .proj-card .proj-heatmap,
   .proj-card .proj-slide-glass { max-width: 600px; }
 
-  /* Left bottom — big acronym + slide description */
+  /* Left middle — stacked acronym words + slide description, packed under heading */
   .proj-card--stacked > .proj-card__identity {
     grid-area: identity;
     grid-column: auto !important;
     grid-row: auto !important;
-    align-self: end;
+    align-self: stretch;
     display: flex !important;
     flex-direction: column;
-    gap: 18px;
-    padding: 0 0 2vh;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 5vh 0 2vh;
   }
-  .proj-card .proj-card__app-expand { display: none; }
-  .proj-card .proj-card__app-acronym {
-    font-size: clamp(64px, 7vw, 112px);
-    line-height: 0.88;
+  .proj-card--stacked .proj-card__identity .proj-card__app-expand {
+    display: flex !important;
+    flex-direction: column;
+    gap: 4px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(40px, 5vw, 80px);
+    line-height: 0.94;
+    letter-spacing: -0.035em;
+    margin: 0;
+    align-self: start;
   }
   .proj-card--stacked .proj-card__slide-desc {
-    max-width: 46ch;
+    max-width: 48ch;
     font-size: 15.5px;
     line-height: 1.55;
     margin: 0;
     justify-self: start;
   }
 
-  /* Bottom — footer spans both columns */
+  /* Bottom — footer spans both columns (compact meta) */
   .proj-card > .proj-card__foot,
   .proj-card--stacked > .proj-card__foot {
     grid-area: footer;
@@ -735,6 +743,15 @@
     padding: 2.4vh 0 0;
     border-top-color: rgba(255, 255, 255, 0.16);
   }
+  .proj-card .proj-card__app-acronym {
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .proj-card .proj-card__app-tag {
+    font-size: 11.5px;
+    letter-spacing: 0.18em;
+  }
   .proj-card.theme-yellow > .proj-card__foot {
     border-top-color: rgba(0, 0, 0, 0.14);
   }
@@ -742,6 +759,20 @@
     font-size: 14.5px;
     padding: 11px 24px;
   }
+
+  /* Right carousel — scale fixed-pixel mocks up for desktop slide */
+  .proj-card--stacked .proj-carousel__slide > figure,
+  .proj-card--stacked .proj-carousel__slide > div {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .proj-card--stacked .aris-thread {
+    transform: scale(1.25);
+    transform-origin: center;
+  }
+  .proj-card .proj-phone { transform: scale(1.15); transform-origin: center; }
 
   /* Edge nav: float to top/bottom center over the slide */
   .proj-scene__edge {
