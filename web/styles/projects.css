@@ -611,15 +611,20 @@
   /* Flatten the card to a full-screen slide */
   .proj-stack { gap: 0; }
   .proj-scene {
+    height: 100vh;
     min-height: 100vh;
+    max-height: 100vh;
     padding: 0;
+    overflow: hidden;
   }
   .proj-card,
   .proj-card--stacked {
     display: flex !important;
     flex-direction: column;
     width: 100%;
-    min-height: 100vh;
+    height: 100vh;
+    min-height: 0 !important;
+    max-height: 100vh;
     background: transparent !important;
     box-shadow: none !important;
     border-radius: 0;
@@ -631,6 +636,7 @@
     row-gap: 0;
     grid-template-columns: none !important;
     grid-template-rows: none !important;
+    overflow: hidden;
   }
   .proj-card::before { display: none !important; }
 
@@ -649,86 +655,95 @@
     grid-row: auto !important;
   }
 
-  /* Top — large editorial heading */
+  /* Top — heading (compact) */
   .proj-card > .proj-card__heading {
-    padding-top: 13vh;
+    padding-top: 6vh;
     padding-bottom: 0;
-    gap: 22px;
+    gap: 14px;
+    flex: 0 0 auto;
   }
   .proj-card .proj-card__topline {
-    font-size: 12px;
+    font-size: 11.5px;
     letter-spacing: 0.22em;
   }
   .proj-card .proj-card__phrase {
-    font-size: clamp(40px, 4.6vw, 68px);
-    line-height: 1.08;
+    font-size: clamp(32px, 3.4vw, 52px);
+    line-height: 1.1;
     max-width: 22ch;
+    margin: 0;
   }
 
-  /* Center — carousel as the hero stage */
+  /* Center — carousel hero stage (flex-grow, can shrink) */
   .proj-card > .proj-card__stage,
   .proj-card--stacked > .proj-card__stage {
-    flex: 1 1 auto;
-    min-height: 44vh;
-    padding-top: 4vh;
-    padding-bottom: 2vh;
+    flex: 1 1 0;
+    min-height: 0 !important;
+    padding-top: 2.5vh;
+    padding-bottom: 1.5vh;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
   }
   .proj-card--stacked .proj-carousel {
-    gap: 16px;
+    gap: 12px;
     height: 100%;
-    min-height: 44vh;
+    min-height: 0 !important;
+    max-height: 100%;
   }
   .proj-card--stacked .proj-carousel__slides {
-    min-height: 44vh;
+    min-height: 0 !important;
+    height: 100%;
+    max-height: 100%;
   }
   .proj-card--stacked .proj-carousel__slide figure {
-    max-width: min(86%, 880px) !important;
+    max-width: min(80%, 760px) !important;
+    max-height: 100%;
   }
-  .proj-card .proj-phone { width: 240px; }
+  .proj-card .proj-phone { width: clamp(180px, 22vh, 220px); }
   .proj-card .proj-flow,
   .proj-card .proj-heatmap,
-  .proj-card .proj-slide-glass { max-width: 640px; }
+  .proj-card .proj-slide-glass { max-width: 600px; }
 
-  /* Identity row — big acronym + slide description */
+  /* Identity row — acronym + slide description (compact) */
   .proj-card--stacked > .proj-card__identity {
     display: grid !important;
-    grid-template-columns: minmax(280px, 1fr) minmax(320px, 1.3fr) !important;
-    gap: 56px;
-    padding-top: 3vh;
+    grid-template-columns: minmax(240px, 0.9fr) minmax(320px, 1.4fr) !important;
+    gap: 44px;
+    padding-top: 1.6vh;
     padding-bottom: 0;
     align-items: end;
-  }
-  .proj-card .proj-card__app-acronym {
-    font-size: clamp(72px, 9.5vw, 132px);
-    line-height: 0.88;
+    flex: 0 0 auto;
   }
   .proj-card .proj-card__app-expand {
-    font-size: clamp(26px, 2.6vw, 38px);
-    line-height: 1.05;
+    display: none;
+  }
+  .proj-card .proj-card__app-acronym {
+    font-size: clamp(48px, 5.8vw, 88px);
+    line-height: 0.9;
   }
   .proj-card--stacked .proj-card__slide-desc {
-    max-width: 56ch;
-    font-size: 16.5px;
-    line-height: 1.6;
+    max-width: 52ch;
+    font-size: 15px;
+    line-height: 1.55;
+    margin: 0;
   }
 
-  /* Footer pinned to bottom */
+  /* Footer pinned to bottom (compact) */
   .proj-card > .proj-card__foot,
   .proj-card--stacked > .proj-card__foot {
     margin-top: auto;
-    padding-top: 3.5vh;
-    padding-bottom: 5.5vh;
+    padding-top: 2vh;
+    padding-bottom: 3.2vh;
+    flex: 0 0 auto;
     border-top-color: rgba(255, 255, 255, 0.16);
   }
   .proj-card.theme-yellow > .proj-card__foot {
     border-top-color: rgba(0, 0, 0, 0.14);
   }
   .proj-card .proj-card__cta {
-    font-size: 14.5px;
-    padding: 12px 26px;
+    font-size: 14px;
+    padding: 10px 22px;
   }
 
   /* Edge nav: float to top/bottom center over the slide */
