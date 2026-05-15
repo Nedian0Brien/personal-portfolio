@@ -431,11 +431,7 @@ async function initPortfolioTextEditor() {
 
   reactGrabApi = await ensureReactGrabApi();
   reactGrabApi?.setEnabled?.(true);
-  if (adminModeRequested) {
-    reactGrabApi?.activate?.();
-  } else {
-    reactGrabApi?.deactivate?.();
-  }
+  reactGrabApi?.deactivate?.();
   window.addEventListener("portfolio-react-grab-edit-text-mode", activateEditTextMode);
 
   document.addEventListener("keydown", (event) => {
