@@ -26,8 +26,10 @@
   }
   .hero__title,
   .hero__sub,
+  .hero__intro,
   .hero__tags,
   .hero__facts,
+  .hero__scroll-cue,
   .hero__eyebrow {
     transform: none !important;
     opacity: 1 !important;
@@ -35,7 +37,8 @@
 }
 
 /* hero parallax (scroll-driven) */
-.hero {
+.hero__intro,
+.hero__scroll-cue {
   will-change: transform, opacity;
 }
 
@@ -233,4 +236,3 @@
   .exp-row-meta { display: none; }
   .exp-entry { padding: 56px 0; }
 }
-

@@ -5,13 +5,27 @@ export function initHeroParallax() {
   const hero = document.querySelector(".hero");
   if (!hero) return;
 
+  const intro = hero.querySelector(".hero__intro");
+  const scrollCue = hero.querySelector(".hero__scroll-cue");
+
   let ticking = false;
   function update() {
     const y = window.scrollY;
     const max = hero.offsetHeight || 1;
     const progress = Math.min(1, Math.max(0, y / max));
-    hero.style.transform = `translate3d(0, ${y * 0.18}px, 0)`;
-    hero.style.opacity = String(1 - progress * 0.6);
+
+    if (intro) {
+      intro.style.transform = `translate3d(0, ${y * 0.14}px, 0)`;
+      intro.style.opacity = String(1 - progress * 0.9);
+    }
+
+    if (scrollCue) {
+      const cueProgress = Math.min(1, Math.max(0, y / Math.max(1, window.innerHeight * 0.18)));
+      scrollCue.style.pointerEvents = cueProgress >= 0.95 ? "none" : "";
+      hero.style.setProperty("--hero-cue-opacity", String(0.6 * (1 - cueProgress)));
+      hero.style.setProperty("--hero-cue-y", `${(cueProgress * 14).toFixed(2)}px`);
+    }
+
     ticking = false;
   }
 
