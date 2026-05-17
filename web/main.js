@@ -331,7 +331,7 @@ if (import.meta.env?.DEV) {
   const scenes = Array.from(document.querySelectorAll('#project .proj-scene'));
   if (!layers.length || layers.length !== scenes.length) return;
 
-  const mq = window.matchMedia('(min-width: 0px)');
+  const mq = window.matchMedia('(min-width: 981px)');
   let active = false;
   let ticking = false;
 
