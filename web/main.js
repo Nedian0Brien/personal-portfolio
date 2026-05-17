@@ -351,6 +351,8 @@ if (import.meta.env?.DEV) {
     if (body) body.classList.remove('project-chrome-bleed');
     root.style.removeProperty('--project-chrome-bg-image');
     root.style.removeProperty('--project-chrome-bg-color');
+    root.style.removeProperty('--project-chrome-bg-position');
+    root.style.removeProperty('--project-chrome-bg-size');
   }
 
   function updateChromeBleed() {
@@ -374,8 +376,11 @@ if (import.meta.env?.DEV) {
     });
 
     const style = getComputedStyle(visibleLayer);
+    const layerRect = visibleLayer.getBoundingClientRect();
     root.style.setProperty('--project-chrome-bg-image', style.backgroundImage || 'none');
     root.style.setProperty('--project-chrome-bg-color', style.backgroundColor || 'transparent');
+    root.style.setProperty('--project-chrome-bg-position', layerRect.left.toFixed(2) + 'px ' + layerRect.top.toFixed(2) + 'px');
+    root.style.setProperty('--project-chrome-bg-size', layerRect.width.toFixed(2) + 'px ' + layerRect.height.toFixed(2) + 'px');
     root.classList.add('project-chrome-bleed');
     if (body) body.classList.add('project-chrome-bleed');
   }

@@ -852,6 +852,9 @@
   body.project-chrome-bleed {
     background-color: var(--project-chrome-bg-color, var(--bg-primary));
     background-image: var(--project-chrome-bg-image, none);
+    background-position: var(--project-chrome-bg-position, 0 0);
+    background-repeat: no-repeat;
+    background-size: var(--project-chrome-bg-size, 100% 100%);
     background-attachment: fixed;
   }
   #project {
