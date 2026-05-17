@@ -1,6 +1,6 @@
 ---
-name: "Minjae Park Portfolio"
-description: "A research-ready graduate school portfolio for AI, NLP, RAG, and LLM Agent work."
+name: "박민재 포트폴리오"
+description: "AI, NLP, RAG, LLM Agent 연구 준비도를 보여주는 대학원 연구실 지원용 포트폴리오."
 colors:
   surface-base: "#FFFFFF"
   surface-muted: "#F5F5F5"
@@ -100,162 +100,162 @@ components:
     padding: "52px 52px 38px"
 ---
 
-# Design System: Minjae Park Portfolio
+# 디자인 시스템: 박민재 포트폴리오
 
 ## 1. Overview
 
-**Creative North Star: "A Research Dossier With Product Clarity"**
+**Creative North Star: "제품처럼 읽히는 연구 포트폴리오"**
 
-This system should feel like a carefully prepared research dossier that has learned the scanning discipline of a product interface. The primary reader is a professor or PI, so the visual order must make evidence visible before personality: publication, role, metric, project, research direction, next question.
+이 시스템은 잘 정리된 연구 지원 dossier에 제품 인터페이스의 스캔 가능성을 결합한 형태여야 한다. 핵심 독자는 교수 및 PI이므로, 화면의 첫 질서는 개성보다 증거를 먼저 보여준다. 논문, 역할, 지표, 프로젝트, 연구 방향, 다음 질문이 빠르게 읽혀야 한다.
 
-The surface is quiet, but it is not timid. Large compressed display type, precise mono labels, strict evidence blocks, and restrained theme switching create a portfolio that looks prepared rather than decorated. The project section is allowed to become more vivid because it is showing built systems, but the research narrative must remain legible and controlled.
+표면은 조용하지만 약하지 않아야 한다. 압축된 대형 디스플레이 타이포그래피, 정밀한 mono 라벨, 엄격한 증거 블록, 절제된 테마 전환이 "꾸민 페이지"가 아니라 "준비된 연구자"라는 인상을 만든다. 프로젝트 섹션은 실제로 만든 시스템을 보여주는 영역이므로 더 선명한 색과 움직임을 가질 수 있지만, 연구 서사는 항상 읽기 쉬운 구조를 유지해야 한다.
 
-It rejects the exact anti-references in PRODUCT.md: 과하게 스타트업 랜딩처럼 보이는 것, 너무 학생 포트폴리오 같은 느낌, AI Slop 처럼 보이는 것, 너무 난잡한 구성 및 장황한 내용.
+이 시스템은 PRODUCT.md의 안티 레퍼런스를 그대로 거부한다: 과하게 스타트업 랜딩처럼 보이는 것, 너무 학생 포트폴리오 같은 느낌, AI Slop 처럼 보이는 것, 너무 난잡한 구성 및 장황한 내용.
 
 **Key Characteristics:**
 
-- Evidence-first hierarchy: metrics, roles, venues, and outputs appear before long explanation.
-- Product-like scanning: sections, badges, cards, and carousels are tuned for fast comparison.
-- Research restraint: the default field is neutral and typographic; color appears as a semantic tag or project world.
-- Motion as proof of care: reveal and carousel motion supports orientation, never spectacle.
+- 증거 우선 위계: 긴 설명보다 지표, 역할, 게재지, 산출물이 먼저 보인다.
+- 제품형 스캔 구조: 섹션, 배지, 카드, 캐러셀은 빠른 비교를 위해 조정된다.
+- 연구 중심 절제: 기본 표면은 중립적이고 타이포그래피 중심이며, 색은 의미 있는 태그나 프로젝트 세계에만 붙는다.
+- 세심함을 보여주는 모션: reveal, 캐러셀, 프리뷰 움직임은 방향 감각을 돕고, 과시가 되면 안 된다.
 
 ## 2. Colors
 
-The palette is restrained neutral research paper plus a full project accent set. Neutrals carry credibility; color names research domains and project identities.
+팔레트는 절제된 연구 문서형 neutral과 프로젝트별 full accent set의 조합이다. neutral은 신뢰감을 만들고, 색은 연구 도메인과 프로젝트 정체성을 구분한다.
 
 ### Primary
 
-- **Research Blue**: Primary action, link, and AI/NLP identity color. Use for Contact, active emphasis, paper links, and brand badges.
-- **Deep Research Blue**: Stronger project card blue and hover color. Use when a surface needs saturated authority, especially ARIS and brand-forward project cards.
-- **Soft Research Blue**: Low-pressure badge fill. Use for tags and small emphasis only.
+- **Research Blue**: 주요 액션, 링크, AI/NLP 정체성을 담당한다. Contact, 활성 강조, 논문 링크, brand badge에 사용한다.
+- **Deep Research Blue**: 더 강한 프로젝트 카드 블루와 hover 색이다. ARIS처럼 권위 있고 선명한 project world가 필요할 때 사용한다.
+- **Soft Research Blue**: 부담이 낮은 badge fill이다. 태그와 작은 강조에만 사용한다.
 
 ### Secondary
 
-- **Evidence Green**: Verified state, biomedical tags, "In Dev" status, and progress signals.
-- **Signal Red**: RAG or alert-like tags where the information needs urgency without becoming an error state.
-- **Agent Purple**: LLM Agent and research-idea tagging. Use sparingly in content sections and more freely inside project worlds.
+- **Evidence Green**: 검증된 상태, biomedical 태그, "In Dev" 상태, 진행 신호에 사용한다.
+- **Signal Red**: RAG나 긴급성이 있는 태그에 사용한다. 단, error 상태처럼 읽히지 않게 제한한다.
+- **Agent Purple**: LLM Agent와 research idea를 표시한다. 본문 섹션에서는 적게, project world 안에서는 더 자유롭게 사용할 수 있다.
 
 ### Tertiary
 
-- **Study Yellow**: Highlighted text, reading/study signals, and warm emphasis.
-- **Prism Pink, Retrieval Teal, System Orange**: Project-world accents. They are allowed to be immersive inside project cards, but should not leak into the core research-reading surface as decoration.
+- **Study Yellow**: 하이라이트 텍스트, reading/study 신호, 따뜻한 강조에 사용한다.
+- **Prism Pink, Retrieval Teal, System Orange**: 프로젝트 세계 전용 accent다. 프로젝트 카드 안에서는 몰입감 있게 쓸 수 있지만, 핵심 연구 표면에는 장식으로 흘러들어오면 안 된다.
 
 ### Neutral
 
-- **Surface Base**: Main light page surface.
-- **Surface Muted**: Low-contrast containers such as hero facts and empty states.
-- **Surface Raised**: Divider, soft panel, and neutral chip fill.
-- **Ink**: Primary text and inverse panel background.
-- **Ink Soft / Ink Muted**: Secondary body, metadata, and scanning labels.
-- **Border Subtle / Border Strong**: Dividers, card frames, top navigation, and focus contrast.
+- **Surface Base**: 기본 light page surface.
+- **Surface Muted**: hero facts, empty state 같은 낮은 대비 컨테이너.
+- **Surface Raised**: divider, soft panel, neutral chip fill.
+- **Ink**: 기본 텍스트와 inverse panel 배경.
+- **Ink Soft / Ink Muted**: 본문 보조 정보, 메타데이터, 스캔 라벨.
+- **Border Subtle / Border Strong**: divider, card frame, top navigation, focus contrast.
 
 ### Named Rules
 
-**The Evidence Color Rule.** Color must identify a research domain, project family, or state. If the color does not answer "what kind of evidence is this?", remove it.
+**증거 색상 규칙.** 색은 연구 도메인, 프로젝트 계열, 상태 중 하나를 식별해야 한다. "이 색이 어떤 증거를 분류하는가"에 답하지 못하면 제거한다.
 
-**The Neutral First Rule.** Research and experience sections start from neutral surfaces. Saturated color belongs to tags, links, covers, and project cards, not to generic section backgrounds.
+**Neutral First 규칙.** Research와 Experience 섹션은 neutral surface에서 시작한다. 포화된 색은 tag, link, cover, project card에 둔다. 일반 섹션 배경을 색으로 채우지 않는다.
 
-**The No AI Slop Rule.** Do not add neon-blue, purple-gradient, or decorative AI glow treatments. The existing gradients are tied to project preview worlds and must stay there.
+**No AI Slop 규칙.** neon blue, purple gradient, 장식적 AI glow를 추가하지 않는다. 기존 gradient는 project preview world에 연결되어 있을 때만 허용된다.
 
 ## 3. Typography
 
-**Display Font:** Inter Tight, with Inter and Pretendard fallback
+**Display Font:** Inter Tight, Inter 및 Pretendard fallback
 
-**Body Font:** Inter and Pretendard Variable, with system sans fallback
+**Body Font:** Inter, Pretendard Variable 및 system sans fallback
 
 **Label/Mono Font:** JetBrains Mono
 
-**Character:** The pairing is compressed, academic, and interface-native. Inter Tight carries headline confidence; Pretendard keeps Korean body copy readable; JetBrains Mono is reserved for labels, numbers, metadata, and evidence stamps.
+**Character:** 이 조합은 압축적이고 학술적이며 interface-native한 인상을 만든다. Inter Tight는 headline의 자신감을 담당하고, Pretendard는 한국어 본문 가독성을 지킨다. JetBrains Mono는 label, number, metadata, evidence stamp에만 사용한다.
 
 ### Hierarchy
 
-- **Display** (800, `clamp(48px, 8vw, 112px)`, 0.98): Hero headline only. Use it when the page needs one dominant claim.
-- **Headline** (700, `clamp(28px, 4vw, 48px)`, 1.05): Contact headline, large section claims, and paper-detail titles.
-- **Title** (700, `clamp(24px, 2.6vw, 32px)`, 1.2): Section titles and feature card titles.
-- **Body** (400 to 600, 15px to 20px, 1.55): Explanatory copy. Keep body line length near 56 to 72ch, and make the first sentence do real work.
-- **Label** (JetBrains Mono, 10px to 11.5px, 0.08em to 0.18em, uppercase): Section eyebrows, badges, counters, status chips, and project metadata.
+- **Display** (800, `clamp(48px, 8vw, 112px)`, 0.98): hero headline 전용이다. 페이지가 하나의 지배적 주장만 가져야 할 때 사용한다.
+- **Headline** (700, `clamp(28px, 4vw, 48px)`, 1.05): contact headline, 큰 section claim, paper-detail title에 사용한다.
+- **Title** (700, `clamp(24px, 2.6vw, 32px)`, 1.2): section title과 feature card title에 사용한다.
+- **Body** (400 to 600, 15px to 20px, 1.55): 설명 본문이다. line length는 56 to 72ch 근처로 유지하고, 첫 문장이 실제 정보를 담아야 한다.
+- **Label** (JetBrains Mono, 10px to 11.5px, 0.08em to 0.18em, uppercase): section eyebrow, badge, counter, status chip, project metadata에 사용한다.
 
 ### Named Rules
 
-**The One Claim Per Fold Rule.** Display type is for one claim, not for every section. If every heading shouts, the professor cannot find the evidence.
+**One Claim Per Fold 규칙.** Display type은 한 fold의 단 하나의 주장에만 사용한다. 모든 heading이 소리치면 교수/PI는 증거를 찾을 수 없다.
 
-**The Mono Is Evidence Rule.** Mono labels must mark metadata, counts, dates, roles, or navigation. Do not use mono as a generic "technical" costume.
+**Mono Is Evidence 규칙.** Mono label은 metadata, count, date, role, navigation을 표시해야 한다. "기술적으로 보이기 위해" mono를 쓰지 않는다.
 
 ## 4. Elevation
 
-The system is flat by default and layered by structure. Most depth comes from tonal contrast, borders, sticky positioning, and grid rhythm. Shadows appear only when an item is interactive or when a project scene becomes active.
+이 시스템은 기본적으로 flat하고, 구조로 layer를 만든다. 대부분의 깊이는 tonal contrast, border, sticky positioning, grid rhythm에서 나온다. shadow는 item이 interactive하거나 project scene이 active일 때만 나타난다.
 
 ### Shadow Vocabulary
 
-- **Soft Surface Shadow** (`0 1px 2px rgba(0,0,0,0.04), 0 4px 14px -6px rgba(0,0,0,0.08)`): Low ambient separation for light-theme surfaces.
-- **Feature Lift** (`0 12px 40px -12px rgba(0,0,0,0.18)`): Hover lift for media cards and elevated content blocks.
-- **Project Active Lift** (`0 36px 90px rgba(0,0,0,.18), 0 8px 16px rgba(0,0,0,.08)`): Active project scene card only.
-- **Device Mockup Shadow** (`0 30px 50px -10px rgba(0,0,0,.45), inset 0 0 0 1.5px rgba(255,255,255,.08)`): Phone and preview mockups.
+- **Soft Surface Shadow** (`0 1px 2px rgba(0,0,0,0.04), 0 4px 14px -6px rgba(0,0,0,0.08)`): light theme surface의 낮은 ambient separation.
+- **Feature Lift** (`0 12px 40px -12px rgba(0,0,0,0.18)`): media card와 elevated content block의 hover lift.
+- **Project Active Lift** (`0 36px 90px rgba(0,0,0,.18), 0 8px 16px rgba(0,0,0,.08)`): active project scene card 전용.
+- **Device Mockup Shadow** (`0 30px 50px -10px rgba(0,0,0,.45), inset 0 0 0 1.5px rgba(255,255,255,.08)`): phone 및 product preview mockup의 물리감.
 
 ### Named Rules
 
-**The Flat Until Proven Rule.** A surface earns shadow only through interaction, active scene state, or device realism. Default content cards should rely on border, rhythm, and type.
+**Flat Until Proven 규칙.** surface는 interaction, active scene state, device realism 중 하나를 증명할 때만 shadow를 얻는다. 기본 content card는 border, rhythm, type으로 버틴다.
 
 ## 5. Components
 
 ### Buttons
 
-- **Shape:** Compact rounded rectangle (8px radius).
-- **Primary:** Inverse ink fill with surface text, 36px height, 14px horizontal padding. It reads as a clear command without becoming a sales CTA.
-- **Hover / Focus:** Primary uses brightness lift; secondary uses muted background. Focus must retain border contrast.
-- **Secondary:** Transparent background, strong border, same size. Use for peer actions such as "Research detail" beside "Read paper".
+- **Shape:** compact rounded rectangle (8px radius).
+- **Primary:** inverse ink fill과 surface text를 사용한다. 36px height, 14px horizontal padding. sales CTA가 아니라 명확한 command처럼 읽혀야 한다.
+- **Hover / Focus:** primary는 brightness lift, secondary는 muted background를 사용한다. focus는 border contrast를 유지한다.
+- **Secondary:** transparent background와 strong border를 유지한다. "Read paper" 옆의 "Research detail"처럼 peer action에 사용한다.
 
 ### Chips
 
-- **Style:** Small mono uppercase badges (20px height, 6px radius, 0 8px padding).
-- **State:** Badge color identifies topic or status. Pressable `.chip` filters use full-pill radius and invert when selected.
-- **Rule:** Chips are metadata, not decoration. A chip that does not help a PI classify evidence should be removed.
+- **Style:** 작은 mono uppercase badge (20px height, 6px radius, 0 8px padding).
+- **State:** badge color는 topic 또는 status를 식별한다. pressable `.chip` filter는 full-pill radius를 쓰고 selected 상태에서 inverse 처리한다.
+- **Rule:** chip은 metadata이지 장식이 아니다. PI가 증거를 분류하는 데 도움을 주지 않는 chip은 제거한다.
 
 ### Cards / Containers
 
-- **Corner Style:** Research evidence cards use 16px to 24px radii. Project scene cards use 24px with immersive gradients.
-- **Background:** Research cards use muted neutral surfaces; project cards use saturated per-project worlds.
-- **Shadow Strategy:** Flat at rest. Hover or active-scene states may lift.
-- **Border:** Thin neutral borders for research and contact rows; project cards use internal translucent dividers.
-- **Internal Padding:** 22px for facts, 28px to 40px for cards, 52px for desktop project scenes.
+- **Corner Style:** research evidence card는 16px to 24px radius를 사용한다. project scene card는 immersive gradient와 함께 24px를 사용한다.
+- **Background:** research card는 muted neutral surface를 사용하고, project card는 프로젝트별 saturated world를 사용한다.
+- **Shadow Strategy:** 기본은 flat이다. hover 또는 active-scene 상태에서만 lift를 줄 수 있다.
+- **Border:** research와 contact row에는 얇은 neutral border를 사용한다. project card는 내부 translucent divider를 사용한다.
+- **Internal Padding:** facts는 22px, 일반 card는 28px to 40px, desktop project scene은 52px를 기준으로 한다.
 
 ### Inputs / Fields
 
-- **Style:** Search-style fields use muted background, 12px radius, 36px height, thin border, and inline mono keyboard hints.
-- **Focus:** Border shifts to `Ink`; background becomes `Surface Base`.
-- **Error / Disabled:** No distinct error system exists yet. Add one only when a real form flow appears.
+- **Style:** search-style field는 muted background, 12px radius, 36px height, thin border, inline mono keyboard hint를 사용한다.
+- **Focus:** border는 `Ink`로 이동하고, background는 `Surface Base`가 된다.
+- **Error / Disabled:** 아직 별도 error system은 없다. 실제 form flow가 생길 때만 추가한다.
 
 ### Navigation
 
-- **Style:** Sticky translucent top navigation with 56px row height, blurred overlay, and a one-pixel bottom border.
-- **Typography:** Logo uses display font at 16px and 700 weight; nav links use 14px medium sans.
-- **Default / Hover / Active:** Links are quiet until hovered or current, then shift to muted background and primary text.
-- **Mobile Treatment:** Hide nav links below 900px; hide full logo text below 560px while preserving the compact mark.
+- **Style:** 56px row height의 sticky translucent top navigation. blur overlay와 1px bottom border를 사용한다.
+- **Typography:** logo는 display font 16px, 700 weight를 사용한다. nav link는 14px medium sans를 사용한다.
+- **Default / Hover / Active:** link는 기본 상태에서 조용해야 한다. hover 또는 current 상태에서 muted background와 primary text로 전환한다.
+- **Mobile Treatment:** 900px 아래에서는 nav link를 숨긴다. 560px 아래에서는 compact mark를 남기고 full logo text를 숨긴다.
 
 ### Signature Component: Project Scene Card
 
-Project cards are full-screen evidence worlds. They combine a saturated project-specific background, a large one-line project phrase, a right-side carousel, and a bottom identity bar. Use them for built systems only. Do not reuse this component for generic research cards or study lists.
+Project card는 full-screen evidence world다. saturated project-specific background, 큰 one-line project phrase, right-side carousel, bottom identity bar를 결합한다. 실제로 만든 시스템을 보여줄 때만 사용한다. generic research card나 study list에는 재사용하지 않는다.
 
 ### Signature Component: Paper Hero Cover
 
-The paper detail page uses a large dark cover, PDF preview, paper metadata, and metric cards. It is the site's most academic component and should favor legibility over preview spectacle. If the PDF preview threatens the title, title readability wins.
+Paper detail page는 large dark cover, PDF preview, paper metadata, metric card를 사용한다. 사이트에서 가장 학술적인 컴포넌트이므로 preview spectacle보다 legibility를 우선한다. PDF preview가 title을 위협하면 title readability가 이긴다.
 
 ## 6. Do's and Don'ts
 
 ### Do:
 
-- **Do** make publication, role, metric, and research direction visible before long explanation.
-- **Do** keep research sections neutral-first and use color to classify evidence.
-- **Do** preserve the compact button, badge, and fact-card dimensions. They make the page feel scannable.
-- **Do** use project-world color only when the section is showing a built system or visual artifact.
-- **Do** honor reduced motion. Reveal, parallax, carousel, and PDF preview motion must degrade without hiding content.
-- **Do** keep professor/PI scanning in mind: each section should answer what was done, why it matters, and what it proves.
+- **Do** publication, role, metric, research direction을 긴 설명보다 먼저 보이게 한다.
+- **Do** research section은 neutral-first로 유지하고, 색은 evidence classification에 사용한다.
+- **Do** compact button, badge, fact-card dimension을 보존한다. 이 크기가 페이지를 scannable하게 만든다.
+- **Do** project-world color는 built system 또는 visual artifact를 보여줄 때만 사용한다.
+- **Do** reduced motion을 존중한다. reveal, parallax, carousel, PDF preview motion은 content를 숨기지 않고 degrade되어야 한다.
+- **Do** 교수/PI의 scan context를 기준으로 각 섹션이 무엇을 했고, 왜 중요하며, 무엇을 증명하는지 답하게 한다.
 
 ### Don't:
 
-- **Don't** make it feel 과하게 스타트업 랜딩처럼 보이는 것. Avoid salesy hero metrics, generic CTA stacks, and investor-style product hype.
-- **Don't** make it feel 너무 학생 포트폴리오 같은 느낌. Avoid skill-list filler, assignment-card grids, and shallow "about me" framing.
-- **Don't** make it feel AI Slop 처럼 보이는 것. Avoid decorative AI icons, neon gradients, glass panels as decoration, and generic blue-purple glow.
-- **Don't** make it too 난잡한 구성 및 장황한 내용. If a visitor cannot tell what was done in five seconds, cut copy or strengthen the evidence hierarchy.
-- **Don't** use colored side-stripe borders, gradient text, or decorative glassmorphism. These are banned patterns for this system.
-- **Don't** repeat identical icon-card grids. This portfolio's rhythm comes from evidence cards, research details, and project scenes, not template feature cards.
+- **Don't** 과하게 스타트업 랜딩처럼 보이게 만들지 않는다. salesy hero metric, generic CTA stack, investor-style product hype를 피한다.
+- **Don't** 너무 학생 포트폴리오 같은 느낌으로 만들지 않는다. skill-list filler, assignment-card grid, 얕은 "about me" framing을 피한다.
+- **Don't** AI Slop 처럼 보이게 만들지 않는다. decorative AI icon, neon gradient, 장식용 glass panel, generic blue-purple glow를 피한다.
+- **Don't** 너무 난잡한 구성 및 장황한 내용으로 만들지 않는다. 방문자가 5초 안에 무엇을 했는지 알 수 없다면 copy를 줄이거나 evidence hierarchy를 강화한다.
+- **Don't** colored side-stripe border, gradient text, decorative glassmorphism을 사용하지 않는다. 이 시스템에서는 금지된 패턴이다.
+- **Don't** 동일한 icon-card grid를 반복하지 않는다. 이 포트폴리오의 rhythm은 evidence card, research detail, project scene에서 나온다.
