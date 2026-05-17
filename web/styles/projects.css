@@ -1209,22 +1209,6 @@
   height: auto;
   max-height: none;
   min-height: 0;
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent 0,
-    rgba(0, 0, 0, 0.25) 18px,
-    rgba(0, 0, 0, 0.72) 64px,
-    #000 112px,
-    #000 100%
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0,
-    rgba(0, 0, 0, 0.25) 18px,
-    rgba(0, 0, 0, 0.72) 64px,
-    #000 112px,
-    #000 100%
-  );
   transform: scale(var(--aris-thread-scale));
   transform-origin: center;
 }
