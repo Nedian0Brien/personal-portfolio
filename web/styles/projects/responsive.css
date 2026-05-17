@@ -1,0 +1,100 @@
+/* Section title sizing */
+#project .sec__row { margin-bottom: 0; }
+
+/* Mobile responsive */
+@media (max-width: 980px) {
+  .proj-card {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto auto;
+    padding: 34px 26px 26px;
+    min-height: auto;
+    column-gap: 0;
+    row-gap: 22px;
+  }
+  .proj-card__heading { grid-column: 1; grid-row: 1; }
+  .proj-card__head { grid-column: 1; grid-row: 2; max-width: none; height: auto; }
+  .proj-card__stage { grid-column: 1; grid-row: 3; min-height: 320px; }
+  .proj-card__app-expand { grid-column: 1; grid-row: 4; align-self: start; }
+  .proj-card__foot { grid-column: 1 / -1; grid-row: 5; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .proj-carousel, .proj-carousel__slides { min-height: 320px; }
+  .proj-scene { min-height: auto; padding: 4vh 0; }
+  .proj-card__phrase { font-size: 30px; }
+  .proj-card__sub { font-size: 14px; }
+  .proj-card__cta { align-self: flex-end; }
+  .proj-phone { width: 160px; }
+  .proj-card--stacked {
+    grid-template-rows: auto auto auto auto;
+  }
+  .proj-card--stacked .proj-card__stage {
+    grid-column: 1;
+    grid-row: 2;
+    min-height: 340px;
+  }
+  .proj-card--stacked .proj-carousel__slide figure {
+    max-width: min(100%, 560px) !important;
+  }
+  .proj-card--stacked .proj-card__identity {
+    grid-column: 1;
+    grid-row: 3;
+    grid-template-columns: minmax(190px, 0.78fr) minmax(240px, 1fr);
+    gap: 24px;
+  }
+  .proj-card--stacked .proj-card__slide-desc {
+    justify-self: end;
+    max-width: 48ch;
+    font-size: 14px;
+  }
+  .proj-card--stacked .proj-card__foot {
+    grid-row: 4;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .proj-card--stacked .proj-card__app {
+    flex: 1 1 auto;
+  }
+  .proj-card--stacked .proj-card__cta {
+    align-self: center;
+    flex: 0 0 auto;
+  }
+}
+@media (max-width: 520px) {
+  .proj-card { padding: 26px 18px 22px; }
+  .proj-card__phrase { font-size: 26px; line-height: 1.18; }
+  .proj-phone { width: 140px; border-radius: 26px; }
+  .proj-phone__screen { border-radius: 22px; }
+  .proj-carousel__nav { width: 32px; height: 32px; font-size: 18px; }
+  .proj-carousel__nav.prev { left: -4px; }
+  .proj-carousel__nav.next { right: -4px; }
+  .proj-card--stacked .proj-card__stage {
+    min-height: 320px;
+  }
+  .proj-card--stacked .proj-card__identity {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .proj-card--stacked .proj-card__slide-desc {
+    justify-self: start;
+    max-width: none;
+    font-size: 13px;
+  }
+  .proj-card--stacked .proj-card__foot {
+    align-items: flex-end;
+  }
+  .proj-card--stacked .proj-card__app {
+    gap: 8px;
+  }
+  .proj-card--stacked .proj-card__app-tag {
+    font-size: 9px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .proj-card { transform: none; opacity: 1; filter: none; transition: none; }
+}
+
+/* ============================================================
+   §03 PROJECT — Desktop full-screen slide mode
+   각 프로젝트가 viewport 전체를 차지하는 슬라이드로 보이고,
+   다음 슬라이드의 그러데이션이 아래에서 위로 차오르며 전환된다.
+   ============================================================ */
