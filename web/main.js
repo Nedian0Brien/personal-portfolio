@@ -377,6 +377,10 @@ if (import.meta.env?.DEV) {
   let active = false;
   let ticking = false;
 
+  function shouldSyncChromeBleed() {
+    return root.classList.contains('device-mobile-or-tablet');
+  }
+
   function supportsCssWipe() {
     return cssWipeMq.matches
       && window.CSS
@@ -398,7 +402,7 @@ if (import.meta.env?.DEV) {
   }
 
   function updateChromeBleed() {
-    if (!cssWipeMq.matches) {
+    if (!shouldSyncChromeBleed()) {
       clearChromeBleed();
       return;
     }
@@ -422,13 +426,14 @@ if (import.meta.env?.DEV) {
 
     const style = getComputedStyle(visibleLayer);
     const layerRect = visibleLayer.getBoundingClientRect();
+    const themeClass = Array.from(visibleLayer.classList).find(name => chromeColors[name]);
+    const chromeColor = themeClass ? chromeColors[themeClass] : (style.backgroundColor || 'transparent');
     root.style.setProperty('--project-chrome-bg-image', style.backgroundImage || 'none');
-    root.style.setProperty('--project-chrome-bg-color', style.backgroundColor || 'transparent');
+    root.style.setProperty('--project-chrome-bg-color', chromeColor);
     root.style.setProperty('--project-chrome-bg-position', layerRect.left.toFixed(2) + 'px ' + layerRect.top.toFixed(2) + 'px');
     root.style.setProperty('--project-chrome-bg-size', layerRect.width.toFixed(2) + 'px ' + layerRect.height.toFixed(2) + 'px');
     root.style.setProperty('--project-chrome-bleed-height', bleedHeight.toFixed(2) + 'px');
     root.style.setProperty('--project-chrome-strip-bg-position', layerRect.left.toFixed(2) + 'px ' + (layerRect.top - bleedTop).toFixed(2) + 'px');
-    const themeClass = Array.from(visibleLayer.classList).find(name => chromeColors[name]);
     if (themeClass) themeMeta.setAttribute('content', chromeColors[themeClass]);
     root.classList.add('project-chrome-bleed');
     if (body) body.classList.add('project-chrome-bleed');
