@@ -57,6 +57,9 @@ if [[ -d "$RESEARCH_DIR" ]]; then
   cp -a "$RESEARCH_DIR/." "$DOC_ROOT/research/"
 fi
 
+find "$DOC_ROOT" -type d -exec chmod 755 {} +
+find "$DOC_ROOT" -type f -exec chmod 644 {} +
+
 cat > "$NGINX_AVAIL" <<NGINX
 server {
     listen 80;

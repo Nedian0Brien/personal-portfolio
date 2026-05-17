@@ -59,6 +59,46 @@
 .hero__title em { font-style: normal; background: hsl(var(--yellow-10)); color: hsl(var(--yellow-60)); padding: 0 .12em; border-radius: 10px; }
 [data-theme="dark"] .hero__title em { background: hsla(var(--yellow-50) / .18); color: hsl(var(--yellow-50)); }
 .hero__title .brand { color: var(--text-brand); }
+.hero__accent {
+  position: relative;
+  display: inline-block;
+  z-index: 0;
+  white-space: nowrap;
+}
+.hero__accent::after {
+  content: "";
+  position: absolute;
+  left: -0.04em;
+  right: -0.04em;
+  bottom: 0.04em;
+  height: 0.16em;
+  border-radius: 999px;
+  z-index: -1;
+}
+.hero__accent--retrieval {
+  color: hsl(var(--blue-70));
+}
+.hero__accent--retrieval::after {
+  background: hsl(var(--blue-10));
+}
+.hero__accent--agent {
+  color: hsl(var(--purple-60));
+}
+.hero__accent--agent::after {
+  background: hsl(var(--purple-10));
+}
+[data-theme="dark"] .hero__accent--retrieval {
+  color: hsl(var(--blue-30));
+}
+[data-theme="dark"] .hero__accent--retrieval::after {
+  background: hsla(var(--blue-50) / 0.28);
+}
+[data-theme="dark"] .hero__accent--agent {
+  color: hsl(var(--purple-50));
+}
+[data-theme="dark"] .hero__accent--agent::after {
+  background: hsla(var(--purple-50) / 0.26);
+}
 
 .hero__sub {
   color: var(--text-secondary);
@@ -91,8 +131,40 @@
 
 .hero__tags { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 8px; }
 
+.hero__summary {
+  color: var(--text-secondary);
+  font-size: clamp(17px, 2vw, 20px);
+  line-height: 1.52;
+  max-width: 760px;
+  margin: 28px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+.hero__summary li {
+  position: relative;
+  padding-left: 20px;
+}
+.hero__summary li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.74em;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--text-brand);
+  box-shadow: 0 0 0 4px hsla(var(--blue-50) / 0.12);
+}
+.hero__summary li:nth-child(2)::before {
+  background: hsl(var(--purple-50));
+  box-shadow: 0 0 0 4px hsla(var(--purple-50) / 0.12);
+}
+.hero__summary b { color: var(--text-primary); font-weight: 700; }
+
 .hero__facts {
-  margin-top: 48px;
+  margin-top: 42px;
   padding: 22px;
   border: 1px solid var(--border-primary);
   border-radius: var(--r-6);
