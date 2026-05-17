@@ -388,6 +388,12 @@ if (import.meta.env?.DEV) {
     themeMeta.setAttribute('content', defaultThemeColor);
   }
 
+  function themeClassForScene(scene) {
+    const card = scene ? scene.querySelector('.proj-card') : null;
+    const source = card || scene;
+    return source ? Array.from(source.classList).find(name => chromeColors[name]) : null;
+  }
+
   function updateProjectThemeColor() {
     if (!root.classList.contains('device-mobile-or-tablet')) {
       clearProjectThemeColor();
@@ -401,6 +407,19 @@ if (import.meta.env?.DEV) {
     }
 
     const probeY = window.innerHeight - 1;
+    let visibleScene = null;
+    scenes.forEach((scene) => {
+      const rect = scene.getBoundingClientRect();
+      if (rect.top <= probeY && rect.bottom > 0) {
+        visibleScene = scene;
+      }
+    });
+    const sceneThemeClass = themeClassForScene(visibleScene);
+    if (sceneThemeClass) {
+      themeMeta.setAttribute('content', chromeColors[sceneThemeClass]);
+      return;
+    }
+
     let visibleLayer = layers[0];
     layers.forEach((layer, i) => {
       if (i === 0 || layer.getBoundingClientRect().top <= probeY) {

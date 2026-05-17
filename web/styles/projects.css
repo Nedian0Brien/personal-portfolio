@@ -11,6 +11,7 @@
   justify-content: center;
   padding: 4vh 0;
 }
+.proj-scene__bg-plane { display: none; }
 .proj-scene__edge {
   align-self: center;
   display: inline-flex; align-items: center; gap: 12px;
@@ -1166,31 +1167,57 @@
 }
 
 :root.device-mobile-or-tablet .proj-bg-stage {
-  position: sticky;
-  top: calc(-1 * var(--proj-bg-bleed-top));
-  bottom: auto;
-  height: var(--proj-bg-stage-height);
-  margin-bottom: calc(-1 * var(--proj-bg-stage-height));
+  display: none;
 }
 
-:root.device-mobile-or-tablet .proj-bg-stage__sticky {
-  position: relative;
-  top: auto;
-  height: 100%;
-  display: grid;
+:root.device-mobile-or-tablet .proj-scene {
+  isolation: isolate;
 }
 
-:root.device-mobile-or-tablet .proj-bg-layer {
-  position: relative;
-  grid-area: 1 / 1;
-  inset: auto;
-  height: 100%;
+:root.device-mobile-or-tablet .proj-scene__bg-plane {
+  position: absolute;
+  inset-block: 0;
+  left: 50%;
+  z-index: 0;
+  display: block;
+  width: 100vw;
   min-height: 100%;
+  transform: translate3d(-50%, 0, 0);
+  pointer-events: none;
 }
 
-:root.device-mobile-or-tablet .proj-bg-plane {
-  height: 100%;
-  min-height: 100%;
+:root.device-mobile-or-tablet .proj-scene__bg-plane.theme-blue {
+  background: radial-gradient(120% 120% at 0% 0%, hsl(var(--blue-50)) 0%, hsl(var(--blue-70)) 60%, hsl(220 100% 22%) 100%);
+}
+
+:root.device-mobile-or-tablet .proj-scene__bg-plane.theme-red {
+  background: radial-gradient(120% 120% at 10% 0%, hsl(var(--red-50)) 0%, hsl(var(--red-60)) 55%, hsl(12 80% 28%) 100%);
+}
+
+:root.device-mobile-or-tablet .proj-scene__bg-plane.theme-yellow {
+  background: radial-gradient(120% 120% at 0% 0%, hsl(var(--orange-50)) 0%, hsl(var(--yellow-50)) 60%, hsl(var(--yellow-60)) 100%);
+}
+
+:root.device-mobile-or-tablet .proj-scene__bg-plane.theme-green {
+  background: radial-gradient(130% 130% at 30% 0%, hsl(var(--green-50)) 0%, hsl(var(--green-60)) 55%, hsl(160 70% 18%) 100%);
+}
+
+:root.device-mobile-or-tablet .proj-scene__bg-plane.theme-purple {
+  background: radial-gradient(120% 120% at 0% 0%, hsl(var(--purple-50)) 0%, hsl(var(--purple-60)) 55%, hsl(232 80% 28%) 100%);
+}
+
+:root.device-mobile-or-tablet .proj-scene__bg-plane.theme-pink {
+  background: linear-gradient(125deg, hsl(var(--pink-50)) 0%, hsl(var(--purple-50)) 50%, hsl(var(--blue-50)) 100%);
+}
+
+:root.device-mobile-or-tablet .proj-scene__bg-plane.theme-orange {
+  background: radial-gradient(120% 120% at 0% 0%, hsl(var(--orange-50)) 0%, hsl(18 100% 50%) 55%, hsl(var(--red-60)) 100%);
+}
+
+:root.device-mobile-or-tablet .proj-scene > .proj-card,
+:root.device-mobile-or-tablet .proj-scene > .proj-scene__edge {
+  position: relative;
+  z-index: 1;
 }
 
 :root.device-mobile-or-tablet .aris-thread-frame {
