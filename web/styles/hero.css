@@ -196,13 +196,10 @@
   text-decoration-thickness: 0.08em;
   text-underline-offset: 0.18em;
 }
-.hero__bullet-key--bio {
+.hero__bullet-key--bio,
+.hero__bullet-key--paper {
   color: hsl(var(--green-60));
   text-decoration-color: hsla(var(--green-50) / 0.65);
-}
-.hero__bullet-key--paper {
-  color: hsl(var(--blue-70));
-  text-decoration-color: hsla(var(--blue-50) / 0.7);
 }
 .hero__bullet-key--retrieval {
   color: hsl(var(--blue-70));
@@ -216,10 +213,10 @@
   color: hsl(var(--orange-50));
   text-decoration-color: hsla(var(--orange-50) / 0.72);
 }
-[data-theme="dark"] .hero__bullet-key--bio {
+[data-theme="dark"] .hero__bullet-key--bio,
+[data-theme="dark"] .hero__bullet-key--paper {
   color: hsl(var(--green-50));
 }
-[data-theme="dark"] .hero__bullet-key--paper,
 [data-theme="dark"] .hero__bullet-key--retrieval {
   color: hsl(var(--blue-30));
 }
