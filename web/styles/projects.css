@@ -1148,7 +1148,6 @@
 :root.device-mobile-or-tablet #project {
   --proj-bg-bleed-top: var(--safe-area-top);
   --proj-bg-bleed-bottom: max(var(--safe-area-bottom), var(--browser-chrome-bottom), 48px);
-  --proj-bg-prewarm: max(calc(var(--browser-chrome-bottom) + 64px), 144px);
   --proj-slide-height: calc(100svh + var(--browser-chrome-bottom));
   --proj-bg-height: 100svh;
   --proj-bg-stage-height: calc(var(--proj-bg-height) + var(--proj-bg-bleed-top) + var(--proj-bg-bleed-bottom));
@@ -1179,7 +1178,6 @@
   top: auto;
   height: 100%;
   display: grid;
-  overflow: visible;
 }
 
 :root.device-mobile-or-tablet .proj-bg-layer {
@@ -1191,10 +1189,8 @@
 }
 
 :root.device-mobile-or-tablet .proj-bg-plane {
-  top: calc(-1 * var(--proj-bg-prewarm));
-  bottom: 0;
-  height: auto;
-  min-height: calc(100% + var(--proj-bg-prewarm));
+  height: 100%;
+  min-height: 100%;
 }
 
 :root.device-mobile-or-tablet .aris-thread-frame {
