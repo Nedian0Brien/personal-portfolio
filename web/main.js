@@ -357,24 +357,86 @@ if (import.meta.env?.DEV) {
   const mq = window.matchMedia('(min-width: 981px)');
   const cssWipeMq = window.matchMedia('(max-width: 980px)');
   const root = document.documentElement;
+  const body = document.body;
+  let themeMeta = document.querySelector('meta[name="theme-color"]');
+  if (!themeMeta) {
+    themeMeta = document.createElement('meta');
+    themeMeta.name = 'theme-color';
+    document.head.appendChild(themeMeta);
+  }
+  const defaultThemeColor = themeMeta.getAttribute('content') || '#ffffff';
+  const chromeColors = {
+    'theme-blue': '#006be8',
+    'theme-red': '#f04a0f',
+    'theme-yellow': '#f5aa00',
+    'theme-green': '#16865a',
+    'theme-purple': '#4f2fc7',
+    'theme-pink': '#bb55d7',
+    'theme-orange': '#f05a16',
+  };
   let active = false;
   let ticking = false;
 
-  function usesDevicePanelStack() {
-    return root.classList.contains('device-mobile-or-tablet');
-  }
-
   function supportsCssWipe() {
-    return !usesDevicePanelStack()
-      && cssWipeMq.matches
+    return cssWipeMq.matches
       && window.CSS
       && CSS.supports('animation-timeline: --project-bg')
       && CSS.supports('view-timeline-name: --project-bg')
       && CSS.supports('timeline-scope: --project-bg');
   }
 
+  function clearChromeBleed() {
+    root.classList.remove('project-chrome-bleed');
+    if (body) body.classList.remove('project-chrome-bleed');
+    root.style.removeProperty('--project-chrome-bg-image');
+    root.style.removeProperty('--project-chrome-bg-color');
+    root.style.removeProperty('--project-chrome-bg-position');
+    root.style.removeProperty('--project-chrome-bg-size');
+    root.style.removeProperty('--project-chrome-bleed-height');
+    root.style.removeProperty('--project-chrome-strip-bg-position');
+    themeMeta.setAttribute('content', defaultThemeColor);
+  }
+
+  function updateChromeBleed() {
+    if (!cssWipeMq.matches) {
+      clearChromeBleed();
+      return;
+    }
+    const project = stage.closest('#project');
+    const projectRect = project ? project.getBoundingClientRect() : null;
+    if (!projectRect || projectRect.top >= window.innerHeight || projectRect.bottom <= 0) {
+      clearChromeBleed();
+      return;
+    }
+
+    const chromeBottom = parseFloat(getComputedStyle(root).getPropertyValue('--browser-chrome-bottom')) || 0;
+    const bleedHeight = Math.max(0, chromeBottom);
+    const bleedTop = window.innerHeight - bleedHeight;
+    const probeY = Math.max(0, (bleedHeight > 0 ? bleedTop + 1 : window.innerHeight - 1));
+    let visibleLayer = layers[0];
+    layers.forEach((layer, i) => {
+      if (i === 0 || layer.getBoundingClientRect().top <= probeY) {
+        visibleLayer = layer;
+      }
+    });
+
+    const style = getComputedStyle(visibleLayer);
+    const layerRect = visibleLayer.getBoundingClientRect();
+    root.style.setProperty('--project-chrome-bg-image', style.backgroundImage || 'none');
+    root.style.setProperty('--project-chrome-bg-color', style.backgroundColor || 'transparent');
+    root.style.setProperty('--project-chrome-bg-position', layerRect.left.toFixed(2) + 'px ' + layerRect.top.toFixed(2) + 'px');
+    root.style.setProperty('--project-chrome-bg-size', layerRect.width.toFixed(2) + 'px ' + layerRect.height.toFixed(2) + 'px');
+    root.style.setProperty('--project-chrome-bleed-height', bleedHeight.toFixed(2) + 'px');
+    root.style.setProperty('--project-chrome-strip-bg-position', layerRect.left.toFixed(2) + 'px ' + (layerRect.top - bleedTop).toFixed(2) + 'px');
+    const themeClass = Array.from(visibleLayer.classList).find(name => chromeColors[name]);
+    if (themeClass) themeMeta.setAttribute('content', chromeColors[themeClass]);
+    root.classList.add('project-chrome-bleed');
+    if (body) body.classList.add('project-chrome-bleed');
+  }
+
   function update(){
     ticking = false;
+    updateChromeBleed();
     if (!active) return;
     const vh = window.innerHeight;
     for (let i = 0; i < layers.length; i++) {
@@ -402,7 +464,7 @@ if (import.meta.env?.DEV) {
     }
   }
 
-  const shouldUseJs = () => !usesDevicePanelStack() && (mq.matches || !supportsCssWipe());
+  const shouldUseJs = () => mq.matches || !supportsCssWipe();
   const updateMode = () => activate(shouldUseJs());
 
   updateMode();
