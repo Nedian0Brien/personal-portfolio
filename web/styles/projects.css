@@ -848,6 +848,12 @@
 }
 
 @media (max-width: 980px) {
+  html.project-chrome-bleed,
+  body.project-chrome-bleed {
+    background-color: var(--project-chrome-bg-color, var(--bg-primary));
+    background-image: var(--project-chrome-bg-image, none);
+    background-attachment: fixed;
+  }
   #project {
     max-width: none;
     padding-left: 0;

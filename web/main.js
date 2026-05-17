@@ -333,6 +333,8 @@ if (import.meta.env?.DEV) {
 
   const mq = window.matchMedia('(min-width: 981px)');
   const cssWipeMq = window.matchMedia('(max-width: 980px)');
+  const root = document.documentElement;
+  const body = document.body;
   let active = false;
   let ticking = false;
 
@@ -344,8 +346,43 @@ if (import.meta.env?.DEV) {
       && CSS.supports('timeline-scope: --project-bg');
   }
 
+  function clearChromeBleed() {
+    root.classList.remove('project-chrome-bleed');
+    if (body) body.classList.remove('project-chrome-bleed');
+    root.style.removeProperty('--project-chrome-bg-image');
+    root.style.removeProperty('--project-chrome-bg-color');
+  }
+
+  function updateChromeBleed() {
+    if (!cssWipeMq.matches) {
+      clearChromeBleed();
+      return;
+    }
+    const project = stage.closest('#project');
+    const projectRect = project ? project.getBoundingClientRect() : null;
+    if (!projectRect || projectRect.top >= window.innerHeight || projectRect.bottom <= 0) {
+      clearChromeBleed();
+      return;
+    }
+
+    const probeY = Math.max(0, window.innerHeight - 1);
+    let visibleLayer = layers[0];
+    layers.forEach((layer, i) => {
+      if (i === 0 || layer.getBoundingClientRect().top <= probeY) {
+        visibleLayer = layer;
+      }
+    });
+
+    const style = getComputedStyle(visibleLayer);
+    root.style.setProperty('--project-chrome-bg-image', style.backgroundImage || 'none');
+    root.style.setProperty('--project-chrome-bg-color', style.backgroundColor || 'transparent');
+    root.classList.add('project-chrome-bleed');
+    if (body) body.classList.add('project-chrome-bleed');
+  }
+
   function update(){
     ticking = false;
+    updateChromeBleed();
     if (!active) return;
     const vh = window.innerHeight;
     for (let i = 0; i < layers.length; i++) {
