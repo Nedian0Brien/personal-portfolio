@@ -6,14 +6,58 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
 
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const root = document.documentElement;
+  const seed = 90217;
+  const layers = [
+    { count: 18, radius: 1.15, drift: 7, depth: 0.55 },
+    { count: 24, radius: 0.95, drift: 12, depth: 0.8 },
+    { count: 28, radius: 0.7, drift: 18, depth: 1 },
+  ];
+  const contourCenters = [
+    { x: 0.2, y: 0.28, rx: 0.26, ry: 0.16, phase: 0.2 },
+    { x: 0.78, y: 0.34, rx: 0.3, ry: 0.18, phase: 1.9 },
+    { x: 0.5, y: 0.72, rx: 0.34, ry: 0.13, phase: 3.1 },
+  ];
 
   let width = 0;
   let height = 0;
   let dpr = 1;
   let rafId = 0;
   let visible = true;
+  let pointer = { x: 0, y: 0, active: false };
+  let points = [];
 
   const isDark = () => root.getAttribute("data-theme") === "dark";
+
+  function random(seedValue) {
+    const value = Math.sin(seedValue * 12.9898) * 43758.5453;
+    return value - Math.floor(value);
+  }
+
+  function makePoints() {
+    const nextPoints = [];
+    let cursor = seed;
+    layers.forEach((layer, layerIndex) => {
+      const scale = width < 640 ? 0.58 : 1;
+      const count = Math.max(10, Math.round(layer.count * scale));
+      for (let index = 0; index < count; index += 1) {
+        cursor += 1;
+        const x = random(cursor);
+        cursor += 1;
+        const y = random(cursor);
+        cursor += 1;
+        nextPoints.push({
+          x,
+          y,
+          depth: layer.depth,
+          drift: layer.drift,
+          layer: layerIndex,
+          phase: random(cursor) * Math.PI * 2,
+          radius: layer.radius,
+        });
+      }
+    });
+    points = nextPoints;
+  }
 
   function resize() {
     const rect = hero.getBoundingClientRect();
@@ -25,70 +69,65 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     canvas.style.width = `${width}px`;
     canvas.style.height = `${height}px`;
+    makePoints();
     draw(performance.now());
   }
 
-  function getCenter() {
-    return {
-      x: width * 0.5,
-      y: height * (width < 640 ? 0.49 : 0.52),
-    };
+  function textFade(x, y) {
+    const nx = x / Math.max(1, width);
+    const ny = y / Math.max(1, height);
+    const dx = Math.abs(nx - 0.5) / 0.34;
+    const dy = Math.abs(ny - 0.48) / 0.24;
+    const distance = Math.max(dx, dy);
+    if (distance < 0.72) return 0.24;
+    if (distance < 1.08) return 0.24 + (distance - 0.72) * 1.45;
+    return 1;
   }
 
-  function getWaveBounds() {
-    const shortSide = Math.min(width, height);
-    const longSide = Math.max(width, height);
-    return {
-      min: Math.max(54, shortSide * (width < 640 ? 0.12 : 0.13)),
-      max: Math.max(shortSide * 0.57, longSide * (width < 640 ? 0.72 : 0.5)),
-    };
-  }
+  function projectedPoint(point, time) {
+    const slowTime = reduced ? 0 : time * 0.00006;
+    let x = point.x * width + Math.sin(slowTime + point.phase) * point.drift;
+    let y = point.y * height + Math.cos(slowTime * 0.82 + point.phase * 1.4) * point.drift * 0.72;
 
-  function smoothstep(value) {
-    const x = Math.max(0, Math.min(1, value));
-    return x * x * (3 - 2 * x);
-  }
-
-  function drawDottedRing({ cx, cy, radius, cycle, ringIndex, ringCount, time, dark }) {
-    const position = ringCount <= 1 ? 0 : ringIndex / (ringCount - 1);
-    const distance = Math.abs(position - cycle);
-    const wave = smoothstep(1 - Math.min(1, distance / 0.24));
-    const afterglow = smoothstep(1 - Math.min(1, Math.max(0, cycle - position) / 0.42)) * 0.28;
-    const baseAlpha = dark ? 0.12 : 0.14;
-    const activeAlpha = dark ? 0.34 : 0.42;
-    const dotAlpha = baseAlpha + wave * activeAlpha + afterglow * (dark ? 0.12 : 0.14);
-    const dotSize = (width < 640 ? 1.15 : 1.25) + wave * (width < 640 ? 1.35 : 1.55);
-    const circumference = Math.PI * 2 * radius;
-    const dotCount = Math.max(42, Math.round(circumference / (width < 640 ? 12 : 14)));
-    const drift = reduced ? 0 : time * 0.00012;
-    const color = ringIndex % 4 === 2
-      ? dark
-        ? "154, 118, 235"
-        : "96, 52, 199"
-      : dark
-        ? "134, 176, 244"
-        : "18, 91, 203";
-
-    for (let index = 0; index < dotCount; index += 1) {
-      const angle = (index / dotCount) * Math.PI * 2;
-      const shimmer = 0.78 + Math.sin(angle * 2 - drift + ringIndex * 0.55) * 0.11 + Math.cos(angle * 5 + drift * 0.7) * 0.08;
-      const ripple = 1 + Math.sin(angle * 3 + ringIndex * 0.8 + drift) * 0.006 * (0.45 + wave);
-      const x = cx + Math.cos(angle) * radius * ripple;
-      const y = cy + Math.sin(angle) * radius * ripple;
-      ctx.beginPath();
-      ctx.arc(x, y, dotSize * (0.86 + shimmer * 0.14), 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${color}, ${dotAlpha * shimmer})`;
-      ctx.fill();
+    if (pointer.active && !reduced) {
+      const dx = pointer.x - x;
+      const dy = pointer.y - y;
+      const distance = Math.hypot(dx, dy);
+      const radius = Math.min(260, Math.max(150, width * 0.18));
+      if (distance > 1 && distance < radius) {
+        const pull = (1 - distance / radius) * 7 * point.depth;
+        x -= (dx / distance) * pull;
+        y -= (dy / distance) * pull;
+      }
     }
+
+    return { x, y };
   }
 
-  function drawCenterWash(cx, cy, maxRadius, dark) {
-    const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxRadius * 0.72);
-    gradient.addColorStop(0, dark ? "rgba(82, 125, 206, 0.15)" : "rgba(44, 111, 224, 0.12)");
-    gradient.addColorStop(0.36, dark ? "rgba(82, 125, 206, 0.06)" : "rgba(44, 111, 224, 0.05)");
-    gradient.addColorStop(1, "rgba(44, 111, 224, 0)");
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, width, height);
+  function drawContour(center, contourIndex, time, dark) {
+    const slowTime = reduced ? 0 : time * 0.000045;
+    const cx = (center.x + Math.sin(slowTime + center.phase) * 0.018) * width;
+    const cy = (center.y + Math.cos(slowTime * 0.9 + center.phase) * 0.016) * height;
+    const rx = center.rx * width * (0.72 + contourIndex * 0.18);
+    const ry = center.ry * height * (0.72 + contourIndex * 0.18);
+    const steps = 96;
+
+    ctx.beginPath();
+    for (let index = 0; index <= steps; index += 1) {
+      const angle = (index / steps) * Math.PI * 2;
+      const wobble = 1 + Math.sin(angle * 3 + center.phase + slowTime * 4) * 0.025;
+      const x = cx + Math.cos(angle) * rx * wobble;
+      const y = cy + Math.sin(angle) * ry * wobble;
+      if (index === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+
+    const alpha = (dark ? 0.15 : 0.13) * (1 - contourIndex * 0.16);
+    ctx.lineWidth = contourIndex === 0 ? 1.05 : 0.78;
+    ctx.strokeStyle = dark
+      ? `rgba(120, 160, 230, ${alpha})`
+      : `rgba(42, 91, 160, ${alpha})`;
+    ctx.stroke();
   }
 
   function draw(time) {
@@ -100,27 +139,45 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
     const fade = 1 - Math.min(0.72, window.scrollY / Math.max(1, height * 0.85));
     ctx.globalAlpha = fade;
 
-    const { x: cx, y: cy } = getCenter();
-    const bounds = getWaveBounds();
-    const heartbeatMs = 1800;
-    const cycle = reduced ? 0.58 : (time % heartbeatMs) / heartbeatMs;
-    const ringCount = width < 640 ? 7 : 9;
+    contourCenters.forEach((center) => {
+      for (let contourIndex = 0; contourIndex < 3; contourIndex += 1) {
+        drawContour(center, contourIndex, time, dark);
+      }
+    });
 
-    drawCenterWash(cx, cy, bounds.max, dark);
-    for (let index = 0; index < ringCount; index += 1) {
-      const position = ringCount <= 1 ? 0 : index / (ringCount - 1);
-      const radius = bounds.min + (bounds.max - bounds.min) * smoothstep(position);
-      drawDottedRing({
-        cx,
-        cy,
-        radius,
-        cycle,
-        ringIndex: index,
-        ringCount,
-        time,
-        dark,
-      });
-    }
+    const projected = points.map((point) => ({
+      ...point,
+      ...projectedPoint(point, time),
+    }));
+
+    projected.forEach((from, index) => {
+      for (let nextIndex = index + 1; nextIndex < projected.length; nextIndex += 1) {
+        const to = projected[nextIndex];
+        if (from.layer !== to.layer) continue;
+        const distance = Math.hypot(from.x - to.x, from.y - to.y);
+        const maxDistance = width < 640 ? 74 : 110;
+        if (distance > maxDistance) continue;
+        const alpha = (1 - distance / maxDistance) * (dark ? 0.09 : 0.075) * textFade((from.x + to.x) / 2, (from.y + to.y) / 2);
+        ctx.beginPath();
+        ctx.moveTo(from.x, from.y);
+        ctx.lineTo(to.x, to.y);
+        ctx.lineWidth = 0.55;
+        ctx.strokeStyle = dark
+          ? `rgba(146, 177, 232, ${alpha})`
+          : `rgba(36, 82, 148, ${alpha})`;
+        ctx.stroke();
+      }
+    });
+
+    projected.forEach((point) => {
+      const alpha = (dark ? 0.34 : 0.32) * point.depth * textFade(point.x, point.y);
+      ctx.beginPath();
+      ctx.arc(point.x, point.y, point.radius, 0, Math.PI * 2);
+      ctx.fillStyle = dark
+        ? `rgba(214, 228, 255, ${alpha})`
+        : `rgba(23, 55, 108, ${alpha})`;
+      ctx.fill();
+    });
 
     ctx.globalAlpha = 1;
   }
@@ -145,6 +202,25 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
     }
   }
 
+  window.addEventListener(
+    "pointermove",
+    (event) => {
+      const rect = hero.getBoundingClientRect();
+      pointer = {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top,
+        active:
+          event.clientX >= rect.left &&
+          event.clientX <= rect.right &&
+          event.clientY >= rect.top &&
+          event.clientY <= rect.bottom,
+      };
+    },
+    { passive: true },
+  );
+  window.addEventListener("pointerleave", () => {
+    pointer.active = false;
+  });
   window.addEventListener("resize", resize, { passive: true });
   window.addEventListener("scroll", () => draw(performance.now()), { passive: true });
 
