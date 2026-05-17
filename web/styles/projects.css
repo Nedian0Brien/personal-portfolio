@@ -878,17 +878,12 @@
   #project > .proj-stack {
     margin-top: 24px;
     timeline-scope:
-      --proj-bg-01,
       --proj-bg-02,
       --proj-bg-03,
       --proj-bg-04,
       --proj-bg-05,
       --proj-bg-06,
       --proj-bg-07;
-  }
-  #proj-01 {
-    view-timeline-name: --proj-bg-01;
-    view-timeline-axis: block;
   }
   .proj-bg-stage__sticky {
     top: calc(-1 * var(--proj-bg-bleed-top));
@@ -940,11 +935,6 @@
 
 @supports (animation-timeline: --proj-bg-02) and (view-timeline-name: --proj-bg-02) and (timeline-scope: --proj-bg-02) {
   @media (max-width: 980px) {
-    :root.device-mobile-or-tablet .proj-bg-layer[data-idx="0"] {
-      animation: proj-bg-rise linear both;
-      animation-timeline: --proj-bg-01;
-      animation-range: entry 0% entry 100%;
-    }
     .proj-bg-layer[data-idx="1"] {
       animation: proj-bg-rise linear both;
       animation-timeline: --proj-bg-02;
@@ -1158,12 +1148,14 @@
 :root.device-mobile-or-tablet #project {
   --proj-bg-bleed-top: var(--safe-area-top);
   --proj-bg-bleed-bottom: max(var(--safe-area-bottom), var(--browser-chrome-bottom), 48px);
+  --proj-slide-height: calc(100svh + var(--browser-chrome-bottom));
   --proj-bg-height: 100svh;
   --proj-bg-stage-height: calc(var(--proj-bg-height) + var(--proj-bg-bleed-top) + var(--proj-bg-bleed-bottom));
 }
 
 @supports (height: 100lvh) {
   :root.device-mobile-or-tablet #project {
+    --proj-slide-height: 100lvh;
     --proj-bg-height: 100lvh;
   }
 }

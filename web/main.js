@@ -417,9 +417,8 @@ if (import.meta.env?.DEV) {
     updateProjectThemeColor();
     if (!active) return;
     const vh = window.innerHeight;
-    const animateFirstLayer = root.classList.contains('device-mobile-or-tablet');
     for (let i = 0; i < layers.length; i++) {
-      if (i === 0 && !animateFirstLayer) { layers[i].style.transform = 'translate3d(0, 0, 0)'; continue; }
+      if (i === 0) { layers[i].style.transform = 'translate3d(0, 0, 0)'; continue; }
       const r = scenes[i].getBoundingClientRect();
       const p = Math.max(0, Math.min(1, 1 - r.top / vh));
       layers[i].style.transform = 'translate3d(0, ' + ((1 - p) * 100).toFixed(3) + '%, 0)';
@@ -438,7 +437,7 @@ if (import.meta.env?.DEV) {
       layers.forEach(l => { l.style.transform = ''; });
     } else {
       layers.forEach((l, i) => {
-        l.style.transform = i === 0 && !root.classList.contains('device-mobile-or-tablet') ? 'translate3d(0, 0, 0)' : 'translate3d(0, 100%, 0)';
+        l.style.transform = i === 0 ? 'translate3d(0, 0, 0)' : 'translate3d(0, 100%, 0)';
       });
     }
   }
