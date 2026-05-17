@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<meta name="theme-color" content="#ffffff" />
+<meta id="themeColor" name="theme-color" content="#101010" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <title>박민재 · Minjae Park — Portfolio</title>
 <meta name="description" content="AI / NLP / RAG / LLM Agent 연구자 박민재의 포트폴리오. 프로젝트와 논문, 연구 아이디어를 하나의 그리드에서 브라우즈합니다." />
 
@@ -18,7 +19,7 @@
     theme = "dark";
   }
   root.setAttribute("data-theme", theme);
-  var themeColor = document.querySelector('meta[name="theme-color"]');
+  var themeColor = document.getElementById("themeColor") || document.querySelector('meta[name="theme-color"]');
   if (themeColor) {
     themeColor.setAttribute("content", theme === "dark" ? "#101010" : "#ffffff");
   }

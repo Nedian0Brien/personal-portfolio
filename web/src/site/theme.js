@@ -8,7 +8,7 @@ export function initThemeToggle({
   const btn = document.getElementById(buttonId);
   const sun = document.getElementById(sunId);
   const moon = document.getElementById(moonId);
-  const themeColor = document.querySelector('meta[name="theme-color"]');
+  const themeColor = document.getElementById("themeColor") || document.querySelector('meta[name="theme-color"]');
   if (!btn || !sun || !moon) return;
 
   function setTheme(theme) {
