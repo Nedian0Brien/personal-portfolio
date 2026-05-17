@@ -10,6 +10,19 @@
 <script>
 (function () {
   var root = document.documentElement;
+  var theme = "light";
+  try {
+    theme = localStorage.getItem("portfolio-theme") || theme;
+  } catch (error) {}
+  if (theme !== "dark" && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+    theme = "dark";
+  }
+  root.setAttribute("data-theme", theme);
+  var themeColor = document.querySelector('meta[name="theme-color"]');
+  if (themeColor) {
+    themeColor.setAttribute("content", theme === "dark" ? "#101010" : "#ffffff");
+  }
+
   var ua = navigator.userAgent || "";
   var platform = navigator.platform || "";
   var touch = navigator.maxTouchPoints || 0;

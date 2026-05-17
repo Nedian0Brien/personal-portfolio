@@ -8,6 +8,7 @@ export function initThemeToggle({
   const btn = document.getElementById(buttonId);
   const sun = document.getElementById(sunId);
   const moon = document.getElementById(moonId);
+  const themeColor = document.querySelector('meta[name="theme-color"]');
   if (!btn || !sun || !moon) return;
 
   function setTheme(theme) {
@@ -20,6 +21,9 @@ export function initThemeToggle({
     const dark = theme === "dark";
     sun.style.display = dark ? "none" : "block";
     moon.style.display = dark ? "block" : "none";
+    if (themeColor) {
+      themeColor.setAttribute("content", dark ? "#101010" : "#ffffff");
+    }
   }
 
   let initial = null;

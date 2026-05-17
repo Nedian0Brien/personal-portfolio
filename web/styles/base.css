@@ -9,6 +9,7 @@ html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
   scroll-padding-top: calc(64px + env(safe-area-inset-top, 0px));
+  background: var(--bg-primary);
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 img, svg { display: block; max-width: 100%; }
@@ -85,6 +86,7 @@ button { font: inherit; }
 }
 
 :root[data-theme="light"] {
+  color-scheme: light;
   --bg-primary:       hsl(var(--neutral-0));
   --bg-secondary:     hsl(var(--neutral-5));
   --bg-tertiary:      hsl(var(--neutral-10));
@@ -109,9 +111,10 @@ button { font: inherit; }
 }
 
 :root[data-theme="dark"] {
-  --bg-primary:       hsl(var(--neutral-100));
-  --bg-secondary:     hsl(var(--neutral-95));
-  --bg-tertiary:      hsl(var(--neutral-90));
+  color-scheme: dark;
+  --bg-primary:       hsl(0 0% 6%);
+  --bg-secondary:     hsl(0 0% 10%);
+  --bg-tertiary:      hsl(0 0% 14%);
   --bg-inverse:       hsl(var(--neutral-0));
   --bg-brand:         hsl(var(--blue-60));
   --bg-brand-hover:   hsl(var(--blue-50));
@@ -133,6 +136,7 @@ button { font: inherit; }
 }
 
 body {
+  min-height: 100svh;
   font-family: var(--font-sans);
   color: var(--text-primary);
   background: var(--bg-primary);
