@@ -331,7 +331,8 @@ if (import.meta.env?.DEV) {
   const scenes = Array.from(document.querySelectorAll('#project .proj-scene'));
   if (!layers.length || layers.length !== scenes.length) return;
 
-  const mq = window.matchMedia('(min-width: 981px)');
+  const mq = window.matchMedia('(min-width: 0px)');
+  const syncMq = window.matchMedia('(max-width: 980px)');
   let active = false;
   let ticking = false;
 
@@ -348,6 +349,10 @@ if (import.meta.env?.DEV) {
   }
   function schedule(){
     if (ticking) return;
+    if (syncMq.matches) {
+      update();
+      return;
+    }
     ticking = true;
     requestAnimationFrame(update);
   }

@@ -861,29 +861,11 @@
   #project > .proj-stack {
     margin-top: 24px;
   }
-  .proj-bg-stage {
-    display: none;
+  .proj-bg-stage__sticky {
+    height: 100svh;
   }
-  #project .proj-scene:has(.theme-blue) {
-    background: radial-gradient(120% 120% at 0% 0%, hsl(var(--blue-50)) 0%, hsl(var(--blue-70)) 60%, hsl(220 100% 22%) 100%);
-  }
-  #project .proj-scene:has(.theme-red) {
-    background: radial-gradient(120% 120% at 10% 0%, hsl(var(--red-50)) 0%, hsl(var(--red-60)) 55%, hsl(12 80% 28%) 100%);
-  }
-  #project .proj-scene:has(.theme-yellow) {
-    background: radial-gradient(120% 120% at 0% 0%, hsl(var(--orange-50)) 0%, hsl(var(--yellow-50)) 60%, hsl(var(--yellow-60)) 100%);
-  }
-  #project .proj-scene:has(.theme-green) {
-    background: radial-gradient(130% 130% at 30% 0%, hsl(var(--green-50)) 0%, hsl(var(--green-60)) 55%, hsl(160 70% 18%) 100%);
-  }
-  #project .proj-scene:has(.theme-purple) {
-    background: radial-gradient(120% 120% at 0% 0%, hsl(var(--purple-50)) 0%, hsl(var(--purple-60)) 55%, hsl(232 80% 28%) 100%);
-  }
-  #project .proj-scene:has(.theme-pink) {
-    background: linear-gradient(125deg, hsl(var(--pink-50)) 0%, hsl(var(--purple-50)) 50%, hsl(var(--blue-50)) 100%);
-  }
-  #project .proj-scene:has(.theme-orange) {
-    background: radial-gradient(120% 120% at 0% 0%, hsl(var(--orange-50)) 0%, hsl(18 100% 50%) 55%, hsl(var(--red-60)) 100%);
+  .proj-bg-layer {
+    transition: none;
   }
 }
 
