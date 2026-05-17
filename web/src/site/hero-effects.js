@@ -52,21 +52,25 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
     for (let ringIndex = 0; ringIndex < ringCount; ringIndex += 1) {
       const ringProgress = ringCount <= 1 ? 0 : ringIndex / (ringCount - 1);
       const radius = inner + (outer - inner) * smoothstep(ringProgress);
-      const count = Math.round((width < 640 ? 22 : 28) + ringIndex * (width < 640 ? 5 : 8));
+      const count = Math.round((width < 640 ? 72 : 132) + ringIndex * (width < 640 ? 18 : 34));
+      const bandHalfWidth = (width < 640 ? 13 : 22) + ringIndex * (width < 640 ? 2.4 : 3.5);
+      const goldenAngle = Math.PI * (3 - Math.sqrt(5));
       for (let index = 0; index < count; index += 1) {
         cursor += 1;
-        const angleJitter = (random(cursor) - 0.5) * (0.045 + ringIndex * 0.004);
+        const angleJitter = (random(cursor) - 0.5) * 0.22;
         cursor += 1;
-        const radiusJitter = (random(cursor) - 0.5) * (width < 640 ? 8 : 12);
+        const radiusJitter = (random(cursor) + random(cursor + 17) + random(cursor + 31) - 1.5) * bandHalfWidth;
         cursor += 1;
         nextParticles.push({
-          angle: (index / count) * Math.PI * 2 + angleJitter,
+          angle: index * goldenAngle + angleJitter,
           baseRadius: radius + radiusJitter,
           depth: 0.54 + ringProgress * 0.46,
+          haloOffset: radiusJitter / Math.max(1, outer - inner),
           phase: random(cursor) * Math.PI * 2,
           ringIndex,
           ringProgress,
-          size: (width < 640 ? 1.28 : 1.38) + random(cursor + 1) * (width < 640 ? 1.08 : 1.22),
+          size: (width < 640 ? 1.18 : 1.08) + random(cursor + 1) * (width < 640 ? 1.16 : 1.18),
+          twinkle: 0.78 + random(cursor + 2) * 0.22,
         });
       }
     }
@@ -93,42 +97,46 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
     const dx = Math.abs(nx - 0.5) / 0.34;
     const dy = Math.abs(ny - (width < 640 ? 0.46 : 0.5)) / 0.26;
     const distance = Math.max(dx, dy);
-    if (distance < 0.68) return 0.66;
-    if (distance < 1.04) return 0.66 + (distance - 0.68) * 0.86;
+    if (distance < 0.68) return 0.82;
+    if (distance < 1.04) return 0.82 + (distance - 0.68) * 0.5;
     return 1;
   }
 
   function cycleState(time) {
-    if (reduced) return { front: 0.58, breath: 0.35 };
+    if (reduced) return { cycle: 0.52, breath: 0.35 };
     const cycle = (time % heartbeatMs) / heartbeatMs;
-    const travel = Math.min(1, cycle / 0.86);
     const pauseFade = cycle > 0.86 ? 1 - smoothstep((cycle - 0.86) / 0.14) : 1;
     return {
-      front: smoothstep(travel),
+      cycle,
       breath: pauseFade,
     };
   }
 
-  function waveStrength(ringProgress, front, breath) {
-    const distance = Math.abs(ringProgress - front);
-    return smoothstep(1 - Math.min(1, distance / 0.26)) * breath;
+  function waveStrength(particle, cycle, breath) {
+    const delay = particle.ringProgress * 0.5 + particle.haloOffset * 0.12;
+    let local = cycle - delay;
+    while (local < 0) local += 1;
+    if (local > 0.68) return 0;
+    const pulse = Math.sin((local / 0.68) * Math.PI);
+    const particleVariance = 0.88 + Math.sin(particle.phase) * 0.12;
+    return smoothstep(pulse) * breath * particleVariance;
   }
 
   function drawParticleField(time, dark) {
     const { x: cx, y: cy } = getCenter();
     const { outer } = getRadiusRange();
-    const { front, breath } = cycleState(time);
+    const { cycle, breath } = cycleState(time);
     const slowTime = reduced ? 0 : time * 0.00018;
     const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, outer * 0.92);
 
-    gradient.addColorStop(0, dark ? "rgba(76, 119, 202, 0.13)" : "rgba(45, 113, 224, 0.1)");
-    gradient.addColorStop(0.46, dark ? "rgba(76, 119, 202, 0.045)" : "rgba(45, 113, 224, 0.038)");
+    gradient.addColorStop(0, dark ? "rgba(76, 119, 202, 0.2)" : "rgba(45, 113, 224, 0.16)");
+    gradient.addColorStop(0.46, dark ? "rgba(76, 119, 202, 0.075)" : "rgba(45, 113, 224, 0.065)");
     gradient.addColorStop(1, "rgba(45, 113, 224, 0)");
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, width, height);
 
     particles.forEach((particle) => {
-      const strength = waveStrength(particle.ringProgress, front, breath);
+      const strength = waveStrength(particle, cycle, breath);
       const drift = Math.sin(slowTime + particle.phase) * (1.8 + particle.depth * 2.4);
       const outward = strength * (width < 640 ? 16 : 25) * particle.depth;
       const radialEase = Math.sin(strength * Math.PI) * (width < 640 ? 5 : 8);
@@ -139,9 +147,9 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
       const blue = dark ? "142, 182, 244" : "18, 91, 203";
       const purple = dark ? "158, 122, 235" : "96, 52, 199";
       const color = particle.ringIndex % 4 === 2 ? purple : blue;
-      const alphaBase = dark ? 0.44 : 0.48;
-      const alphaActive = dark ? 0.05 : 0.045;
-      const alpha = (alphaBase + strength * alphaActive) * particle.depth * textFade(x, y);
+      const alphaBase = dark ? 0.56 : 0.64;
+      const alphaActive = dark ? 0.055 : 0.04;
+      const alpha = (alphaBase + strength * alphaActive) * particle.depth * particle.twinkle * textFade(x, y);
       const size = particle.size * (1 + strength * 0.22);
 
       ctx.beginPath();
