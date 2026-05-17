@@ -180,6 +180,14 @@
   color: var(--text-primary);
   font-weight: 700;
 }
+.hero__bullet-linklike {
+  color: var(--text-primary);
+  font-weight: 400;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+}
 .hero__bullet-key--bio {
   color: hsl(var(--green-60));
   text-decoration-color: hsla(var(--green-50) / 0.65);
