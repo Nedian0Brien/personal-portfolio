@@ -1,4 +1,4 @@
-import { initCoverSpotlight, initHeroParallax } from "./src/site/hero-effects.js";
+import { initCoverSpotlight, initHeroParallax, initHeroTraceField } from "./src/site/hero-effects.js";
 import { initSectionNavSpy } from "./src/site/nav-spy.js";
 import { initPaperCoverPreview } from "./src/site/pdf-preview.js";
 import { initBrowserChromeInset } from "./src/site/project-browser-chrome.js";
@@ -15,6 +15,7 @@ initSectionNavSpy({
   linkSelector: '#topnavNav a[href^="#"]',
   rootMargin: "-56px 0px -40% 0px",
 });
+initHeroTraceField();
 initHeroParallax();
 initCoverSpotlight();
 
