@@ -8,9 +8,11 @@ CONF_NAME="${DOMAIN}"
 NGINX_AVAIL="/etc/nginx/sites-available/${CONF_NAME}"
 NGINX_ENABLED="/etc/nginx/sites-enabled/${CONF_NAME}"
 REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-SOURCE_HTML="${REPO_DIR}/web/index.html"
+WEB_DIR="${REPO_DIR}/web"
+SOURCE_HTML="${WEB_DIR}/index.html"
 ASSETS_DIR="${REPO_DIR}/assets"
-RESEARCH_DIR="${REPO_DIR}/web/research"
+PUBLIC_DIR="${WEB_DIR}/public"
+RESEARCH_DIR="${WEB_DIR}/research"
 
 if [[ $EUID -ne 0 ]]; then
   echo "이 스크립트는 root 권한으로 실행하세요: sudo $0" >&2
@@ -24,6 +26,16 @@ fi
 
 mkdir -p "$DOC_ROOT"
 cp -f "$SOURCE_HTML" "$DOC_ROOT/index.html"
+cp -f "$WEB_DIR/main.js" "$DOC_ROOT/main.js"
+cp -f "$WEB_DIR/styles.css" "$DOC_ROOT/styles.css"
+
+rm -rf "$DOC_ROOT/styles" "$DOC_ROOT/src" "$DOC_ROOT/research"
+cp -a "$WEB_DIR/styles" "$DOC_ROOT/styles"
+cp -a "$WEB_DIR/src" "$DOC_ROOT/src"
+
+if [[ -d "$PUBLIC_DIR" ]]; then
+  find "$PUBLIC_DIR" -maxdepth 1 -type f -exec cp -f {} "$DOC_ROOT/" \;
+fi
 
 if [[ -d "$ASSETS_DIR/logo" ]]; then
   mkdir -p "$DOC_ROOT/logo"
@@ -33,6 +45,11 @@ fi
 if [[ -d "$ASSETS_DIR/pdf" ]]; then
   mkdir -p "$DOC_ROOT/pdf"
   cp -a "$ASSETS_DIR/pdf/." "$DOC_ROOT/pdf/"
+fi
+
+if [[ -d "$ASSETS_DIR/project" ]]; then
+  mkdir -p "$DOC_ROOT/project"
+  cp -a "$ASSETS_DIR/project/." "$DOC_ROOT/project/"
 fi
 
 if [[ -d "$RESEARCH_DIR" ]]; then
@@ -63,7 +80,7 @@ server {
         try_files \$uri \$uri/ /index.html;
     }
 
-    location ~ ^/(logo|pdf)/ {
+    location ~ ^/(logo|pdf|project|styles|src|research)/ {
         try_files \$uri =404;
     }
 
