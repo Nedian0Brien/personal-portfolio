@@ -79,8 +79,8 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
     const dx = Math.abs(nx - 0.5) / 0.34;
     const dy = Math.abs(ny - 0.48) / 0.24;
     const distance = Math.max(dx, dy);
-    if (distance < 0.72) return 0.14;
-    if (distance < 1.08) return 0.14 + (distance - 0.72) * 1.55;
+    if (distance < 0.72) return 0.24;
+    if (distance < 1.08) return 0.24 + (distance - 0.72) * 1.45;
     return 1;
   }
 
@@ -122,8 +122,8 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
       else ctx.lineTo(x, y);
     }
 
-    const alpha = (dark ? 0.08 : 0.06) * (1 - contourIndex * 0.16);
-    ctx.lineWidth = contourIndex === 0 ? 0.9 : 0.65;
+    const alpha = (dark ? 0.15 : 0.13) * (1 - contourIndex * 0.16);
+    ctx.lineWidth = contourIndex === 0 ? 1.05 : 0.78;
     ctx.strokeStyle = dark
       ? `rgba(120, 160, 230, ${alpha})`
       : `rgba(42, 91, 160, ${alpha})`;
@@ -157,7 +157,7 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
         const distance = Math.hypot(from.x - to.x, from.y - to.y);
         const maxDistance = width < 640 ? 74 : 110;
         if (distance > maxDistance) continue;
-        const alpha = (1 - distance / maxDistance) * (dark ? 0.045 : 0.035) * textFade((from.x + to.x) / 2, (from.y + to.y) / 2);
+        const alpha = (1 - distance / maxDistance) * (dark ? 0.09 : 0.075) * textFade((from.x + to.x) / 2, (from.y + to.y) / 2);
         ctx.beginPath();
         ctx.moveTo(from.x, from.y);
         ctx.lineTo(to.x, to.y);
@@ -170,7 +170,7 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
     });
 
     projected.forEach((point) => {
-      const alpha = (dark ? 0.22 : 0.18) * point.depth * textFade(point.x, point.y);
+      const alpha = (dark ? 0.34 : 0.32) * point.depth * textFade(point.x, point.y);
       ctx.beginPath();
       ctx.arc(point.x, point.y, point.radius, 0, Math.PI * 2);
       ctx.fillStyle = dark
