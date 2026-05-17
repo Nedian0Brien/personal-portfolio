@@ -106,7 +106,7 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
 
   function makeSphere() {
     const mobile = width < 640;
-    const count = mobile ? 118 : 176;
+    const count = mobile ? 168 : 260;
     const nodeCount = mobile ? 10 : 14;
     const hopCount = mobile ? 5 : 7;
     const goldenAngle = Math.PI * (3 - Math.sqrt(5));
