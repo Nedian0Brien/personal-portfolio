@@ -21,14 +21,14 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
-  opacity: 0.94;
+  opacity: 0.72;
   mix-blend-mode: normal;
-  filter: saturate(1.12);
+  filter: saturate(1.03);
 }
 [data-theme="dark"] .hero__trace-field {
-  opacity: 0.96;
+  opacity: 0.78;
   mix-blend-mode: normal;
-  filter: saturate(1.14);
+  filter: saturate(1.06);
 }
 .hero__intro {
   justify-self: center;
@@ -187,10 +187,10 @@
 
 @media (max-width: 640px) {
   .hero__trace-field {
-    opacity: 0.9;
+    opacity: 0.68;
   }
   [data-theme="dark"] .hero__trace-field {
-    opacity: 0.92;
+    opacity: 0.74;
   }
 }
 

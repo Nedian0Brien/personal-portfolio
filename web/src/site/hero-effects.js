@@ -6,15 +6,14 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
 
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const root = document.documentElement;
-  const seed = 130271;
-  const heartbeatMs = 3600;
+  const pulseMs = 3600;
 
   let width = 0;
   let height = 0;
   let dpr = 1;
   let rafId = 0;
   let visible = true;
-  let particles = [];
+  let sphere = { points: [], nodeIndexes: [], routes: [] };
 
   const isDark = () => root.getAttribute("data-theme") === "dark";
 
@@ -28,53 +27,110 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
     return x * x * (3 - 2 * x);
   }
 
-  function getCenter() {
+  function dot3(a, b) {
+    return a.x * b.x + a.y * b.y + a.z * b.z;
+  }
+
+  function normalize3(point) {
+    const length = Math.hypot(point.x, point.y, point.z) || 1;
     return {
-      x: width * 0.5,
-      y: height * (width < 640 ? 0.47 : 0.52),
+      x: point.x / length,
+      y: point.y / length,
+      z: point.z / length,
     };
   }
 
-  function getRadiusRange() {
-    const shortSide = Math.min(width, height);
-    const longSide = Math.max(width, height);
-    return {
-      inner: Math.max(58, shortSide * (width < 640 ? 0.13 : 0.12)),
-      outer: Math.max(shortSide * 0.48, longSide * (width < 640 ? 0.58 : 0.42)),
-    };
+  function slerp3(a, b, progress) {
+    const dot = Math.max(-0.98, Math.min(0.98, dot3(a, b)));
+    const theta = Math.acos(dot);
+    const sinTheta = Math.sin(theta);
+    if (sinTheta < 0.001) {
+      return normalize3({
+        x: a.x + (b.x - a.x) * progress,
+        y: a.y + (b.y - a.y) * progress,
+        z: a.z + (b.z - a.z) * progress,
+      });
+    }
+    const fromScale = Math.sin((1 - progress) * theta) / sinTheta;
+    const toScale = Math.sin(progress * theta) / sinTheta;
+    return normalize3({
+      x: a.x * fromScale + b.x * toScale,
+      y: a.y * fromScale + b.y * toScale,
+      z: a.z * fromScale + b.z * toScale,
+    });
   }
 
-  function makeParticles() {
-    const nextParticles = [];
-    const ringCount = width < 640 ? 6 : 7;
-    const { inner, outer } = getRadiusRange();
-    let cursor = seed;
-    for (let ringIndex = 0; ringIndex < ringCount; ringIndex += 1) {
-      const ringProgress = ringCount <= 1 ? 0 : ringIndex / (ringCount - 1);
-      const radius = inner + (outer - inner) * smoothstep(ringProgress);
-      const count = Math.round((width < 640 ? 72 : 132) + ringIndex * (width < 640 ? 18 : 34));
-      const bandHalfWidth = (width < 640 ? 13 : 22) + ringIndex * (width < 640 ? 2.4 : 3.5);
-      const goldenAngle = Math.PI * (3 - Math.sqrt(5));
-      for (let index = 0; index < count; index += 1) {
-        cursor += 1;
-        const angleJitter = (random(cursor) - 0.5) * 0.22;
-        cursor += 1;
-        const radiusJitter = (random(cursor) + random(cursor + 17) + random(cursor + 31) - 1.5) * bandHalfWidth;
-        cursor += 1;
-        nextParticles.push({
-          angle: index * goldenAngle + angleJitter,
-          baseRadius: radius + radiusJitter,
-          depth: 0.54 + ringProgress * 0.46,
-          haloOffset: radiusJitter / Math.max(1, outer - inner),
-          phase: random(cursor) * Math.PI * 2,
-          ringIndex,
-          ringProgress,
-          size: (width < 640 ? 1.18 : 1.08) + random(cursor + 1) * (width < 640 ? 1.16 : 1.18),
-          twinkle: 0.78 + random(cursor + 2) * 0.22,
-        });
+  function nearestSurfacePoint(points, target, used) {
+    let bestIndex = -1;
+    let bestScore = -Infinity;
+    points.forEach((point, index) => {
+      if (used.has(index)) return;
+      const score = dot3(point, target);
+      if (score > bestScore) {
+        bestIndex = index;
+        bestScore = score;
+      }
+    });
+    return bestIndex;
+  }
+
+  function makeSurfaceRoute(points, from, to, hopCount) {
+    const route = [from];
+    const used = new Set(route);
+    const start = points[from];
+    const end = points[to];
+
+    for (let hop = 1; hop < hopCount; hop += 1) {
+      const target = slerp3(start, end, hop / hopCount);
+      const nearest = nearestSurfacePoint(points, target, used);
+      if (nearest >= 0) {
+        route.push(nearest);
+        used.add(nearest);
       }
     }
-    particles = nextParticles;
+
+    if (!used.has(to)) route.push(to);
+    return route.filter((pointIndex, index) => index === 0 || pointIndex !== route[index - 1]);
+  }
+
+  function makeSphere() {
+    const mobile = width < 640;
+    const count = mobile ? 118 : 176;
+    const nodeCount = mobile ? 10 : 14;
+    const hopCount = mobile ? 5 : 7;
+    const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+    const nodes = [];
+
+    for (let index = 0; index < count; index += 1) {
+      const t = count === 1 ? 0 : index / (count - 1);
+      const y = 1 - t * 2;
+      const radius = Math.sqrt(Math.max(0, 1 - y * y));
+      const theta = index * goldenAngle;
+      nodes.push({
+        x: Math.cos(theta) * radius,
+        y,
+        z: Math.sin(theta) * radius,
+        size: mobile ? 1.15 + random(index + 15) * 0.6 : 1.2 + random(index + 15) * 0.75,
+        tone: random(index + 43),
+      });
+    }
+
+    const nodeIndexes = [];
+    for (let index = 0; index < nodeCount; index += 1) {
+      const step = Math.floor((count - 18) / nodeCount);
+      nodeIndexes.push(9 + index * step + Math.floor(random(index + 97) * Math.max(1, step * 0.45)));
+    }
+
+    const routes = [];
+    for (let index = 0; index < nodeIndexes.length; index += 1) {
+      const from = nodeIndexes[index];
+      const to = nodeIndexes[(index + 3 + (index % 2)) % nodeIndexes.length];
+      const alt = nodeIndexes[(index + 5) % nodeIndexes.length];
+      routes.push(makeSurfaceRoute(nodes, from, to, hopCount));
+      if (!mobile && index % 3 === 1) routes.push(makeSurfaceRoute(nodes, from, alt, hopCount + 1));
+    }
+
+    sphere = { points: nodes, nodeIndexes, routes };
   }
 
   function resize() {
@@ -87,80 +143,196 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     canvas.style.width = `${width}px`;
     canvas.style.height = `${height}px`;
-    makeParticles();
+    makeSphere();
     draw(performance.now());
   }
 
-  function textFade(x, y) {
-    const nx = x / Math.max(1, width);
-    const ny = y / Math.max(1, height);
-    const dx = Math.abs(nx - 0.5) / 0.34;
-    const dy = Math.abs(ny - (width < 640 ? 0.46 : 0.5)) / 0.26;
-    const distance = Math.max(dx, dy);
-    if (distance < 0.68) return 0.82;
-    if (distance < 1.04) return 0.82 + (distance - 0.68) * 0.5;
-    return 1;
+  function palette(dark) {
+    return dark
+      ? {
+          dot: "rgba(174, 193, 226,",
+          node: "rgba(222, 232, 252,",
+          edge: "rgba(134, 172, 244,",
+          packet: "rgba(237, 243, 255,",
+        }
+      : {
+          dot: "rgba(24, 58, 105,",
+          node: "rgba(17, 45, 91,",
+          edge: "rgba(17, 90, 199,",
+          packet: "rgba(13, 65, 166,",
+        };
   }
 
-  function cycleState(time) {
-    if (reduced) return { cycle: 0.52, breath: 0.35 };
-    const cycle = (time % heartbeatMs) / heartbeatMs;
-    const pauseFade = cycle > 0.86 ? 1 - smoothstep((cycle - 0.86) / 0.14) : 1;
+  function layout() {
+    const mobile = width < 640;
     return {
-      cycle,
-      breath: pauseFade,
+      cx: width * 0.5,
+      cy: height * (mobile ? 0.5 : 0.52),
+      radius: Math.min(width * (mobile ? 0.58 : 0.42), height * (mobile ? 0.37 : 0.43)),
+      perspective: mobile ? 2.9 : 3.2,
+      quietRx: width * (mobile ? 0.34 : 0.32),
+      quietRy: height * (mobile ? 0.24 : 0.2),
     };
   }
 
-  function waveStrength(particle, cycle, breath) {
-    const delay = particle.ringProgress * 0.5 + particle.haloOffset * 0.12;
-    let local = cycle - delay;
-    while (local < 0) local += 1;
-    if (local > 0.68) return 0;
-    const pulse = Math.sin((local / 0.68) * Math.PI);
-    const particleVariance = 0.88 + Math.sin(particle.phase) * 0.12;
-    return smoothstep(pulse) * breath * particleVariance;
+  function projectPoint(point, time, still = false) {
+    const specs = layout();
+    const seconds = still ? 1.4 : time / 1000;
+    const yaw = seconds * 0.13;
+    const pitch = -0.18 + Math.sin(seconds * 0.11) * 0.08;
+    const roll = Math.sin(seconds * 0.07) * 0.05;
+    const cosY = Math.cos(yaw);
+    const sinY = Math.sin(yaw);
+    const cosX = Math.cos(pitch);
+    const sinX = Math.sin(pitch);
+    const cosZ = Math.cos(roll);
+    const sinZ = Math.sin(roll);
+
+    let x = point.x * cosY + point.z * sinY;
+    let z = -point.x * sinY + point.z * cosY;
+    let y = point.y * cosX - z * sinX;
+    z = point.y * sinX + z * cosX;
+
+    const rolledX = x * cosZ - y * sinZ;
+    const rolledY = x * sinZ + y * cosZ;
+    x = rolledX;
+    y = rolledY;
+
+    const scale = specs.perspective / (specs.perspective - z);
+    const px = specs.cx + x * specs.radius * scale;
+    const py = specs.cy + y * specs.radius * scale;
+    const quietX = (px - specs.cx) / Math.max(1, specs.quietRx);
+    const quietY = (py - specs.cy) / Math.max(1, specs.quietRy);
+    const quietDistance = Math.sqrt(quietX * quietX + quietY * quietY);
+    const textFade = quietDistance < 0.75 ? 0.16 : quietDistance < 1.14 ? 0.16 + smoothstep((quietDistance - 0.75) / 0.39) * 0.84 : 1;
+
+    return {
+      x: px,
+      y: py,
+      z,
+      scale,
+      textFade,
+      front: (z + 1) / 2,
+      size: point.size * scale,
+    };
   }
 
-  function drawParticleField(time, dark) {
-    const { x: cx, y: cy } = getCenter();
-    const { outer } = getRadiusRange();
-    const { cycle, breath } = cycleState(time);
-    const slowTime = reduced ? 0 : time * 0.00018;
-    const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, outer * 0.92);
+  function activePulse(time) {
+    if (!sphere.routes.length) return null;
+    const cycle = reduced ? 0.56 : (time % pulseMs) / pulseMs;
+    const activeWindow = reduced ? 0.48 : Math.max(0, Math.min(1, (cycle - 0.08) / 0.68));
+    if (!reduced && (cycle < 0.08 || cycle > 0.84)) return null;
+    const startIndex = Math.floor(time / pulseMs) % sphere.routes.length;
+    return {
+      startIndex,
+      progress: smoothstep(activeWindow),
+      alpha: Math.sin(Math.PI * activeWindow),
+    };
+  }
 
-    gradient.addColorStop(0, dark ? "rgba(76, 119, 202, 0.2)" : "rgba(45, 113, 224, 0.16)");
-    gradient.addColorStop(0.46, dark ? "rgba(76, 119, 202, 0.075)" : "rgba(45, 113, 224, 0.065)");
-    gradient.addColorStop(1, "rgba(45, 113, 224, 0)");
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, width, height);
+  function pickPulseRoute(projected, startIndex) {
+    let best = null;
+    let bestScore = 0;
+    const specs = layout();
 
-    particles.forEach((particle) => {
-      const strength = waveStrength(particle, cycle, breath);
-      const drift = Math.sin(slowTime + particle.phase) * (1.8 + particle.depth * 2.4);
-      const outward = strength * (width < 640 ? 16 : 25) * particle.depth;
-      const radialEase = Math.sin(strength * Math.PI) * (width < 640 ? 5 : 8);
-      const radius = particle.baseRadius + drift + outward + radialEase;
-      const angle = particle.angle + Math.sin(slowTime * 0.72 + particle.phase) * 0.006 * (1 + strength);
-      const x = cx + Math.cos(angle) * radius;
-      const y = cy + Math.sin(angle) * radius;
-      const blue = dark ? "142, 182, 244" : "18, 91, 203";
-      const purple = dark ? "158, 122, 235" : "96, 52, 199";
-      const color = particle.ringIndex % 4 === 2 ? purple : blue;
-      const alphaBase = dark ? 0.56 : 0.64;
-      const alphaActive = dark ? 0.055 : 0.04;
-      const alpha = (alphaBase + strength * alphaActive) * particle.depth * particle.twinkle * textFade(x, y);
-      const size = particle.size * (1 + strength * 0.22);
+    for (let offset = 0; offset < sphere.routes.length; offset += 1) {
+      const route = sphere.routes[(startIndex + offset) % sphere.routes.length];
+      const points = route.map((pointIndex) => projected[pointIndex]).filter(Boolean);
+      if (points.length < 2) continue;
+      const visible = points.reduce((sum, point) => sum + point.textFade * (0.26 + point.front * 0.74), 0) / points.length;
+      const length = points.reduce((sum, point, index) => {
+        if (index === 0) return sum;
+        const previous = points[index - 1];
+        return sum + Math.hypot(point.x - previous.x, point.y - previous.y);
+      }, 0);
+      const distanceScore = Math.min(1, length / Math.max(1, specs.radius * 0.54));
+      const score = visible * distanceScore;
+      if (score > bestScore) {
+        best = route;
+        bestScore = score;
+      }
+      if (score > 0.34) return route;
+    }
 
+    return best;
+  }
+
+  function routeSegments(route, projected) {
+    return route.slice(1).map((pointIndex, index) => {
+      const fromIndex = route[index];
+      const from = projected[fromIndex];
+      const to = projected[pointIndex];
+      const length = from && to ? Math.hypot(to.x - from.x, to.y - from.y) : 0;
+      return { from, to, fromIndex, toIndex: pointIndex, length };
+    }).filter((segment) => segment.from && segment.to && segment.length > 0.5);
+  }
+
+  function drawSegment(from, to, progress, alpha, colors, dark, active = false) {
+    const textFade = Math.min(from.textFade, to.textFade);
+    const depthFade = 0.28 + Math.min(from.front, to.front) * 0.72;
+    const segmentAlpha = alpha * textFade * depthFade;
+    if (segmentAlpha <= 0.025) return null;
+    const x = from.x + (to.x - from.x) * progress;
+    const y = from.y + (to.y - from.y) * progress;
+    if (active) {
       ctx.beginPath();
-      ctx.arc(x, y, size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${color}, ${alpha})`;
-      ctx.fill();
+      ctx.moveTo(from.x, from.y);
+      ctx.lineTo(x, y);
+      ctx.lineWidth = width < 640 ? 2.8 : 3.2;
+      ctx.strokeStyle = `${colors.edge} ${Math.min(0.34, segmentAlpha * (dark ? 0.42 : 0.32))})`;
+      ctx.stroke();
+    }
+    ctx.beginPath();
+    ctx.moveTo(from.x, from.y);
+    ctx.lineTo(x, y);
+    ctx.lineWidth = active ? (width < 640 ? 1.45 : 1.75) : (width < 640 ? 0.7 : 0.85);
+    ctx.strokeStyle = `${colors.edge} ${Math.min(0.95, segmentAlpha * (active ? (dark ? 1.48 : 1.08) : (dark ? 0.28 : 0.22)))})`;
+    ctx.stroke();
+    return { x, y, alpha: segmentAlpha };
+  }
+
+  function drawSurfaceRoute(route, projected, pulse, colors, dark) {
+    const segments = routeSegments(route, projected);
+    if (!segments.length) return new Set();
+    const totalLength = segments.reduce((sum, segment) => sum + segment.length, 0);
+    const traveled = totalLength * pulse.progress;
+    let covered = 0;
+    let packet = null;
+    const activeIndexes = new Set([route[0]]);
+
+    segments.forEach((segment) => {
+      drawSegment(segment.from, segment.to, 1, pulse.alpha, colors, dark, false);
     });
+
+    for (const segment of segments) {
+      const localStart = covered;
+      const localEnd = covered + segment.length;
+      if (traveled >= localStart) {
+        const localProgress = Math.max(0, Math.min(1, (traveled - localStart) / segment.length));
+        const partial = drawSegment(segment.from, segment.to, localProgress, pulse.alpha, colors, dark, true);
+        if (localProgress > 0) activeIndexes.add(segment.fromIndex);
+        if (localProgress >= 1) activeIndexes.add(segment.toIndex);
+        if (traveled <= localEnd && partial) packet = partial;
+      }
+      covered = localEnd;
+    }
+
+    if (packet) {
+      ctx.beginPath();
+      ctx.arc(packet.x, packet.y, width < 640 ? 2.3 : 2.75, 0, Math.PI * 2);
+      ctx.fillStyle = `${colors.packet} ${packet.alpha * (dark ? 0.9 : 1)})`;
+      ctx.fill();
+    }
+
+    return activeIndexes;
   }
 
   function draw(time) {
     const dark = isDark();
+    const colors = palette(dark);
+    const projected = sphere.points.map((point) => projectPoint(point, time, reduced));
+    const active = activePulse(time);
+
     ctx.clearRect(0, 0, width, height);
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
@@ -168,7 +340,53 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
     const fade = 1 - Math.min(0.72, window.scrollY / Math.max(1, height * 0.85));
     ctx.globalAlpha = fade;
 
-    drawParticleField(time, dark);
+    projected
+      .map((point, index) => ({ ...point, index }))
+      .sort((a, b) => a.z - b.z)
+      .forEach((point) => {
+        const depthAlpha = 0.16 + point.front * 0.52;
+        const alpha = depthAlpha * point.textFade * (dark ? 0.82 : 0.9);
+        if (alpha <= 0.02) return;
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, point.size, 0, Math.PI * 2);
+        ctx.fillStyle = `${colors.dot} ${alpha})`;
+        ctx.fill();
+      });
+
+    const activeRoute = active ? pickPulseRoute(projected, active.startIndex) : null;
+    const activeIndexes = activeRoute ? drawSurfaceRoute(activeRoute, projected, active, colors, dark) : new Set();
+
+    activeIndexes.forEach((pointIndex) => {
+      const point = projected[pointIndex];
+      if (!point) return;
+      const radius = (width < 640 ? 2.35 : 2.8) * point.scale;
+      const alpha = point.textFade * (0.42 + point.front * 0.58) * (active?.alpha || 0);
+      if (alpha <= 0.03) return;
+      ctx.beginPath();
+      ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+      ctx.fillStyle = `${colors.packet} ${Math.min(0.95, alpha)})`;
+      ctx.fill();
+    });
+
+    sphere.nodeIndexes.forEach((pointIndex) => {
+      const point = projected[pointIndex];
+      if (!point) return;
+      const isActive = activeIndexes.has(pointIndex);
+      const radius = (width < 640 ? 2.1 : 2.45) * point.scale * (isActive ? 1.32 : 1);
+      const alpha = point.textFade * (0.34 + point.front * 0.48) * (isActive ? 1 : 0.72);
+      if (alpha <= 0.02) return;
+      ctx.beginPath();
+      ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+      ctx.fillStyle = `${colors.node} ${alpha})`;
+      ctx.fill();
+      if (isActive) {
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, radius * 2.05, 0, Math.PI * 2);
+        ctx.lineWidth = 0.85;
+        ctx.strokeStyle = `${colors.edge} ${alpha * 0.28})`;
+        ctx.stroke();
+      }
+    });
 
     ctx.globalAlpha = 1;
   }
