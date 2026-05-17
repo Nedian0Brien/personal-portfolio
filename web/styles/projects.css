@@ -617,6 +617,12 @@
     padding: 0;
     overflow: hidden;
   }
+  .proj-scene.reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    will-change: auto;
+  }
 
   .proj-card,
   .proj-card--stacked {
