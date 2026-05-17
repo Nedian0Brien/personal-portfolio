@@ -860,6 +860,13 @@
   }
   #project > .proj-stack {
     margin-top: 24px;
+    timeline-scope:
+      --proj-bg-02,
+      --proj-bg-03,
+      --proj-bg-04,
+      --proj-bg-05,
+      --proj-bg-06,
+      --proj-bg-07;
   }
   .proj-bg-stage__sticky {
     height: 100svh;
@@ -867,17 +874,85 @@
   .proj-bg-layer {
     transition: none;
   }
+  .proj-scene,
+  .proj-card,
+  .proj-card--stacked {
+    height: 100svh;
+    min-height: 100svh;
+    max-height: 100svh;
+  }
+  #proj-02 {
+    view-timeline-name: --proj-bg-02;
+    view-timeline-axis: block;
+  }
+  #proj-03 {
+    view-timeline-name: --proj-bg-03;
+    view-timeline-axis: block;
+  }
+  #proj-04 {
+    view-timeline-name: --proj-bg-04;
+    view-timeline-axis: block;
+  }
+  #proj-05 {
+    view-timeline-name: --proj-bg-05;
+    view-timeline-axis: block;
+  }
+  #proj-06 {
+    view-timeline-name: --proj-bg-06;
+    view-timeline-axis: block;
+  }
+  #proj-07 {
+    view-timeline-name: --proj-bg-07;
+    view-timeline-axis: block;
+  }
+  .proj-scene__edge {
+    display: none;
+  }
+}
+
+@keyframes proj-bg-rise {
+  from { transform: translate3d(0, 100%, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}
+
+@supports (animation-timeline: --proj-bg-02) and (view-timeline-name: --proj-bg-02) and (timeline-scope: --proj-bg-02) {
+  @media (max-width: 980px) {
+    .proj-bg-layer[data-idx="1"] {
+      animation: proj-bg-rise linear both;
+      animation-timeline: --proj-bg-02;
+      animation-range: entry 0% entry 100%;
+    }
+    .proj-bg-layer[data-idx="2"] {
+      animation: proj-bg-rise linear both;
+      animation-timeline: --proj-bg-03;
+      animation-range: entry 0% entry 100%;
+    }
+    .proj-bg-layer[data-idx="3"] {
+      animation: proj-bg-rise linear both;
+      animation-timeline: --proj-bg-04;
+      animation-range: entry 0% entry 100%;
+    }
+    .proj-bg-layer[data-idx="4"] {
+      animation: proj-bg-rise linear both;
+      animation-timeline: --proj-bg-05;
+      animation-range: entry 0% entry 100%;
+    }
+    .proj-bg-layer[data-idx="5"] {
+      animation: proj-bg-rise linear both;
+      animation-timeline: --proj-bg-06;
+      animation-range: entry 0% entry 100%;
+    }
+    .proj-bg-layer[data-idx="6"] {
+      animation: proj-bg-rise linear both;
+      animation-timeline: --proj-bg-07;
+      animation-range: entry 0% entry 100%;
+    }
+  }
 }
 
 @media (max-width: 720px) {
   .proj-scene {
-    height: 100svh;
-    min-height: 100svh;
-    max-height: 100svh;
     padding: 0 var(--gutter);
-  }
-  .proj-scene__edge {
-    display: none;
   }
   .proj-card,
   .proj-card--stacked {

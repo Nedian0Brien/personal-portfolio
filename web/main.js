@@ -331,10 +331,18 @@ if (import.meta.env?.DEV) {
   const scenes = Array.from(document.querySelectorAll('#project .proj-scene'));
   if (!layers.length || layers.length !== scenes.length) return;
 
-  const mq = window.matchMedia('(min-width: 0px)');
-  const syncMq = window.matchMedia('(max-width: 980px)');
+  const mq = window.matchMedia('(min-width: 981px)');
+  const cssWipeMq = window.matchMedia('(max-width: 980px)');
   let active = false;
   let ticking = false;
+
+  function supportsCssWipe() {
+    return cssWipeMq.matches
+      && window.CSS
+      && CSS.supports('animation-timeline: --project-bg')
+      && CSS.supports('view-timeline-name: --project-bg')
+      && CSS.supports('timeline-scope: --project-bg');
+  }
 
   function update(){
     ticking = false;
@@ -349,10 +357,6 @@ if (import.meta.env?.DEV) {
   }
   function schedule(){
     if (ticking) return;
-    if (syncMq.matches) {
-      update();
-      return;
-    }
     ticking = true;
     requestAnimationFrame(update);
   }
@@ -360,6 +364,8 @@ if (import.meta.env?.DEV) {
     active = on;
     if (on) {
       schedule();
+    } else if (supportsCssWipe()) {
+      layers.forEach(l => { l.style.transform = ''; });
     } else {
       layers.forEach((l, i) => {
         l.style.transform = i === 0 ? 'translate3d(0, 0, 0)' : 'translate3d(0, 100%, 0)';
@@ -367,9 +373,14 @@ if (import.meta.env?.DEV) {
     }
   }
 
-  activate(mq.matches);
-  if (mq.addEventListener) mq.addEventListener('change', e => activate(e.matches));
-  else if (mq.addListener) mq.addListener(e => activate(e.matches));
+  const shouldUseJs = () => mq.matches || !supportsCssWipe();
+  const updateMode = () => activate(shouldUseJs());
+
+  updateMode();
+  if (mq.addEventListener) mq.addEventListener('change', updateMode);
+  else if (mq.addListener) mq.addListener(updateMode);
+  if (cssWipeMq.addEventListener) cssWipeMq.addEventListener('change', updateMode);
+  else if (cssWipeMq.addListener) cssWipeMq.addListener(updateMode);
 
   window.addEventListener('scroll', schedule, { passive: true });
   window.addEventListener('resize', schedule);
