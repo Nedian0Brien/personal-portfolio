@@ -8,9 +8,11 @@ export function initProjectWheelSnap() {
 
   const TOPNAV = 64;
   const DURATION = 700;
-  const COOLDOWN = 180;
+  const MOMENTUM_QUIET_MS = 360;
   const SETTLE_TOLERANCE = 36;
   let busy = false;
+  let lastWheelAt = 0;
+  let releaseTimer = 0;
 
   const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
   const snapCenterY = () => TOPNAV + (window.innerHeight - TOPNAV) / 2;
@@ -48,6 +50,16 @@ export function initProjectWheelSnap() {
     html.style.scrollBehavior = "auto";
     const startedAt = performance.now();
     busy = true;
+    window.clearTimeout(releaseTimer);
+
+    function releaseWhenWheelSettled() {
+      const quietFor = performance.now() - lastWheelAt;
+      if (quietFor >= MOMENTUM_QUIET_MS) {
+        busy = false;
+        return;
+      }
+      releaseTimer = window.setTimeout(releaseWhenWheelSettled, MOMENTUM_QUIET_MS - quietFor);
+    }
 
     function tick(now) {
       const progress = Math.min((now - startedAt) / DURATION, 1);
@@ -58,9 +70,7 @@ export function initProjectWheelSnap() {
       } else {
         html.style.scrollSnapType = prevSnap;
         html.style.scrollBehavior = prevBehavior;
-        setTimeout(() => {
-          busy = false;
-        }, COOLDOWN);
+        releaseWhenWheelSettled();
       }
     }
 
@@ -113,11 +123,13 @@ export function initProjectWheelSnap() {
     "wheel",
     (event) => {
       if (!inProjectArea()) return;
+      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+
+      lastWheelAt = performance.now();
       if (busy) {
         event.preventDefault();
         return;
       }
-      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
 
       const dir = event.deltaY > 0 ? 1 : -1;
       const target = wheelTarget(dir);
