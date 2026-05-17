@@ -335,6 +335,22 @@ if (import.meta.env?.DEV) {
   const cssWipeMq = window.matchMedia('(max-width: 980px)');
   const root = document.documentElement;
   const body = document.body;
+  let themeMeta = document.querySelector('meta[name="theme-color"]');
+  if (!themeMeta) {
+    themeMeta = document.createElement('meta');
+    themeMeta.name = 'theme-color';
+    document.head.appendChild(themeMeta);
+  }
+  const defaultThemeColor = themeMeta.getAttribute('content') || '#ffffff';
+  const chromeColors = {
+    'theme-blue': '#006be8',
+    'theme-red': '#f04a0f',
+    'theme-yellow': '#f5aa00',
+    'theme-green': '#16865a',
+    'theme-purple': '#4f2fc7',
+    'theme-pink': '#bb55d7',
+    'theme-orange': '#f05a16',
+  };
   let active = false;
   let ticking = false;
 
@@ -353,6 +369,7 @@ if (import.meta.env?.DEV) {
     root.style.removeProperty('--project-chrome-bg-color');
     root.style.removeProperty('--project-chrome-bg-position');
     root.style.removeProperty('--project-chrome-bg-size');
+    themeMeta.setAttribute('content', defaultThemeColor);
   }
 
   function updateChromeBleed() {
@@ -381,6 +398,8 @@ if (import.meta.env?.DEV) {
     root.style.setProperty('--project-chrome-bg-color', style.backgroundColor || 'transparent');
     root.style.setProperty('--project-chrome-bg-position', layerRect.left.toFixed(2) + 'px ' + layerRect.top.toFixed(2) + 'px');
     root.style.setProperty('--project-chrome-bg-size', layerRect.width.toFixed(2) + 'px ' + layerRect.height.toFixed(2) + 'px');
+    const themeClass = Array.from(visibleLayer.classList).find(name => chromeColors[name]);
+    if (themeClass) themeMeta.setAttribute('content', chromeColors[themeClass]);
     root.classList.add('project-chrome-bleed');
     if (body) body.classList.add('project-chrome-bleed');
   }
