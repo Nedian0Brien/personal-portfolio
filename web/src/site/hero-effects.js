@@ -93,6 +93,17 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
     return route.filter((pointIndex, index) => index === 0 || pointIndex !== route[index - 1]);
   }
 
+  function makePulseRoute(points, mainRoute, branchTarget, hopCount, shouldBranch, branchAt) {
+    const paths = [mainRoute];
+    if (shouldBranch && mainRoute.length > 4) {
+      const splitIndex = Math.max(2, Math.min(mainRoute.length - 2, Math.floor(mainRoute.length * branchAt)));
+      const splitNode = mainRoute[splitIndex];
+      const branchRoute = makeSurfaceRoute(points, splitNode, branchTarget, Math.max(3, hopCount - 2));
+      if (branchRoute.length > 2) paths.push(branchRoute);
+    }
+    return { paths, branchAt };
+  }
+
   function makeSphere() {
     const mobile = width < 640;
     const count = mobile ? 118 : 176;
@@ -126,8 +137,12 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
       const from = nodeIndexes[index];
       const to = nodeIndexes[(index + 3 + (index % 2)) % nodeIndexes.length];
       const alt = nodeIndexes[(index + 5) % nodeIndexes.length];
-      routes.push(makeSurfaceRoute(nodes, from, to, hopCount));
-      if (!mobile && index % 3 === 1) routes.push(makeSurfaceRoute(nodes, from, alt, hopCount + 1));
+      const branchAt = 0.42 + random(index + 211) * 0.12;
+      const shouldBranch = index % (mobile ? 3 : 4) === 1;
+      routes.push(makePulseRoute(nodes, makeSurfaceRoute(nodes, from, to, hopCount), alt, hopCount, shouldBranch, branchAt));
+      if (!mobile && index % 3 === 1) {
+        routes.push(makePulseRoute(nodes, makeSurfaceRoute(nodes, from, alt, hopCount + 1), to, hopCount, false, branchAt));
+      }
     }
 
     sphere = { points: nodes, nodeIndexes, routes };
@@ -236,22 +251,25 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
     const specs = layout();
 
     for (let offset = 0; offset < sphere.routes.length; offset += 1) {
-      const route = sphere.routes[(startIndex + offset) % sphere.routes.length];
-      const points = route.map((pointIndex) => projected[pointIndex]).filter(Boolean);
+      const routeGroup = sphere.routes[(startIndex + offset) % sphere.routes.length];
+      const points = routeGroup.paths.flatMap((route) => route.map((pointIndex) => projected[pointIndex]).filter(Boolean));
       if (points.length < 2) continue;
       const visible = points.reduce((sum, point) => sum + point.textFade * (0.26 + point.front * 0.74), 0) / points.length;
-      const length = points.reduce((sum, point, index) => {
-        if (index === 0) return sum;
-        const previous = points[index - 1];
-        return sum + Math.hypot(point.x - previous.x, point.y - previous.y);
+      const length = routeGroup.paths.reduce((sum, route) => {
+        const routePoints = route.map((pointIndex) => projected[pointIndex]).filter(Boolean);
+        return sum + routePoints.reduce((routeSum, point, index) => {
+          if (index === 0) return routeSum;
+          const previous = routePoints[index - 1];
+          return routeSum + Math.hypot(point.x - previous.x, point.y - previous.y);
+        }, 0);
       }, 0);
       const distanceScore = Math.min(1, length / Math.max(1, specs.radius * 0.54));
       const score = visible * distanceScore;
       if (score > bestScore) {
-        best = route;
+        best = routeGroup;
         bestScore = score;
       }
-      if (score > 0.34) return route;
+      if (score > 0.34) return routeGroup;
     }
 
     return best;
@@ -291,7 +309,7 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
     return { x, y, alpha: segmentAlpha };
   }
 
-  function drawSurfaceRoute(route, projected, pulse, colors, dark) {
+  function drawSurfacePath(route, projected, pulse, colors, dark) {
     const segments = routeSegments(route, projected);
     if (!segments.length) return new Set();
     const totalLength = segments.reduce((sum, segment) => sum + segment.length, 0);
@@ -322,6 +340,25 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
       ctx.arc(packet.x, packet.y, width < 640 ? 2.3 : 2.75, 0, Math.PI * 2);
       ctx.fillStyle = `${colors.packet} ${packet.alpha * (dark ? 0.9 : 1)})`;
       ctx.fill();
+    }
+
+    return activeIndexes;
+  }
+
+  function mergeIndexes(target, source) {
+    source.forEach((pointIndex) => target.add(pointIndex));
+    return target;
+  }
+
+  function drawSurfaceRoute(routeGroup, projected, pulse, colors, dark) {
+    const activeIndexes = new Set();
+    const [mainRoute, branchRoute] = routeGroup.paths;
+    mergeIndexes(activeIndexes, drawSurfacePath(mainRoute, projected, pulse, colors, dark));
+
+    if (branchRoute && pulse.progress > routeGroup.branchAt) {
+      const branchProgress = smoothstep((pulse.progress - routeGroup.branchAt) / Math.max(0.1, 1 - routeGroup.branchAt));
+      const branchAlpha = pulse.alpha * Math.min(1, (pulse.progress - routeGroup.branchAt) / 0.18) * 0.92;
+      mergeIndexes(activeIndexes, drawSurfacePath(branchRoute, projected, { progress: branchProgress, alpha: branchAlpha }, colors, dark));
     }
 
     return activeIndexes;
