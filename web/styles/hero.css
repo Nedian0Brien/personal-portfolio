@@ -180,10 +180,6 @@
   color: var(--text-primary);
   font-weight: 700;
 }
-.hero__bullet-label {
-  color: var(--text-primary);
-  font-weight: 800;
-}
 .hero__bullet-key--bio {
   color: hsl(var(--green-60));
   text-decoration-color: hsla(var(--green-50) / 0.65);
@@ -200,6 +196,10 @@
   color: hsl(var(--purple-60));
   text-decoration-color: hsla(var(--purple-50) / 0.75);
 }
+.hero__bullet-key--domain {
+  color: hsl(var(--orange-50));
+  text-decoration-color: hsla(var(--orange-50) / 0.72);
+}
 [data-theme="dark"] .hero__bullet-key--bio {
   color: hsl(var(--green-50));
 }
@@ -209,6 +209,9 @@
 }
 [data-theme="dark"] .hero__bullet-key--project {
   color: hsl(var(--purple-50));
+}
+[data-theme="dark"] .hero__bullet-key--domain {
+  color: hsl(var(--orange-50));
 }
 
 .hero__facts {
