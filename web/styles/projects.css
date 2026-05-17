@@ -878,12 +878,17 @@
   #project > .proj-stack {
     margin-top: 24px;
     timeline-scope:
+      --proj-bg-01,
       --proj-bg-02,
       --proj-bg-03,
       --proj-bg-04,
       --proj-bg-05,
       --proj-bg-06,
       --proj-bg-07;
+  }
+  #proj-01 {
+    view-timeline-name: --proj-bg-01;
+    view-timeline-axis: block;
   }
   .proj-bg-stage__sticky {
     top: calc(-1 * var(--proj-bg-bleed-top));
@@ -935,6 +940,11 @@
 
 @supports (animation-timeline: --proj-bg-02) and (view-timeline-name: --proj-bg-02) and (timeline-scope: --proj-bg-02) {
   @media (max-width: 980px) {
+    :root.device-mobile-or-tablet .proj-bg-layer[data-idx="0"] {
+      animation: proj-bg-rise linear both;
+      animation-timeline: --proj-bg-01;
+      animation-range: entry 0% entry 100%;
+    }
     .proj-bg-layer[data-idx="1"] {
       animation: proj-bg-rise linear both;
       animation-timeline: --proj-bg-02;
