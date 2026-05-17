@@ -1192,3 +1192,23 @@
   height: 100%;
   min-height: 100%;
 }
+
+:root.device-mobile-or-tablet .aris-thread-frame {
+  --aris-thread-scale: 0.72;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+:root.device-mobile-or-tablet .aris-thread-frame .aris-thread {
+  flex: 0 0 auto;
+  width: calc(100% / var(--aris-thread-scale));
+  height: auto;
+  max-height: none;
+  min-height: 0;
+  transform: scale(var(--aris-thread-scale));
+  transform-origin: center;
+}
