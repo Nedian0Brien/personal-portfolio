@@ -811,7 +811,7 @@
 
 @media (min-width: 721px) and (max-width: 980px) {
   #project {
-    --proj-wipe-safe-bottom: calc(clamp(80px, 10svh, 122px) + var(--safe-area-bottom));
+    --proj-wipe-safe-bottom: calc(clamp(80px, 10svh, 122px) + var(--safe-area-bottom) + var(--browser-chrome-bottom));
   }
   .proj-scene {
     padding-left: var(--gutter);
@@ -974,7 +974,7 @@
 
 @media (max-width: 720px) {
   #project {
-    --proj-wipe-safe-bottom: calc(clamp(92px, 12svh, 136px) + var(--safe-area-bottom));
+    --proj-wipe-safe-bottom: calc(clamp(92px, 12svh, 136px) + var(--safe-area-bottom) + var(--browser-chrome-bottom));
   }
   .proj-scene {
     padding: 0 var(--gutter);
@@ -1124,7 +1124,7 @@
 
 @media (max-width: 380px), (max-height: 700px) {
   #project {
-    --proj-wipe-safe-bottom: calc(clamp(68px, 10svh, 92px) + var(--safe-area-bottom));
+    --proj-wipe-safe-bottom: calc(clamp(68px, 10svh, 92px) + var(--safe-area-bottom) + var(--browser-chrome-bottom));
   }
   .proj-card,
   .proj-card--stacked {

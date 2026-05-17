@@ -81,6 +81,7 @@ button { font: inherit; }
   --section-py: clamp(72px, 8vw, 112px);
   --safe-area-top: env(safe-area-inset-top, 0px);
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --browser-chrome-bottom: 0px;
 }
 
 :root[data-theme="light"] {
