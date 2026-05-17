@@ -848,30 +848,24 @@
 }
 
 @media (max-width: 980px) {
-  html.project-chrome-bleed,
-  body.project-chrome-bleed {
-    background-color: var(--project-chrome-bg-color, var(--bg-primary));
-    background-image: var(--project-chrome-bg-image, none);
-    background-position: var(--project-chrome-bg-position, 0 0);
-    background-repeat: no-repeat;
-    background-size: var(--project-chrome-bg-size, 100% 100%);
-    background-attachment: fixed;
-  }
-  body.project-chrome-bleed::before {
+  .proj-scene::before {
     content: "";
-    position: fixed;
-    left: 0;
-    right: 0;
+    position: absolute;
+    left: 50%;
     bottom: 0;
-    height: var(--project-chrome-bleed-height, 180px);
-    background-color: var(--project-chrome-bg-color, var(--bg-primary));
-    background-image: var(--project-chrome-bg-image, none);
-    background-position: var(--project-chrome-strip-bg-position, var(--project-chrome-bg-position, 0 0));
-    background-repeat: no-repeat;
-    background-size: var(--project-chrome-bg-size, 100% 100%);
+    width: 100vw;
+    height: max(128px, calc(var(--browser-chrome-bottom) + var(--safe-area-bottom)));
+    transform: translateX(-50%);
     pointer-events: none;
     z-index: 0;
   }
+  #proj-01::before { background: radial-gradient(120% 120% at 0% 0%, hsl(var(--blue-50)) 0%, hsl(var(--blue-70)) 60%, hsl(220 100% 22%) 100%); }
+  #proj-02::before { background: radial-gradient(120% 120% at 10% 0%, hsl(var(--red-50)) 0%, hsl(var(--red-60)) 55%, hsl(12 80% 28%) 100%); }
+  #proj-03::before { background: radial-gradient(120% 120% at 0% 0%, hsl(var(--orange-50)) 0%, hsl(var(--yellow-50)) 60%, hsl(var(--yellow-60)) 100%); }
+  #proj-04::before { background: radial-gradient(130% 130% at 30% 0%, hsl(var(--green-50)) 0%, hsl(var(--green-60)) 55%, hsl(160 70% 18%) 100%); }
+  #proj-05::before { background: radial-gradient(120% 120% at 0% 0%, hsl(var(--purple-50)) 0%, hsl(var(--purple-60)) 55%, hsl(232 80% 28%) 100%); }
+  #proj-06::before { background: linear-gradient(125deg, hsl(var(--pink-50)) 0%, hsl(var(--purple-50)) 50%, hsl(var(--blue-50)) 100%); }
+  #proj-07::before { background: radial-gradient(120% 120% at 0% 0%, hsl(var(--orange-50)) 0%, hsl(18 100% 50%) 55%, hsl(var(--red-60)) 100%); }
   #project {
     max-width: none;
     padding-left: 0;
