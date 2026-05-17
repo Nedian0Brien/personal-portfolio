@@ -392,6 +392,8 @@ if (import.meta.env?.DEV) {
     root.style.removeProperty('--project-chrome-bg-color');
     root.style.removeProperty('--project-chrome-bg-position');
     root.style.removeProperty('--project-chrome-bg-size');
+    root.style.removeProperty('--project-chrome-bleed-height');
+    root.style.removeProperty('--project-chrome-strip-bg-position');
     themeMeta.setAttribute('content', defaultThemeColor);
   }
 
@@ -407,7 +409,10 @@ if (import.meta.env?.DEV) {
       return;
     }
 
-    const probeY = Math.max(0, window.innerHeight - 1);
+    const chromeBottom = parseFloat(getComputedStyle(root).getPropertyValue('--browser-chrome-bottom')) || 0;
+    const bleedHeight = Math.max(0, chromeBottom);
+    const bleedTop = window.innerHeight - bleedHeight;
+    const probeY = Math.max(0, (bleedHeight > 0 ? bleedTop + 1 : window.innerHeight - 1));
     let visibleLayer = layers[0];
     layers.forEach((layer, i) => {
       if (i === 0 || layer.getBoundingClientRect().top <= probeY) {
@@ -421,6 +426,8 @@ if (import.meta.env?.DEV) {
     root.style.setProperty('--project-chrome-bg-color', style.backgroundColor || 'transparent');
     root.style.setProperty('--project-chrome-bg-position', layerRect.left.toFixed(2) + 'px ' + layerRect.top.toFixed(2) + 'px');
     root.style.setProperty('--project-chrome-bg-size', layerRect.width.toFixed(2) + 'px ' + layerRect.height.toFixed(2) + 'px');
+    root.style.setProperty('--project-chrome-bleed-height', bleedHeight.toFixed(2) + 'px');
+    root.style.setProperty('--project-chrome-strip-bg-position', layerRect.left.toFixed(2) + 'px ' + (layerRect.top - bleedTop).toFixed(2) + 'px');
     const themeClass = Array.from(visibleLayer.classList).find(name => chromeColors[name]);
     if (themeClass) themeMeta.setAttribute('content', chromeColors[themeClass]);
     root.classList.add('project-chrome-bleed');

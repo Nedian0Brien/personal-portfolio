@@ -811,7 +811,7 @@
 
 @media (min-width: 721px) and (max-width: 980px) {
   #project {
-    --proj-wipe-safe-bottom: calc(clamp(80px, 10svh, 122px) + var(--safe-area-bottom) + var(--browser-chrome-bottom));
+    --proj-wipe-safe-bottom: calc(clamp(80px, 10svh, 122px) + var(--safe-area-bottom));
   }
   .proj-scene {
     padding-left: var(--gutter);
@@ -856,6 +856,21 @@
     background-repeat: no-repeat;
     background-size: var(--project-chrome-bg-size, 100% 100%);
     background-attachment: fixed;
+  }
+  body.project-chrome-bleed::before {
+    content: "";
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--project-chrome-bleed-height, 180px);
+    background-color: var(--project-chrome-bg-color, var(--bg-primary));
+    background-image: var(--project-chrome-bg-image, none);
+    background-position: var(--project-chrome-strip-bg-position, var(--project-chrome-bg-position, 0 0));
+    background-repeat: no-repeat;
+    background-size: var(--project-chrome-bg-size, 100% 100%);
+    pointer-events: none;
+    z-index: 0;
   }
   #project {
     max-width: none;
@@ -974,7 +989,7 @@
 
 @media (max-width: 720px) {
   #project {
-    --proj-wipe-safe-bottom: calc(clamp(92px, 12svh, 136px) + var(--safe-area-bottom) + var(--browser-chrome-bottom));
+    --proj-wipe-safe-bottom: calc(clamp(92px, 12svh, 136px) + var(--safe-area-bottom));
   }
   .proj-scene {
     padding: 0 var(--gutter);
@@ -1124,7 +1139,7 @@
 
 @media (max-width: 380px), (max-height: 700px) {
   #project {
-    --proj-wipe-safe-bottom: calc(clamp(68px, 10svh, 92px) + var(--safe-area-bottom) + var(--browser-chrome-bottom));
+    --proj-wipe-safe-bottom: calc(clamp(68px, 10svh, 92px) + var(--safe-area-bottom));
   }
   .proj-card,
   .proj-card--stacked {
