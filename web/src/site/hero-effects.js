@@ -45,6 +45,10 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
     .map((node, index) => ({ index, node }))
     .filter(({ node }) => node.terminal)
     .map(({ index }) => index);
+  const internalNodeIndexes = anchors
+    .map((node, index) => ({ index, node }))
+    .filter(({ node }) => !node.terminal)
+    .map(({ index }) => index);
   const heartbeatPeriodMs = 1800;
   const heartbeatFlowMs = 680;
 
@@ -67,7 +71,7 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
     return copy;
   }
 
-  function findRandomPath(start, end) {
+  function findRandomPath(start, end, { blocked = new Set() } = {}) {
     const queue = [[start]];
     const visited = new Set([start]);
 
@@ -77,6 +81,7 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
       if (current === end) return path;
 
       shuffledIndexes(adjacency[current]).forEach((next) => {
+        if (blocked.has(next) && next !== end) return;
         if (visited.has(next)) return;
         visited.add(next);
         queue.push([...path, next]);
@@ -88,21 +93,43 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
 
   function chooseRandomPulseBranches() {
     const start = edgeNodeIndexes[Math.floor(Math.random() * edgeNodeIndexes.length)];
+    let trunk = null;
+    let split = null;
+
+    for (const candidate of shuffledIndexes(internalNodeIndexes)) {
+      const candidatePath = findRandomPath(start, candidate);
+      if (candidatePath.length >= 3) {
+        trunk = candidatePath;
+        split = candidate;
+        break;
+      }
+    }
+
+    if (!trunk || split === null) {
+      split = internalNodeIndexes[Math.floor(Math.random() * internalNodeIndexes.length)];
+      trunk = findRandomPath(start, split);
+    }
+
     const targets = shuffledIndexes(edgeNodeIndexes.filter((index) => index !== start));
     const maxBranches = Math.min(4, targets.length);
     const branchCount = Math.min(maxBranches, 2 + Math.floor(Math.random() * Math.max(1, maxBranches - 1)));
     const branches = targets.slice(0, branchCount).map((end, index) => {
-      const path = findRandomPath(start, end);
+      const path = findRandomPath(split, end, { blocked: new Set([start]) });
       const duration = heartbeatFlowMs + Math.min(180, path.length * 28);
       return {
         delay: index * 78 + Math.random() * 42,
         duration,
         path,
-        trail: 0.22 + Math.random() * 0.08,
       };
     });
 
-    return { branches, start };
+    return {
+      branches,
+      split,
+      start,
+      trunk,
+      trunkDuration: 390 + Math.min(180, trunk.length * 36),
+    };
   }
 
   function resetPulse(time, { immediate = false } = {}) {
@@ -114,8 +141,11 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
       branches: burst.branches,
       hue: Math.random() < 0.36 ? "agent" : "retrieval",
       origin: burst.start,
+      split: burst.split,
       startTime: nextStartTime,
-      totalDuration: Math.max(...burst.branches.map((branch) => branch.delay + branch.duration)),
+      totalDuration: burst.trunkDuration + Math.max(...burst.branches.map((branch) => branch.delay + branch.duration)),
+      trunk: burst.trunk,
+      trunkDuration: burst.trunkDuration,
     };
   }
 
@@ -221,7 +251,11 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
     }
 
     if (reduced || time >= activePulse.startTime) {
+      const elapsed = reduced
+        ? activePulse.trunkDuration + heartbeatFlowMs * 0.58
+        : time - activePulse.startTime;
       const origin = nodes[activePulse.origin];
+      const split = nodes[activePulse.split];
       const accent = activePulse.hue === "agent"
         ? (dark ? "rgba(170, 112, 255, 0.88)" : "rgba(102, 42, 220, 0.86)")
         : (dark ? "rgba(124, 184, 255, 0.9)" : "rgba(0, 88, 216, 0.88)");
@@ -229,16 +263,48 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
         ? (dark ? "rgba(170, 112, 255, 0.4)" : "rgba(102, 42, 220, 0.3)")
         : (dark ? "rgba(124, 184, 255, 0.4)" : "rgba(0, 88, 216, 0.32)");
 
+      if (elapsed >= 0 && elapsed <= activePulse.trunkDuration + 140) {
+        const rawTrunkProgress = Math.min(1, Math.max(0, elapsed / activePulse.trunkDuration));
+        const trunkProgress = 1 - Math.pow(1 - rawTrunkProgress, 2.1);
+        const trunkTrailStart = Math.max(0, trunkProgress - 0.28);
+        const trunkTrail = samplePath(nodes, activePulse.trunk, trunkTrailStart, trunkProgress);
+        const head = trunkTrail[trunkTrail.length - 1];
+        const tail = trunkTrail[0];
+        const gradient = ctx.createLinearGradient(tail.x, tail.y, head.x, head.y);
+        gradient.addColorStop(0, dark ? "rgba(255, 255, 255, 0)" : "rgba(255, 255, 255, 0)");
+        gradient.addColorStop(0.42, glow);
+        gradient.addColorStop(1, accent);
+
+        ctx.beginPath();
+        trunkTrail.forEach((point, index) => {
+          if (index === 0) ctx.moveTo(point.x, point.y);
+          else ctx.lineTo(point.x, point.y);
+        });
+        ctx.lineWidth = dark ? 2.55 : 2.45;
+        ctx.strokeStyle = gradient;
+        ctx.shadowBlur = dark ? 22 : 15;
+        ctx.shadowColor = accent;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        ctx.beginPath();
+        ctx.arc(head.x, head.y, dark ? 4.1 : 3.7, 0, Math.PI * 2);
+        ctx.fillStyle = accent;
+        ctx.shadowBlur = dark ? 28 : 18;
+        ctx.shadowColor = accent;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+
       activePulse.branches.forEach((branch) => {
         const branchTime = reduced
           ? branch.duration * 0.68
-          : time - activePulse.startTime - branch.delay;
+          : elapsed - activePulse.trunkDuration - branch.delay;
         if (branchTime < 0 || branchTime > branch.duration) return;
 
         const rawProgress = Math.min(1, Math.max(0, branchTime / branch.duration));
         const progress = 1 - Math.pow(1 - rawProgress, 2.35);
-        const trailStart = Math.max(0, progress - branch.trail);
-        const trail = samplePath(nodes, branch.path, trailStart, progress);
+        const trail = samplePath(nodes, branch.path, 0, progress);
         const head = trail[trail.length - 1];
         const tail = trail[0];
 
@@ -268,7 +334,7 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
         ctx.shadowBlur = 0;
       });
 
-      const originAge = reduced ? 260 : time - activePulse.startTime;
+      const originAge = reduced ? 260 : elapsed;
       if (originAge >= 0 && originAge <= 420) {
         const originProgress = originAge / 420;
         ctx.beginPath();
@@ -277,6 +343,18 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
         ctx.strokeStyle = activePulse.hue === "agent"
           ? (dark ? `rgba(170, 112, 255, ${0.42 * (1 - originProgress)})` : `rgba(102, 42, 220, ${0.5 * (1 - originProgress)})`)
           : (dark ? `rgba(124, 184, 255, ${0.42 * (1 - originProgress)})` : `rgba(0, 88, 216, ${0.52 * (1 - originProgress)})`);
+        ctx.stroke();
+      }
+
+      const splitAge = reduced ? 180 : elapsed - activePulse.trunkDuration;
+      if (splitAge >= 0 && splitAge <= 480) {
+        const splitProgress = splitAge / 480;
+        ctx.beginPath();
+        ctx.arc(split.x, split.y, 4 + splitProgress * 12, 0, Math.PI * 2);
+        ctx.lineWidth = dark ? 1.6 : 1.45;
+        ctx.strokeStyle = activePulse.hue === "agent"
+          ? (dark ? `rgba(170, 112, 255, ${0.52 * (1 - splitProgress)})` : `rgba(102, 42, 220, ${0.58 * (1 - splitProgress)})`)
+          : (dark ? `rgba(124, 184, 255, ${0.52 * (1 - splitProgress)})` : `rgba(0, 88, 216, ${0.6 * (1 - splitProgress)})`);
         ctx.stroke();
       }
     }
