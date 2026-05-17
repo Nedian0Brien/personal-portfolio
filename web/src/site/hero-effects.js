@@ -465,13 +465,22 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
 
 export function initHeroParallax() {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (reduced) return;
-
   const hero = document.querySelector(".hero");
   if (!hero) return;
 
   const intro = hero.querySelector(".hero__intro");
   const scrollCue = hero.querySelector(".hero__scroll-cue");
+
+  if (scrollCue) {
+    scrollCue.addEventListener("click", (event) => {
+      const target = document.getElementById("hero-details");
+      if (!target) return;
+      event.preventDefault();
+      target.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+    });
+  }
+
+  if (reduced) return;
 
   let ticking = false;
   function update() {

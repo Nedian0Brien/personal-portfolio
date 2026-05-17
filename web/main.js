@@ -9,6 +9,16 @@ import { initProjectWheelSnap } from "./src/site/project-wheel-snap.js";
 import { initScrollReveal } from "./src/site/reveal.js";
 import { initThemeToggle } from "./src/site/theme.js";
 
+if ("scrollRestoration" in history) {
+  history.scrollRestoration = "manual";
+}
+
+if (window.location.hash === "#hero-details") {
+  history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "auto" }));
+}
+
 initThemeToggle();
 initScrollReveal();
 initSectionNavSpy({
