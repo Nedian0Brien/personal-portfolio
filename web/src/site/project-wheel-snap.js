@@ -8,11 +8,15 @@ export function initProjectWheelSnap() {
 
   const TOPNAV = 64;
   const DURATION = 700;
-  const MOMENTUM_QUIET_MS = 360;
+  const GESTURE_GAP_MS = 140;
+  const REACCELERATION_FACTOR = 1.8;
+  const REACCELERATION_MIN_DELTA = 24;
   const SETTLE_TOLERANCE = 36;
   let busy = false;
-  let lastWheelAt = 0;
-  let releaseTimer = 0;
+  let lastWheelAt = null;
+  let lastWheelDelta = 0;
+  let gestureDir = 0;
+  let gestureConsumed = false;
 
   const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
   const snapCenterY = () => TOPNAV + (window.innerHeight - TOPNAV) / 2;
@@ -50,16 +54,6 @@ export function initProjectWheelSnap() {
     html.style.scrollBehavior = "auto";
     const startedAt = performance.now();
     busy = true;
-    window.clearTimeout(releaseTimer);
-
-    function releaseWhenWheelSettled() {
-      const quietFor = performance.now() - lastWheelAt;
-      if (quietFor >= MOMENTUM_QUIET_MS) {
-        busy = false;
-        return;
-      }
-      releaseTimer = window.setTimeout(releaseWhenWheelSettled, MOMENTUM_QUIET_MS - quietFor);
-    }
 
     function tick(now) {
       const progress = Math.min((now - startedAt) / DURATION, 1);
@@ -70,7 +64,7 @@ export function initProjectWheelSnap() {
       } else {
         html.style.scrollSnapType = prevSnap;
         html.style.scrollBehavior = prevBehavior;
-        releaseWhenWheelSettled();
+        busy = false;
       }
     }
 
@@ -119,23 +113,42 @@ export function initProjectWheelSnap() {
     return null;
   }
 
+  function updateGesture(now, dir, delta) {
+    const gap = lastWheelAt === null ? Infinity : now - lastWheelAt;
+    const acceleratedAgain =
+      gestureConsumed && delta >= REACCELERATION_MIN_DELTA && delta > lastWheelDelta * REACCELERATION_FACTOR;
+    const isNewGesture = lastWheelAt === null || gap > GESTURE_GAP_MS || dir !== gestureDir || acceleratedAgain;
+
+    if (isNewGesture) {
+      gestureConsumed = false;
+      gestureDir = dir;
+    }
+
+    lastWheelAt = now;
+    lastWheelDelta = delta;
+  }
+
   window.addEventListener(
     "wheel",
     (event) => {
       if (!inProjectArea()) return;
-      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+      const deltaY = Math.abs(event.deltaY);
+      if (deltaY <= Math.abs(event.deltaX)) return;
 
-      lastWheelAt = performance.now();
-      if (busy) {
+      const dir = event.deltaY > 0 ? 1 : -1;
+      updateGesture(performance.now(), dir, deltaY);
+
+      if (busy || gestureConsumed) {
+        gestureConsumed = true;
         event.preventDefault();
         return;
       }
 
-      const dir = event.deltaY > 0 ? 1 : -1;
       const target = wheelTarget(dir);
       if (!target) return;
 
       event.preventDefault();
+      gestureConsumed = true;
       tweenTo(target.y);
     },
     { passive: false },
