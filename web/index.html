@@ -7,6 +7,21 @@
 <title>박민재 · Minjae Park — Portfolio</title>
 <meta name="description" content="AI / NLP / RAG / LLM Agent 연구자 박민재의 포트폴리오. 프로젝트와 논문, 연구 아이디어를 하나의 그리드에서 브라우즈합니다." />
 
+<script>
+(function () {
+  var root = document.documentElement;
+  var ua = navigator.userAgent || "";
+  var platform = navigator.platform || "";
+  var maxTouchPoints = navigator.maxTouchPoints || 0;
+  var isiPadOS = platform === "MacIntel" && maxTouchPoints > 1;
+  var isTablet = isiPadOS || /iPad|Tablet|PlayBook|Silk|Kindle|Nexus 7|Nexus 10|SM-T|Tab/i.test(ua) || (/Android/i.test(ua) && !/Mobile/i.test(ua));
+  var isMobile = !isTablet && /Mobi|iPhone|iPod|Android.*Mobile|Windows Phone/i.test(ua);
+  root.classList.toggle("device-mobile", isMobile);
+  root.classList.toggle("device-tablet", isTablet);
+  root.classList.toggle("device-mobile-or-tablet", isMobile || isTablet);
+})();
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
