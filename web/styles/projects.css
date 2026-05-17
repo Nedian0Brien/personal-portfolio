@@ -811,7 +811,7 @@
 
 @media (min-width: 721px) and (max-width: 980px) {
   #project {
-    --proj-wipe-safe-bottom: clamp(80px, 10svh, 122px);
+    --proj-wipe-safe-bottom: calc(clamp(80px, 10svh, 122px) + var(--safe-area-bottom));
   }
   .proj-scene {
     padding-left: var(--gutter);
@@ -853,6 +853,15 @@
     padding-left: 0;
     padding-right: 0;
     overflow-x: clip;
+    --proj-slide-height: 100svh;
+    --proj-bg-bleed-top: var(--safe-area-top);
+    --proj-bg-bleed-bottom: max(var(--safe-area-bottom), 48px);
+    --proj-bg-height: 100svh;
+  }
+  @supports (height: 100lvh) {
+    #project {
+      --proj-bg-height: 100lvh;
+    }
   }
   #project > .sec__row {
     max-width: var(--container);
@@ -872,7 +881,8 @@
       --proj-bg-07;
   }
   .proj-bg-stage__sticky {
-    height: 100svh;
+    top: calc(-1 * var(--proj-bg-bleed-top));
+    height: calc(var(--proj-bg-height) + var(--proj-bg-bleed-top) + var(--proj-bg-bleed-bottom));
   }
   .proj-bg-layer {
     transition: none;
@@ -880,9 +890,9 @@
   .proj-scene,
   .proj-card,
   .proj-card--stacked {
-    height: 100svh;
-    min-height: 100svh;
-    max-height: 100svh;
+    height: var(--proj-slide-height);
+    min-height: var(--proj-slide-height);
+    max-height: var(--proj-slide-height);
   }
   #proj-02 {
     view-timeline-name: --proj-bg-02;
@@ -955,7 +965,7 @@
 
 @media (max-width: 720px) {
   #project {
-    --proj-wipe-safe-bottom: clamp(92px, 12svh, 136px);
+    --proj-wipe-safe-bottom: calc(clamp(92px, 12svh, 136px) + var(--safe-area-bottom));
   }
   .proj-scene {
     padding: 0 var(--gutter);
@@ -967,7 +977,7 @@
     row-gap: clamp(10px, 1.8svh, 16px);
     height: 100%;
     min-height: 0 !important;
-    max-height: 100svh;
+    max-height: var(--proj-slide-height);
     padding: clamp(42px, 7svh, 64px) 0 var(--proj-wipe-safe-bottom);
   }
   .proj-card > .proj-card__heading {
@@ -1105,7 +1115,7 @@
 
 @media (max-width: 380px), (max-height: 700px) {
   #project {
-    --proj-wipe-safe-bottom: clamp(68px, 10svh, 92px);
+    --proj-wipe-safe-bottom: calc(clamp(68px, 10svh, 92px) + var(--safe-area-bottom));
   }
   .proj-card,
   .proj-card--stacked {
