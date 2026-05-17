@@ -1,0 +1,255 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-17T21:13:01+09:00",
+  "title": "Design System: Minjae Park Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "surface-base": {
+        "role": "neutral",
+        "displayName": "Surface Base",
+        "canonical": "hsl(0 0% 100%)",
+        "tonalRamp": ["#141414", "#262626", "#404040", "#707070", "#ADADAD", "#DBDBDB", "#F5F5F5", "#FFFFFF"]
+      },
+      "surface-muted": {
+        "role": "neutral",
+        "displayName": "Surface Muted",
+        "canonical": "hsl(0 0% 96%)",
+        "tonalRamp": ["#141414", "#262626", "#404040", "#707070", "#ADADAD", "#DBDBDB", "#F5F5F5", "#FFFFFF"]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "hsl(0 0% 8%)",
+        "tonalRamp": ["#141414", "#262626", "#404040", "#707070", "#ADADAD", "#DBDBDB", "#F5F5F5", "#FFFFFF"]
+      },
+      "research-blue": {
+        "role": "primary",
+        "displayName": "Research Blue",
+        "canonical": "hsl(216 100% 52%)",
+        "tonalRamp": ["#001A42", "#00337F", "#005AE0", "#0A6CFF", "#297EFF", "#7AAFFF", "#D6E7FF", "#EDF5FF"]
+      },
+      "signal-red": {
+        "role": "secondary",
+        "displayName": "Signal Red",
+        "canonical": "hsl(18 100% 44%)",
+        "tonalRamp": ["#3D1200", "#7A2500", "#E04300", "#FF540A", "#FF8A52", "#FFC0A3", "#FFE2D6", "#FFF2ED"]
+      },
+      "evidence-green": {
+        "role": "secondary",
+        "displayName": "Evidence Green",
+        "canonical": "hsl(150 70% 32%)",
+        "tonalRamp": ["#062414", "#0D4A2B", "#188B52", "#1DA561", "#55C990", "#9BE0BD", "#DEF7EB", "#F0FCF6"]
+      },
+      "study-yellow": {
+        "role": "tertiary",
+        "displayName": "Study Yellow",
+        "canonical": "hsl(42 100% 42%)",
+        "tonalRamp": ["#3B2900", "#735100", "#D69600", "#FFB60A", "#FFD166", "#FFE2A3", "#FFF0CC", "#FFF8E8"]
+      },
+      "agent-purple": {
+        "role": "secondary",
+        "displayName": "Agent Purple",
+        "canonical": "hsl(262 70% 50%)",
+        "tonalRamp": ["#190A38", "#32116E", "#6826D9", "#8049DF", "#A278EA", "#C8AEF5", "#ECE0FF", "#F7F2FF"]
+      },
+      "prism-pink": {
+        "role": "tertiary",
+        "displayName": "Prism Pink",
+        "canonical": "hsl(330 85% 62%)",
+        "tonalRamp": ["#3D0822", "#7A1045", "#C92978", "#F04C9E", "#F57AB8", "#FAB3D6", "#FDE3F0", "#FFF3F9"]
+      },
+      "retrieval-teal": {
+        "role": "tertiary",
+        "displayName": "Retrieval Teal",
+        "canonical": "hsl(180 70% 42%)",
+        "tonalRamp": ["#063333", "#0D6666", "#169999", "#20B6B6", "#5BD0D0", "#9FE5E5", "#D8F6F6", "#F0FCFC"]
+      },
+      "system-orange": {
+        "role": "tertiary",
+        "displayName": "System Orange",
+        "canonical": "hsl(28 100% 54%)",
+        "tonalRamp": ["#3D1B00", "#7A3600", "#CC5A00", "#FF8214", "#FFA65C", "#FFD0A8", "#FFE8D4", "#FFF5ED"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero headlines and the one dominant claim per fold."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Large section and contact claims that need authority without hero scale."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Section titles, card titles, and paper-detail subheads."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Korean and English explanatory copy with restrained density."
+      },
+      "label": {
+        "displayName": "Evidence Label",
+        "purpose": "Dates, roles, counters, tags, and metadata, never generic decoration."
+      }
+    },
+    "shadows": [
+      {
+        "name": "soft-surface-shadow",
+        "value": "0 1px 2px rgba(0,0,0,0.04), 0 4px 14px -6px rgba(0,0,0,0.08)",
+        "purpose": "Low ambient separation for light-theme surfaces."
+      },
+      {
+        "name": "feature-lift",
+        "value": "0 12px 40px -12px rgba(0,0,0,0.18)",
+        "purpose": "Hover lift for media cards and elevated content blocks."
+      },
+      {
+        "name": "project-active-lift",
+        "value": "0 36px 90px rgba(0,0,0,.18), 0 8px 16px rgba(0,0,0,.08)",
+        "purpose": "Active project scene emphasis."
+      },
+      {
+        "name": "device-mockup-shadow",
+        "value": "0 30px 50px -10px rgba(0,0,0,.45), inset 0 0 0 1.5px rgba(255,255,255,.08)",
+        "purpose": "Phone and product preview realism."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-standard",
+        "value": "cubic-bezier(.2,.7,.2,1)",
+        "purpose": "Default state transition."
+      },
+      {
+        "name": "ease-apple",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Reveal, project card activation, and choreographed page motion."
+      },
+      {
+        "name": "duration-fast",
+        "value": "120ms",
+        "purpose": "Buttons, nav, and chip hover states."
+      },
+      {
+        "name": "duration-reveal",
+        "value": "800ms",
+        "purpose": "Scroll reveal and staged entrance effects."
+      }
+    ],
+    "breakpoints": [
+      { "name": "compact-nav", "value": "900px" },
+      { "name": "tablet", "value": "820px" },
+      { "name": "mobile", "value": "520px" },
+      { "name": "small-mobile", "value": "380px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Compact inverse command used for contact and primary paper actions.",
+      "html": "<button class=\"ds-btn-primary\">Read paper</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 36px; padding: 0 14px; border: 1px solid transparent; border-radius: var(--r-4, 8px); background: var(--bg-inverse, #141414); color: var(--text-inverse, #FFFFFF); font-family: var(--font-sans, Inter, sans-serif); font-size: 14px; font-weight: 500; white-space: nowrap; cursor: pointer; transition: filter var(--dur-1, 120ms) var(--ease, cubic-bezier(.2,.7,.2,1)); } .ds-btn-primary:hover { filter: brightness(1.15); } .ds-btn-primary:focus-visible { outline: 2px solid var(--border-focus, #141414); outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Peer action button for secondary destinations such as research details.",
+      "html": "<button class=\"ds-btn-secondary\">Research detail</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 36px; padding: 0 14px; border: 1px solid var(--border-secondary, #DBDBDB); border-radius: var(--r-4, 8px); background: transparent; color: var(--text-primary, #141414); font-family: var(--font-sans, Inter, sans-serif); font-size: 14px; font-weight: 500; white-space: nowrap; cursor: pointer; transition: background var(--dur-1, 120ms) var(--ease, cubic-bezier(.2,.7,.2,1)); } .ds-btn-secondary:hover { background: var(--bg-secondary, #F5F5F5); } .ds-btn-secondary:focus-visible { outline: 2px solid var(--border-focus, #141414); outline-offset: 2px; }"
+    },
+    {
+      "name": "Evidence Badge",
+      "kind": "chip",
+      "refersTo": "badge-brand",
+      "description": "Small mono metadata chip for research topics, states, and venues.",
+      "html": "<span class=\"ds-badge ds-badge-brand\">AI · NLP</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; gap: 4px; height: 20px; padding: 0 8px; border-radius: var(--r-3, 6px); font-family: var(--font-mono, monospace); font-size: 10.5px; letter-spacing: 0.04em; text-transform: uppercase; background: #EDEDED; color: #404040; border: 1px solid #DBDBDB; } .ds-badge-brand { background: #D6E7FF; color: #005AE0; border-color: rgba(0,90,224,.25); }"
+    },
+    {
+      "name": "Hero Fact Card",
+      "kind": "card",
+      "refersTo": "evidence-card",
+      "description": "Compact evidence block for GPA, research role, service, and publication proof.",
+      "html": "<div class=\"ds-fact\"><div class=\"ds-fact-k\">Publication</div><div class=\"ds-fact-v\">JMIR MI 2025</div><div class=\"ds-fact-s\">Co-first author · SCI Q2</div></div>",
+      "css": ".ds-fact { padding: 22px; border: 1px solid var(--border-primary, #EDEDED); border-radius: var(--r-6, 16px); background: var(--bg-secondary, #F5F5F5); color: var(--text-primary, #141414); } .ds-fact-k { font-family: var(--font-mono, monospace); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary, #878787); } .ds-fact-v { margin-top: 4px; font-family: var(--font-display, Inter, sans-serif); font-size: 20px; font-weight: 700; letter-spacing: -0.015em; } .ds-fact-s { margin-top: 2px; font-size: 13px; color: var(--text-secondary, #707070); }"
+    },
+    {
+      "name": "Top Navigation",
+      "kind": "nav",
+      "refersTo": "navigation",
+      "description": "Sticky translucent navigation with compact identity mark and quiet section links.",
+      "html": "<nav class=\"ds-topnav\"><a class=\"ds-logo\"><span class=\"ds-logo-mark\">박</span><span>박민재 · Minjae Park</span></a><a class=\"ds-link\">Research</a><a class=\"ds-link\">Project</a></nav>",
+      "css": ".ds-topnav { display: flex; align-items: center; gap: 14px; height: 56px; padding: 0 var(--gutter, 24px); background: var(--bg-overlay, rgba(255,255,255,.78)); border-bottom: 1px solid var(--border-primary, #EDEDED); backdrop-filter: saturate(160%) blur(14px); } .ds-logo { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-display, Inter, sans-serif); font-size: 16px; font-weight: 700; letter-spacing: -0.015em; color: var(--text-primary, #141414); white-space: nowrap; } .ds-logo-mark { width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; border-radius: 7px; background: var(--bg-inverse, #141414); color: var(--text-inverse, #FFFFFF); font-size: 12px; font-weight: 800; } .ds-link { padding: 6px 10px; border-radius: var(--r-4, 8px); font-size: 14px; color: var(--text-secondary, #707070); font-weight: 500; } .ds-link:hover { background: var(--bg-secondary, #F5F5F5); color: var(--text-primary, #141414); }"
+    },
+    {
+      "name": "Project Scene Card",
+      "kind": "custom",
+      "refersTo": "project-scene-card",
+      "description": "Immersive full-screen project evidence world with a phrase, stage, and identity bar.",
+      "html": "<article class=\"ds-project-card\"><div class=\"ds-project-meta\">01 / 07 · Agent UX</div><h3 class=\"ds-project-phrase\">언제 어디서든, 에이전트와 함께하는 개발</h3><div class=\"ds-project-stage\">Preview stage</div></article>",
+      "css": ".ds-project-card { position: relative; display: grid; gap: 24px; min-height: 420px; padding: 52px 52px 38px; border-radius: var(--r-8, 24px); overflow: hidden; color: #FFFFFF; background: radial-gradient(120% 120% at 0% 0%, #297EFF 0%, #005AE0 60%, #003070 100%); box-shadow: 0 2px 4px rgba(0,0,0,.05), 0 18px 40px rgba(0,0,0,.08); } .ds-project-meta { font-family: var(--font-mono, monospace); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; opacity: .85; } .ds-project-phrase { margin: 0; max-width: 14ch; font-family: var(--font-display, Inter, sans-serif); font-size: clamp(32px, 5vw, 48px); line-height: 1.12; font-weight: 800; letter-spacing: 0; } .ds-project-stage { display: grid; place-items: center; min-height: 180px; border: 1px solid rgba(255,255,255,.26); border-radius: 18px; background: rgba(255,255,255,.14); font-family: var(--font-mono, monospace); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "A Research Dossier With Product Clarity",
+    "overview": "This system should feel like a carefully prepared research dossier that has learned the scanning discipline of a product interface. The primary reader is a professor or PI, so the visual order must make evidence visible before personality: publication, role, metric, project, research direction, next question.\n\nThe surface is quiet, but it is not timid. Large compressed display type, precise mono labels, strict evidence blocks, and restrained theme switching create a portfolio that looks prepared rather than decorated. The project section is allowed to become more vivid because it is showing built systems, but the research narrative must remain legible and controlled.",
+    "keyCharacteristics": [
+      "Evidence-first hierarchy: metrics, roles, venues, and outputs appear before long explanation.",
+      "Product-like scanning: sections, badges, cards, and carousels are tuned for fast comparison.",
+      "Research restraint: the default field is neutral and typographic; color appears as a semantic tag or project world.",
+      "Motion as proof of care: reveal and carousel motion supports orientation, never spectacle."
+    ],
+    "rules": [
+      {
+        "name": "The Evidence Color Rule",
+        "body": "Color must identify a research domain, project family, or state. If the color does not answer \"what kind of evidence is this?\", remove it.",
+        "section": "colors"
+      },
+      {
+        "name": "The Neutral First Rule",
+        "body": "Research and experience sections start from neutral surfaces. Saturated color belongs to tags, links, covers, and project cards, not to generic section backgrounds.",
+        "section": "colors"
+      },
+      {
+        "name": "The No AI Slop Rule",
+        "body": "Do not add neon-blue, purple-gradient, or decorative AI glow treatments. The existing gradients are tied to project preview worlds and must stay there.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Claim Per Fold Rule",
+        "body": "Display type is for one claim, not for every section. If every heading shouts, the professor cannot find the evidence.",
+        "section": "typography"
+      },
+      {
+        "name": "The Mono Is Evidence Rule",
+        "body": "Mono labels must mark metadata, counts, dates, roles, or navigation. Do not use mono as a generic \"technical\" costume.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Until Proven Rule",
+        "body": "A surface earns shadow only through interaction, active scene state, or device realism. Default content cards should rely on border, rhythm, and type.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do make publication, role, metric, and research direction visible before long explanation.",
+      "Do keep research sections neutral-first and use color to classify evidence.",
+      "Do preserve the compact button, badge, and fact-card dimensions. They make the page feel scannable.",
+      "Do use project-world color only when the section is showing a built system or visual artifact.",
+      "Do honor reduced motion. Reveal, parallax, carousel, and PDF preview motion must degrade without hiding content.",
+      "Do keep professor/PI scanning in mind: each section should answer what was done, why it matters, and what it proves."
+    ],
+    "donts": [
+      "Don't make it feel 과하게 스타트업 랜딩처럼 보이는 것. Avoid salesy hero metrics, generic CTA stacks, and investor-style product hype.",
+      "Don't make it feel 너무 학생 포트폴리오 같은 느낌. Avoid skill-list filler, assignment-card grids, and shallow \"about me\" framing.",
+      "Don't make it feel AI Slop 처럼 보이는 것. Avoid decorative AI icons, neon gradients, glass panels as decoration, and generic blue-purple glow.",
+      "Don't make it too 난잡한 구성 및 장황한 내용. If a visitor cannot tell what was done in five seconds, cut copy or strengthen the evidence hierarchy.",
+      "Don't use colored side-stripe borders, gradient text, or decorative glassmorphism. These are banned patterns for this system.",
+      "Don't repeat identical icon-card grids. This portfolio's rhythm comes from evidence cards, research details, and project scenes, not template feature cards."
+    ]
+  }
+}
