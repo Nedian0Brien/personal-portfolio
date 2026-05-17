@@ -7,29 +7,46 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const root = document.documentElement;
   const anchors = [
-    { x: 0.06, y: 0.34 },
-    { x: 0.14, y: 0.68 },
-    { x: 0.22, y: 0.18 },
-    { x: 0.32, y: 0.42 },
-    { x: 0.41, y: 0.72 },
-    { x: 0.5, y: 0.26 },
-    { x: 0.58, y: 0.58 },
-    { x: 0.69, y: 0.2 },
-    { x: 0.78, y: 0.48 },
-    { x: 0.87, y: 0.75 },
-    { x: 0.94, y: 0.31 },
-    { x: 0.73, y: 0.82 },
+    { x: 0.04, y: 0.36, terminal: true },
+    { x: 0.11, y: 0.68, terminal: true },
+    { x: 0.2, y: 0.16, terminal: true },
+    { x: 0.28, y: 0.4 },
+    { x: 0.34, y: 0.62 },
+    { x: 0.43, y: 0.25 },
+    { x: 0.5, y: 0.5 },
+    { x: 0.56, y: 0.73 },
+    { x: 0.64, y: 0.2, terminal: true },
+    { x: 0.7, y: 0.43 },
+    { x: 0.78, y: 0.6 },
+    { x: 0.86, y: 0.18, terminal: true },
+    { x: 0.95, y: 0.33, terminal: true },
+    { x: 0.91, y: 0.76, terminal: true },
+    { x: 0.75, y: 0.84, terminal: true },
+    { x: 0.52, y: 0.86, terminal: true },
+    { x: 0.23, y: 0.78, terminal: true },
+    { x: 0.16, y: 0.48 },
+    { x: 0.66, y: 0.64 },
   ];
   const edges = [
-    [0, 2], [0, 3], [1, 3], [1, 4], [2, 5], [3, 5], [3, 6],
-    [4, 6], [4, 11], [5, 7], [5, 8], [6, 8], [7, 10], [8, 10],
-    [8, 9], [9, 11],
+    [0, 2], [0, 3], [0, 17], [1, 4], [1, 16], [1, 17],
+    [2, 3], [2, 5], [3, 5], [3, 6], [3, 17], [4, 6],
+    [4, 7], [4, 16], [5, 6], [5, 8], [5, 9], [6, 7],
+    [6, 9], [6, 18], [7, 10], [7, 15], [7, 18], [8, 9],
+    [8, 11], [9, 11], [9, 12], [9, 18], [10, 13], [10, 14],
+    [10, 18], [11, 12], [12, 13], [13, 14], [14, 15],
+    [14, 18], [15, 16], [16, 17],
   ];
-  const paths = [
-    [0, 3, 5, 8, 10],
-    [2, 5, 6, 4, 11],
-    [1, 3, 6, 8, 9],
-  ];
+  const adjacency = anchors.map(() => []);
+  edges.forEach(([from, to]) => {
+    adjacency[from].push(to);
+    adjacency[to].push(from);
+  });
+  const edgeNodeIndexes = anchors
+    .map((node, index) => ({ index, node }))
+    .filter(({ node }) => node.terminal)
+    .map(({ index }) => index);
+  const heartbeatPeriodMs = 1800;
+  const heartbeatFlowMs = 680;
 
   let width = 0;
   let height = 0;
@@ -37,8 +54,70 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
   let rafId = 0;
   let visible = true;
   let pointer = { x: 0, y: 0, active: false };
+  let activePulse = null;
 
   const isDark = () => root.getAttribute("data-theme") === "dark";
+
+  function shuffledIndexes(items) {
+    const copy = items.slice();
+    for (let index = copy.length - 1; index > 0; index -= 1) {
+      const swapIndex = Math.floor(Math.random() * (index + 1));
+      [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
+    }
+    return copy;
+  }
+
+  function findRandomPath(start, end) {
+    const queue = [[start]];
+    const visited = new Set([start]);
+
+    while (queue.length) {
+      const path = queue.shift();
+      const current = path[path.length - 1];
+      if (current === end) return path;
+
+      shuffledIndexes(adjacency[current]).forEach((next) => {
+        if (visited.has(next)) return;
+        visited.add(next);
+        queue.push([...path, next]);
+      });
+    }
+
+    return [start, end];
+  }
+
+  function chooseRandomPulseBranches() {
+    const start = edgeNodeIndexes[Math.floor(Math.random() * edgeNodeIndexes.length)];
+    const targets = shuffledIndexes(edgeNodeIndexes.filter((index) => index !== start));
+    const maxBranches = Math.min(4, targets.length);
+    const branchCount = Math.min(maxBranches, 2 + Math.floor(Math.random() * Math.max(1, maxBranches - 1)));
+    const branches = targets.slice(0, branchCount).map((end, index) => {
+      const path = findRandomPath(start, end);
+      const duration = heartbeatFlowMs + Math.min(180, path.length * 28);
+      return {
+        delay: index * 78 + Math.random() * 42,
+        duration,
+        path,
+        trail: 0.22 + Math.random() * 0.08,
+      };
+    });
+
+    return { branches, start };
+  }
+
+  function resetPulse(time, { immediate = false } = {}) {
+    const nextStartTime = immediate
+      ? time - 90
+      : Math.max(time, activePulse.startTime + heartbeatPeriodMs);
+    const burst = chooseRandomPulseBranches();
+    activePulse = {
+      branches: burst.branches,
+      hue: Math.random() < 0.36 ? "agent" : "retrieval",
+      origin: burst.start,
+      startTime: nextStartTime,
+      totalDuration: Math.max(...burst.branches.map((branch) => branch.delay + branch.duration)),
+    };
+  }
 
   function resize() {
     const rect = hero.getBoundingClientRect();
@@ -103,6 +182,16 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
     return { x: last.x, y: last.y, from: last };
   }
 
+  function samplePath(nodes, path, fromProgress, toProgress) {
+    const points = [];
+    const steps = Math.max(5, Math.ceil((toProgress - fromProgress) * 34));
+    for (let index = 0; index <= steps; index += 1) {
+      const progress = fromProgress + (toProgress - fromProgress) * (index / steps);
+      points.push(pointOnPath(nodes, path, progress));
+    }
+    return points;
+  }
+
   function draw(time) {
     const dark = isDark();
     const nodes = projectedNodes(time);
@@ -119,42 +208,84 @@ export function initHeroTraceField({ canvasSelector = ".hero__trace-field" } = {
       ctx.beginPath();
       ctx.moveTo(from.x, from.y);
       ctx.lineTo(to.x, to.y);
-      ctx.lineWidth = index % 3 === 0 ? 1.2 : 0.8;
-      ctx.strokeStyle = dark ? "rgba(142, 184, 255, 0.18)" : "rgba(0, 87, 190, 0.13)";
+      ctx.lineWidth = index % 3 === 0 ? 1.35 : 0.95;
+      ctx.strokeStyle = dark ? "rgba(142, 184, 255, 0.23)" : "rgba(0, 68, 164, 0.22)";
       ctx.setLineDash(index % 4 === 0 ? [5, 12] : []);
       ctx.stroke();
     });
     ctx.setLineDash([]);
 
-    paths.forEach((path, index) => {
-      const progress = reduced ? 0.58 : (time * 0.0001 + index * 0.29) % 1;
-      const point = pointOnPath(nodes, path, progress);
-      const from = point.from;
-      const accent = index === 1
-        ? (dark ? "rgba(150, 92, 255, 0.62)" : "rgba(102, 45, 210, 0.4)")
-        : (dark ? "rgba(112, 166, 255, 0.62)" : "rgba(0, 98, 220, 0.42)");
+    if (!activePulse) resetPulse(time, { immediate: true });
+    if (!reduced && time >= activePulse.startTime + activePulse.totalDuration) {
+      resetPulse(time);
+    }
 
-      ctx.beginPath();
-      ctx.moveTo(from.x, from.y);
-      ctx.lineTo(point.x, point.y);
-      ctx.lineWidth = 1.45;
-      ctx.strokeStyle = accent;
-      ctx.stroke();
+    if (reduced || time >= activePulse.startTime) {
+      const origin = nodes[activePulse.origin];
+      const accent = activePulse.hue === "agent"
+        ? (dark ? "rgba(170, 112, 255, 0.88)" : "rgba(102, 42, 220, 0.86)")
+        : (dark ? "rgba(124, 184, 255, 0.9)" : "rgba(0, 88, 216, 0.88)");
+      const glow = activePulse.hue === "agent"
+        ? (dark ? "rgba(170, 112, 255, 0.4)" : "rgba(102, 42, 220, 0.3)")
+        : (dark ? "rgba(124, 184, 255, 0.4)" : "rgba(0, 88, 216, 0.32)");
 
-      ctx.beginPath();
-      ctx.arc(point.x, point.y, dark ? 3.2 : 2.8, 0, Math.PI * 2);
-      ctx.fillStyle = accent;
-      ctx.shadowBlur = dark ? 18 : 10;
-      ctx.shadowColor = accent;
-      ctx.fill();
-      ctx.shadowBlur = 0;
-    });
+      activePulse.branches.forEach((branch) => {
+        const branchTime = reduced
+          ? branch.duration * 0.68
+          : time - activePulse.startTime - branch.delay;
+        if (branchTime < 0 || branchTime > branch.duration) return;
+
+        const rawProgress = Math.min(1, Math.max(0, branchTime / branch.duration));
+        const progress = 1 - Math.pow(1 - rawProgress, 2.35);
+        const trailStart = Math.max(0, progress - branch.trail);
+        const trail = samplePath(nodes, branch.path, trailStart, progress);
+        const head = trail[trail.length - 1];
+        const tail = trail[0];
+
+        const gradient = ctx.createLinearGradient(tail.x, tail.y, head.x, head.y);
+        gradient.addColorStop(0, dark ? "rgba(255, 255, 255, 0)" : "rgba(255, 255, 255, 0)");
+        gradient.addColorStop(0.42, glow);
+        gradient.addColorStop(1, accent);
+
+        ctx.beginPath();
+        trail.forEach((point, index) => {
+          if (index === 0) ctx.moveTo(point.x, point.y);
+          else ctx.lineTo(point.x, point.y);
+        });
+        ctx.lineWidth = dark ? 2.45 : 2.35;
+        ctx.strokeStyle = gradient;
+        ctx.shadowBlur = dark ? 20 : 14;
+        ctx.shadowColor = accent;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        ctx.beginPath();
+        ctx.arc(head.x, head.y, dark ? 4.2 : 3.8, 0, Math.PI * 2);
+        ctx.fillStyle = accent;
+        ctx.shadowBlur = dark ? 28 : 18;
+        ctx.shadowColor = accent;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+
+      const originAge = reduced ? 260 : time - activePulse.startTime;
+      if (originAge >= 0 && originAge <= 420) {
+        const originProgress = originAge / 420;
+        ctx.beginPath();
+        ctx.arc(origin.x, origin.y, 4 + originProgress * 10, 0, Math.PI * 2);
+        ctx.lineWidth = dark ? 1.4 : 1.25;
+        ctx.strokeStyle = activePulse.hue === "agent"
+          ? (dark ? `rgba(170, 112, 255, ${0.42 * (1 - originProgress)})` : `rgba(102, 42, 220, ${0.5 * (1 - originProgress)})`)
+          : (dark ? `rgba(124, 184, 255, ${0.42 * (1 - originProgress)})` : `rgba(0, 88, 216, ${0.52 * (1 - originProgress)})`);
+        ctx.stroke();
+      }
+    }
 
     nodes.forEach((node, index) => {
       const emphasized = index % 4 === 0;
       ctx.beginPath();
       ctx.arc(node.x, node.y, emphasized ? 2.3 : 1.55, 0, Math.PI * 2);
-      ctx.fillStyle = dark ? "rgba(236, 244, 255, 0.5)" : "rgba(18, 24, 38, 0.32)";
+      ctx.fillStyle = dark ? "rgba(236, 244, 255, 0.58)" : "rgba(14, 28, 56, 0.52)";
       ctx.fill();
     });
 
