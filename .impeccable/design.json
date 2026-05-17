@@ -191,7 +191,7 @@
       "refersTo": "project-scene-card",
       "description": "phrase, stage, identity bar를 결합한 immersive full-screen project evidence world.",
       "html": "<article class=\"ds-project-card\"><div class=\"ds-project-meta\">01 / 07 · Agent UX</div><h3 class=\"ds-project-phrase\">언제 어디서든, 에이전트와 함께하는 개발</h3><div class=\"ds-project-stage\">Preview stage</div></article>",
-      "css": ".ds-project-card { position: relative; display: grid; gap: 24px; min-height: 420px; padding: 52px 52px 38px; border-radius: var(--r-8, 24px); overflow: hidden; color: #FFFFFF; background: radial-gradient(120% 120% at 0% 0%, #297EFF 0%, #005AE0 60%, #003070 100%); box-shadow: 0 2px 4px rgba(0,0,0,.05), 0 18px 40px rgba(0,0,0,.08); } .ds-project-meta { font-family: var(--font-mono, monospace); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; opacity: .85; } .ds-project-phrase { margin: 0; max-width: 14ch; font-family: var(--font-display, Inter, sans-serif); font-size: clamp(32px, 5vw, 48px); line-height: 1.12; font-weight: 800; letter-spacing: 0; } .ds-project-stage { display: grid; place-items: center; min-height: 180px; border: 1px solid rgba(255,255,255,.26); border-radius: 18px; background: rgba(255,255,255,.14); font-family: var(--font-mono, monospace); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }"
+      "css": ".ds-project-card { position: relative; display: grid; gap: 24px; min-height: 420px; padding: 52px 52px 38px; border-radius: var(--r-8, 24px); overflow: hidden; color: #FFFFFF; background: radial-gradient(120% 120% at 0% 0%, #297EFF 0%, #005AE0 60%, #003070 100%); box-shadow: 0 2px 4px rgba(0,0,0,.05), 0 18px 40px rgba(0,0,0,.08); } .ds-project-meta { font-family: var(--font-mono, monospace); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; opacity: .85; } .ds-project-phrase { margin: 0; max-width: 14ch; font-family: var(--font-display, Inter, sans-serif); font-size: clamp(32px, 5vw, 48px); line-height: 1.12; font-weight: 800; letter-spacing: 0; } .ds-project-stage { display: grid; place-items: center; min-height: 180px; border: 1px solid rgba(255,255,255,.3); border-radius: 18px; background: rgba(255,255,255,.2); font-family: var(--font-mono, monospace); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }"
     }
   ],
   "narrative": {
@@ -216,7 +216,7 @@
       },
       {
         "name": "No AI Slop 규칙",
-        "body": "neon blue, purple gradient, 장식적 AI glow를 추가하지 않는다. 기존 gradient는 project preview world에 연결되어 있을 때만 허용된다.",
+        "body": "neon blue, 장식적 AI glow, 장식용 glass panel을 추가하지 않는다. 기존 gradient는 project preview world와 논문 상세 hero title의 `약물–부작용` 강조처럼 명확한 semantic emphasis에 연결될 때만 허용된다.",
         "section": "colors"
       },
       {
@@ -248,7 +248,7 @@
       "Don't 너무 학생 포트폴리오 같은 느낌으로 만들지 않는다. skill-list filler, assignment-card grid, 얕은 \"about me\" framing을 피한다.",
       "Don't AI Slop 처럼 보이게 만들지 않는다. decorative AI icon, neon gradient, 장식용 glass panel, generic blue-purple glow를 피한다.",
       "Don't 너무 난잡한 구성 및 장황한 내용으로 만들지 않는다. 방문자가 5초 안에 무엇을 했는지 알 수 없다면 copy를 줄이거나 evidence hierarchy를 강화한다.",
-      "Don't colored side-stripe border, gradient text, decorative glassmorphism을 사용하지 않는다. 이 시스템에서는 금지된 패턴이다.",
+      "Don't colored side-stripe border와 decorative glassmorphism을 사용하지 않는다. gradient text는 논문 상세 hero title의 좁은 semantic emphasis 예외를 제외하고 사용하지 않는다.",
       "Don't 동일한 icon-card grid를 반복하지 않는다. 이 포트폴리오의 rhythm은 evidence card, research detail, project scene에서 나온다."
     ]
   }

@@ -68,13 +68,15 @@ test("research detail page is an allowed edit target and loads the editor bootst
 
   const detailHtml = readFileSync(detailPath, "utf8");
   assert.match(detailHtml, /import\('\/src\/react-grab-dev\.js'\)/);
+  assert.match(detailHtml, /href="\/styles\/base\.css"/);
   assert.match(detailHtml, /href="\/research\/biomedical-bert-adr\.css"/);
   assert.match(detailHtml, /src="\/research\/biomedical-bert-adr\.js"/);
   assert.doesNotMatch(detailHtml, /<style>/);
 
   const detailCss = readFileSync(new URL("../web/research/biomedical-bert-adr.css", import.meta.url), "utf8");
   const detailJs = readFileSync(new URL("../web/research/biomedical-bert-adr.js", import.meta.url), "utf8");
-  assert.match(detailCss, /Reset \+ Tokens/);
+  assert.match(detailCss, /Shared reset and tokens come from \/styles\/base\.css/);
+  assert.doesNotMatch(detailCss, /:root\s*\{/);
   assert.match(detailJs, /Theme toggle/);
   assert.doesNotThrow(() => new Function(detailJs));
 });

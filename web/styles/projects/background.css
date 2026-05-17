@@ -156,7 +156,7 @@
   .proj-card .proj-phone { width: clamp(200px, 32vh, 280px); }
   .proj-card .proj-flow,
   .proj-card .proj-heatmap,
-  .proj-card .proj-slide-glass { max-width: 560px; }
+  .proj-card .proj-slide-panel { max-width: 560px; }
   .proj-card--stacked .aris-thread {
     max-height: 64vh;
     overflow: hidden;
@@ -278,7 +278,7 @@
   .proj-card .proj-phone { width: clamp(180px, 28vh, 240px); }
   .proj-card .proj-flow,
   .proj-card .proj-heatmap,
-  .proj-card .proj-slide-glass { max-width: 500px; }
+  .proj-card .proj-slide-panel { max-width: 500px; }
   .proj-card--stacked .aris-thread { max-height: 58vh; }
 }
 

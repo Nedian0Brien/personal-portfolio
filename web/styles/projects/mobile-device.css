@@ -77,20 +77,20 @@
   }
   .proj-flow__node .t { font-size: 12px; }
   .proj-flow__node .d { font-size: 9px; }
-  .proj-card .proj-slide-glass {
+  .proj-card .proj-slide-panel {
     max-width: 100%;
     border-radius: 14px;
     padding: 14px;
   }
-  .proj-slide-glass h5 {
+  .proj-slide-panel h5 {
     font-size: 9px;
     letter-spacing: 0.12em;
     margin-bottom: 10px;
   }
-  .proj-slide-glass .big {
+  .proj-slide-panel .big {
     font-size: 22px;
   }
-  .proj-slide-glass .line {
+  .proj-slide-panel .line {
     font-size: 10.5px;
   }
   .proj-card--stacked .aris-thread {

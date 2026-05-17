@@ -183,12 +183,10 @@
   width: 40px; height: 40px;
   display: grid; place-items: center;
   border-radius: 50%;
-  background: rgba(255,255,255,0.18);
-  border: 1px solid rgba(255,255,255,0.26);
+  background: rgba(255,255,255,0.28);
+  border: 1px solid rgba(255,255,255,0.34);
   color: #fff; font-size: 22px; font-weight: 300; line-height: 1;
   cursor: pointer; z-index: 5;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   transition: background .18s ease, transform .18s ease;
 }
 .proj-carousel__nav:hover { background: rgba(255,255,255,0.3); }
@@ -285,30 +283,28 @@
 .proj-card.theme-yellow .proj-card__cta { background: rgba(0,0,0,0.1); border-color: rgba(0,0,0,0.18); color: #1a1a1a; }
 .proj-card.theme-yellow .proj-card__cta:hover { background: rgba(0,0,0,0.18); }
 
-/* Generic glass content cards used inside slides */
-.proj-slide-glass {
-  background: rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.24);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+/* Solid evidence panels used inside project slides */
+.proj-slide-panel {
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.3);
   border-radius: 18px;
   padding: 22px;
   width: 100%; max-width: 460px;
   color: #fff;
 }
-.proj-card.theme-yellow .proj-slide-glass { background: rgba(255,255,255,0.55); border-color: rgba(0,0,0,0.14); color: #1a1a1a; }
-.proj-slide-glass h5 {
+.proj-card.theme-yellow .proj-slide-panel { background: rgba(255,255,255,0.64); border-color: rgba(0,0,0,0.14); color: #1a1a1a; }
+.proj-slide-panel h5 {
   font-family: var(--font-mono); font-size: 10.5px;
   letter-spacing: 0.18em; text-transform: uppercase;
   font-weight: 700; opacity: 0.85;
   margin: 0 0 14px;
 }
-.proj-slide-glass .big {
+.proj-slide-panel .big {
   font-family: var(--font-display); font-weight: 800;
   font-size: 30px; letter-spacing: -0.02em; line-height: 1.05;
   margin: 0;
 }
-.proj-slide-glass .line { font-family: var(--font-mono); font-size: 12px; line-height: 1.7; opacity: 0.85; }
+.proj-slide-panel .line { font-family: var(--font-mono); font-size: 12px; line-height: 1.7; opacity: 0.85; }
 
 /* Phone mock used in some slides */
 .proj-phone {
