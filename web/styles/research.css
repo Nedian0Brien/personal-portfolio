@@ -118,9 +118,9 @@
    ================================================================ */
 .idea-carousel {
   display: flex;
-  gap: 18px;
+  gap: 16px;
   margin: 6px calc(var(--gutter) * -1) 0;
-  padding: 4px var(--gutter) 18px;
+  padding: 2px var(--gutter) 14px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
@@ -138,141 +138,45 @@
   background: var(--border-secondary);
   border-radius: var(--r-full);
 }
-.idea-card {
-  position: relative;
-  flex: 0 0 min(520px, calc(100vw - var(--gutter) * 2));
-  display: grid;
-  grid-template-columns: 116px 1fr;
-  gap: 22px;
-  align-items: stretch;
-  min-height: 238px;
-  padding: 22px;
-  border: 1px solid var(--border-secondary);
-  border-radius: var(--r-7);
-  background: color-mix(in srgb, var(--bg-primary) 72%, hsl(var(--purple-10)));
+.idea-carousel .mini-card--idea {
+  flex: 0 0 min(560px, calc(100vw - var(--gutter) * 2));
+  grid-column: auto;
+  min-height: 188px;
   scroll-snap-align: start;
-  overflow: hidden;
 }
-.idea-card:nth-child(2) {
-  background: color-mix(in srgb, var(--bg-primary) 74%, hsl(var(--green-10)));
+.idea-carousel .mini-card__title {
+  font-size: 17px;
 }
-.idea-card::before {
-  content: "pipeline";
-  position: absolute;
-  right: 18px;
-  top: 16px;
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-tertiary);
-}
-.idea-card::after {
-  content: "";
-  position: absolute;
-  left: 22px;
-  right: 22px;
-  bottom: 18px;
-  height: 1px;
-  background: var(--border-secondary);
-  opacity: 0.7;
-}
-.idea-card__code {
-  align-self: start;
-  font-family: var(--font-display);
-  font-size: 52px;
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  color: var(--text-primary);
-  line-height: 0.86;
-}
-.idea-card__body {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding-top: 2px;
-}
-.idea-card__kicker {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-tertiary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.idea-card__title {
-  max-width: 24ch;
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: 23px;
-  font-weight: 700;
-  line-height: 1.12;
-  letter-spacing: -0.02em;
-  color: var(--text-primary);
-}
-.idea-card__summary {
+.idea-carousel .mini-card__meta {
   display: -webkit-box;
-  margin: 0;
-  color: var(--text-secondary);
-  font-size: 13.5px;
-  line-height: 1.55;
+  font-size: 13px;
+  line-height: 1.6;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.idea-card__tags {
+.idea-card__badges {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: auto;
-  padding-bottom: 18px;
-}
-.idea-card__tags span {
-  display: inline-flex;
-  align-items: center;
-  min-height: 20px;
-  padding: 0 7px;
-  border: 1px solid var(--border-primary);
-  border-radius: var(--r-3);
-  background: color-mix(in srgb, var(--bg-primary) 74%, transparent);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--text-secondary);
-}
-.idea-card__tags span + span::before {
-  content: none;
+  margin-bottom: 8px;
 }
 .idea-venues {
-  position: relative;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 14px;
+  gap: 12px;
   align-items: center;
-  margin-top: 14px;
-  padding-top: 12px;
-  color: var(--text-tertiary);
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-.idea-venues::before {
-  content: "";
-  flex: 0 0 42px;
-  height: 1px;
-  background: var(--border-secondary);
+  margin-top: 22px;
+  padding: 16px 20px;
+  border: 1px dashed var(--border-primary);
+  border-radius: var(--r-6);
 }
 .idea-venues__label {
-  color: var(--text-primary);
-  font-weight: 700;
-}
-.idea-venues__label::after {
-  content: ":";
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
 }
 
 @media (max-width: 640px) {
@@ -281,20 +185,19 @@
     padding-bottom: 16px;
   }
 
-  .idea-card {
-    flex-basis: min(360px, calc(100vw - var(--gutter) * 2 - 34px));
+  .idea-carousel .mini-card--idea {
+    flex-basis: min(360px, calc(100vw - var(--gutter) * 2 - 28px));
     grid-template-columns: 1fr;
-    min-height: 266px;
+    min-height: 238px;
     padding: 18px;
   }
 
-  .idea-card__code {
-    font-size: 46px;
+  .idea-carousel .mini-card__year {
+    font-size: 30px;
   }
 
-  .idea-card__title {
-    max-width: 19ch;
-    font-size: 22px;
+  .idea-carousel .mini-card__title {
+    font-size: 16px;
   }
 }
 
