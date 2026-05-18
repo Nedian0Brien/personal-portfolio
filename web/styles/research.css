@@ -140,7 +140,6 @@
   gap: 4px;
   min-height: 30px;
   padding: 0 10px;
-  border: 1px solid var(--border-secondary);
   border-radius: var(--r-4);
   background: var(--bg-primary);
   color: var(--text-secondary);
@@ -148,11 +147,10 @@
   font-weight: 600;
   line-height: 1;
   white-space: nowrap;
-  transition: color var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease), background var(--dur-1) var(--ease);
+  transition: color var(--dur-1) var(--ease), background var(--dur-1) var(--ease);
 }
 .mini-card__detail:hover,
 .mini-card__detail:focus-visible {
-  border-color: var(--border-focus);
   color: var(--text-primary);
   background: var(--bg-secondary);
 }
