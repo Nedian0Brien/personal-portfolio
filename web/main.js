@@ -23,7 +23,8 @@ initThemeToggle();
 initScrollReveal();
 initSectionNavSpy({
   linkSelector: '#topnavNav a[href^="#"]',
-  rootMargin: "-56px 0px -40% 0px",
+  activationRatio: 0.32,
+  minActivationOffset: 96,
 });
 initHeroTraceField();
 initHeroParallax();
