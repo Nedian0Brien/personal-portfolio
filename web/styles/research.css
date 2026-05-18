@@ -164,6 +164,7 @@
   margin: 6px calc(var(--gutter) * -1) 0;
   padding: 2px var(--gutter) 14px;
   overflow-x: auto;
+  overflow-y: hidden;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
   scroll-padding-left: var(--gutter);
@@ -179,6 +180,10 @@
 .idea-carousel::-webkit-scrollbar-thumb {
   background: var(--border-secondary);
   border-radius: var(--r-full);
+}
+.idea-carousel > .reveal,
+.idea-carousel > .reveal.is-visible {
+  transform: none;
 }
 .idea-carousel .mini-card--idea {
   flex: 0 0 min(560px, calc(100vw - var(--gutter) * 2));
