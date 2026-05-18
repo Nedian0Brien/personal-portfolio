@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Research Ideas · Minjae Park</title>
+<meta name="description" content="ORAG, ATI-GRPO, RFAR 연구 아이디어의 문제의식과 현재 설계 요약." />
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var theme = "light";
+  try {
+    theme = localStorage.getItem("portfolio-theme") || theme;
+  } catch (error) {}
+  if (theme !== "dark" && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+    theme = "dark";
+  }
+  root.setAttribute("data-theme", theme);
+})();
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+
+<link rel="stylesheet" href="/styles/base.css" />
+<link rel="stylesheet" href="/styles/navigation.css" />
+<link rel="stylesheet" href="/research/research-ideas.css" />
+</head>
+<body>
+<nav class="topnav">
+  <div class="topnav__row">
+    <a class="topnav__logo" href="../index.html#research" aria-label="Back to portfolio">
+      <span class="topnav__logo-mark">박</span>
+      <span>← Back to Portfolio</span>
+    </a>
+    <span class="idea-nav__crumb">Research / Ideas</span>
+    <div class="spacer"></div>
+    <div class="topnav__actions">
+      <a class="btn btn--secondary btn--sm" href="../index.html#research">Research</a>
+    </div>
+  </div>
+</nav>
+
+<main class="idea-page">
+  <header class="idea-hero">
+    <div class="idea-hero__label">Research Ideas</div>
+    <h1>현재 연구 질문을 세 개의 실험 가능한 프레임으로 압축합니다.</h1>
+    <p>
+      카드에는 핵심만 남기고, 이 페이지에는 문제의식과 방법의 뼈대를 둡니다.
+      ORAG는 서버의 연구 작업공간 문서를 기준으로 정리했습니다.
+    </p>
+  </header>
+
+  <section class="idea-detail idea-detail--orag" id="orag">
+    <div class="idea-detail__code">ORAG</div>
+    <div class="idea-detail__body">
+      <div class="idea-detail__kicker">Observer-triggered Retrieval-Augmented Generation</div>
+      <h2>코딩 에이전트가 검색해야 할 순간을 놓치는 문제를 다룹니다.</h2>
+      <p>
+        ORAG는 repository-level coding agent의 plan, search, edit, test trajectory를 별도의 Observer가 관찰하고,
+        정보 결핍이 보이면 code, test, docs, log evidence를 수집해 구조화된 evidence packet으로 전달하는 프레임워크입니다.
+      </p>
+      <div class="idea-facts">
+        <div>
+          <span>Core claim</span>
+          <p>병목은 검색 품질만이 아니라, 작업 중 retrieval necessity를 인지하지 못하는 데 있다.</p>
+        </div>
+        <div>
+          <span>Mechanism</span>
+          <p>Observer Retriever가 trajectory state를 추적하고, 정보 질문을 만들고, evidence board와 delivery gate를 운영한다.</p>
+        </div>
+        <div>
+          <span>Boundary</span>
+          <p>Observer는 코드를 직접 고치지 않고, 다음 안전한 boundary에서 use-or-ignore advisory packet만 노출한다.</p>
+        </div>
+        <div>
+          <span>Next step</span>
+          <p>Agentic Observer Retriever replay를 scikit-learn/Django trajectory에 적용하고 Active Scout baseline과 비교한다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="idea-detail idea-detail--ati" id="ati">
+    <div class="idea-detail__code">ATI</div>
+    <div class="idea-detail__body">
+      <div class="idea-detail__kicker">Adaptive Teacher Intervention</div>
+      <h2>작은 RL agent가 막히는 순간에만 교사가 한 스텝 개입합니다.</h2>
+      <p>
+        DAVID-GRPO 계열이 cold-start를 넘긴 뒤 plateau에서 무너지는 지점을 단일 스텝 수준 개입과 curriculum decay로 다루는 동적 증류 아이디어입니다.
+        목표는 teacher cost를 상시 투입하지 않고도 trajectory 전환이 필요한 구간만 찾아내는 것입니다.
+      </p>
+    </div>
+  </section>
+
+  <section class="idea-detail idea-detail--rfar" id="rfar">
+    <div class="idea-detail__code">RFAR</div>
+    <div class="idea-detail__body">
+      <div class="idea-detail__kicker">Reranker-Free Adaptive Retrieval</div>
+      <h2>문서 그래프가 충분히 성숙하면 리랭커 의존도를 줄입니다.</h2>
+      <p>
+        리랭커를 부트스트래핑 교사로 사용하고, 누적 문서 그래프를 장기 메모리로 활용하는 점진적 리랭커 제거 프레임워크입니다.
+        graph maturity 기반 gating policy로 full, selective, graph-only reranking 사이를 전환해 비용과 성능의 균형을 찾습니다.
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer class="idea-footer">
+  <span>© 2026 Minjae Park · libera3920@gmail.com</span>
+  <a href="../index.html#research">← Back to Portfolio</a>
+</footer>
+
+<script type="module">
+if (import.meta.env?.DEV) {
+  import('/src/react-grab-dev.js');
+}
+</script>
+</body>
+</html>

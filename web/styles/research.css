@@ -113,6 +113,7 @@
   color: var(--text-secondary);
 }
 .mini-card--idea {
+  position: relative;
   background: transparent;
   border-style: dashed;
   border-color: var(--border-secondary, var(--border-primary));
@@ -120,11 +121,40 @@
 .mini-card--idea .mini-card__year {
   opacity: 0.9;
 }
+.mini-card--idea-orag .mini-card__year {
+  color: hsl(var(--orange-50));
+}
 .mini-card--idea-ati .mini-card__year {
   color: hsl(var(--purple-60));
 }
 .mini-card--idea-rfar .mini-card__year {
   color: hsl(var(--teal-50));
+}
+.mini-card__detail {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--r-4);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  transition: color var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease), background var(--dur-1) var(--ease);
+}
+.mini-card__detail:hover,
+.mini-card__detail:focus-visible {
+  border-color: var(--border-focus);
+  color: var(--text-primary);
+  background: var(--bg-secondary);
 }
 
 /* ================================================================
@@ -158,6 +188,9 @@
   min-height: 168px;
   scroll-snap-align: start;
 }
+.idea-carousel .mini-card--idea > div:last-child {
+  padding-right: 96px;
+}
 .idea-carousel .mini-card__title {
   font-size: 17px;
 }
@@ -181,6 +214,10 @@
     grid-template-columns: 1fr;
     min-height: 210px;
     padding: 18px;
+  }
+
+  .idea-carousel .mini-card--idea > div:last-child {
+    padding-right: 0;
   }
 
   .idea-carousel .mini-card__year {
