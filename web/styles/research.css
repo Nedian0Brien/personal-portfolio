@@ -263,11 +263,13 @@
   color: var(--text-tertiary);
 }
 .subsec__subtitle {
-  max-width: 520px;
-  margin: -6px 0 14px;
-  color: var(--text-secondary);
-  font-size: 14px;
-  line-height: 1.6;
+  margin: -4px 0 18px;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: clamp(24px, 4vw, 38px);
+  font-weight: 750;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
 }
 
 /* ---------- Cover keyword scroll spotlight (top→bottom) ---------- */
