@@ -112,6 +112,20 @@
   font-size: 13px;
   color: var(--text-secondary);
 }
+.mini-card--idea {
+  background: transparent;
+  border-style: dashed;
+  border-color: var(--border-secondary, var(--border-primary));
+}
+.mini-card--idea .mini-card__year {
+  opacity: 0.9;
+}
+.mini-card--idea-ati .mini-card__year {
+  color: hsl(var(--purple-60));
+}
+.mini-card--idea-rfar .mini-card__year {
+  color: hsl(var(--teal-50));
+}
 
 /* ================================================================
    Research Ideas carousel
@@ -141,7 +155,7 @@
 .idea-carousel .mini-card--idea {
   flex: 0 0 min(560px, calc(100vw - var(--gutter) * 2));
   grid-column: auto;
-  min-height: 188px;
+  min-height: 168px;
   scroll-snap-align: start;
 }
 .idea-carousel .mini-card__title {
@@ -155,29 +169,6 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.idea-card__badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 8px;
-}
-.idea-venues {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: center;
-  margin-top: 22px;
-  padding: 16px 20px;
-  border: 1px dashed var(--border-primary);
-  border-radius: var(--r-6);
-}
-.idea-venues__label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-tertiary);
-}
 
 @media (max-width: 640px) {
   .idea-carousel {
@@ -188,7 +179,7 @@
   .idea-carousel .mini-card--idea {
     flex-basis: min(360px, calc(100vw - var(--gutter) * 2 - 28px));
     grid-template-columns: 1fr;
-    min-height: 238px;
+    min-height: 210px;
     padding: 18px;
   }
 
