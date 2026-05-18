@@ -480,8 +480,7 @@
   }
 
   .feature[data-type="paper"] .kw-fade--2,
-  .feature[data-type="paper"] .kw-fade--3,
-  .feature[data-type="paper"] .cover__detail-btn {
+  .feature[data-type="paper"] .kw-fade--3 {
     display: none;
   }
 
@@ -489,9 +488,9 @@
     top: auto;
     right: 10px;
     bottom: 10px;
-    width: 38%;
+    width: 34%;
     height: 42%;
-    opacity: 0.82;
+    opacity: 0.9;
   }
 
   .feature[data-type="paper"] .cover__labeltag {
@@ -500,6 +499,15 @@
     bottom: auto;
     font-size: 9px;
     letter-spacing: 0.07em;
+  }
+
+  .feature[data-type="paper"] .cover__detail-btn {
+    left: 18px;
+    bottom: 16px;
+    min-height: 32px;
+    padding: 0 2px;
+    font-size: 12px;
+    line-height: 1;
   }
 
   .feature[data-type="paper"] .feature__body {
@@ -581,11 +589,19 @@
   }
 
   .feature[data-type="paper"] .cover__mini {
-    display: none;
+    right: 8px;
+    bottom: 8px;
+    width: 31%;
+    height: 39%;
   }
 
   .feature[data-type="paper"] .cover > div:not(.cover__mini) {
-    max-width: 100%;
+    max-width: 70%;
+  }
+
+  .feature[data-type="paper"] .cover__detail-btn {
+    left: 16px;
+    bottom: 14px;
   }
 
   .feature[data-type="paper"] .paper-stat {
