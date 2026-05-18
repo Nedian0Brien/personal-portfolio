@@ -183,7 +183,10 @@
 }
 .idea-carousel > .reveal,
 .idea-carousel > .reveal.is-visible {
+  opacity: 1;
   transform: none;
+  transition: none;
+  will-change: auto;
 }
 .idea-carousel .mini-card--idea {
   flex: 0 0 min(560px, calc(100vw - var(--gutter) * 2));
@@ -213,7 +216,7 @@
   }
 
   .idea-carousel .mini-card--idea {
-    flex-basis: min(360px, calc(100vw - var(--gutter) * 2 - 28px));
+    flex-basis: min(340px, calc(100vw - var(--gutter) * 2 - 56px));
     grid-template-columns: 1fr;
     min-height: 210px;
     padding: 18px;
