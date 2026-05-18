@@ -12,8 +12,8 @@ export function initProjectBackground() {
   const stage = document.querySelector(".proj-bg-stage");
   if (!stage) return;
 
-  const layers = Array.from(stage.querySelectorAll(".proj-bg-layer"));
-  const scenes = Array.from(document.querySelectorAll("#project .proj-scene"));
+  const scenes = Array.from(document.querySelectorAll("#project .proj-scene:not(.proj-scene--grid)"));
+  const layers = Array.from(stage.querySelectorAll(".proj-bg-layer")).slice(0, scenes.length);
   if (!layers.length || layers.length !== scenes.length) return;
 
   const mq = window.matchMedia("(min-width: 981px)");

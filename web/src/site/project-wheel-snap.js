@@ -2,7 +2,7 @@ export function initProjectWheelSnap() {
   const project = document.getElementById("project");
   if (!project) return;
 
-  const scenes = Array.from(project.querySelectorAll(".proj-scene"));
+  const scenes = Array.from(project.querySelectorAll(".proj-scene:not(.proj-scene--grid)"));
   if (!scenes.length) return;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 

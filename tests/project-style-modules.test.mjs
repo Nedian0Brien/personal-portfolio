@@ -26,8 +26,9 @@ test("project styles are split into ordered behavior modules", () => {
     "./projects/responsive.css",
     "./projects/background.css",
     "./projects/mobile-device.css",
+    "./projects/grid.css",
   ]);
-  assert.equal(entry.trim().split("\n").length, 5);
+  assert.equal(entry.trim().split("\n").length, 6);
 });
 
 test("project style import graph still includes desktop and mobile project behavior", () => {
@@ -38,4 +39,6 @@ test("project style import graph still includes desktop and mobile project behav
   assert.match(source, /\.proj-bg-layer\[data-idx="6"\]/);
   assert.match(source, /:root\.device-mobile-or-tablet \.proj-scene__bg-plane\.theme-orange/);
   assert.match(source, /:root\.device-mobile-or-tablet \.aris-thread-frame \.aris-thread/);
+  assert.match(source, /\.proj-card-grid\s*\{/);
+  assert.match(source, /\.proj-card-grid \.proj-scene__edge/);
 });
